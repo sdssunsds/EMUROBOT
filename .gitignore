@@ -348,3 +348,37 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+/DLL/opencv_world340d.dll
+/DLL/opencv_world340.dll
+/DLL/nvparsers.lib
+/DLL/nvparsers.dll
+/DLL/nvonnxparser.lib
+/DLL/nvonnxparser.dll
+/DLL/nvinfer_plugin.lib
+/DLL/nvinfer_plugin.dll
+/DLL/nvinfer_builder_resource.dll
+/DLL/nvinfer.lib
+/DLL/nvinfer.dll
+/DLL/cutimg.engine
+/DLL/cudnn_ops_train64_8.lib
+/DLL/cudnn_ops_train64_8.dll
+/DLL/cudnn_ops_train.lib
+/DLL/cudnn_ops_infer64_8.lib
+/DLL/cudnn_ops_infer64_8.dll
+/DLL/cudnn_ops_infer.lib
+/DLL/cudnn_cnn_train64_8.lib
+/DLL/cudnn_cnn_train64_8.dll
+/DLL/cudnn_cnn_train.lib
+/DLL/cudnn_cnn_infer64_8.lib
+/DLL/cudnn_cnn_infer64_8.dll
+/DLL/cudnn_cnn_infer.lib
+/DLL/cudnn_adv_train64_8.lib
+/DLL/cudnn_adv_train64_8.dll
+/DLL/cudnn_adv_train.lib
+/DLL/cudnn_adv_infer64_8.lib
+/DLL/cudnn_adv_infer64_8.dll
+/DLL/cudnn_adv_infer.lib
+/DLL/cudnn64_8.lib
+/DLL/cudnn64_8.dll
+/DLL/cudnn.lib
+/DLL/CppLibDll.h
