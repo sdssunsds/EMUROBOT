@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="313b476b-16e6-4568-82e9-7442e686fb92" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8001/PicService" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="PicService2.xsd" MetadataType="Schema" ID="cf47e7c5-1894-40bc-9acd-896b9f2bd9ca" SourceId="1" SourceUrl="http://localhost:8001/PicService?xsd=xsd2" />
+    <MetadataFile FileName="PicService.xsd" MetadataType="Schema" ID="82f3dd84-e63c-4bc1-a99a-f361ce88b098" SourceId="1" SourceUrl="http://localhost:8001/PicService?xsd=xsd1" />
+    <MetadataFile FileName="PicService1.xsd" MetadataType="Schema" ID="7eaeed2a-c73a-4099-93c9-bc98c7e62ed8" SourceId="1" SourceUrl="http://localhost:8001/PicService?xsd=xsd0" />
+    <MetadataFile FileName="UploadService1.wsdl" MetadataType="Wsdl" ID="d4e4ada8-5021-4aa2-b45e-75d782b191cc" SourceId="1" SourceUrl="http://localhost:8001/PicService" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

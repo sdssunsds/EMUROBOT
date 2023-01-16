@@ -1,0 +1,99 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="EMU.Parameter.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="FtpIP" Type="System.String" Scope="User">
+      <Value Profile="(Default)">192.168.0.102</Value>
+    </Setting>
+    <Setting Name="FtpPort" Type="System.String" Scope="User">
+      <Value Profile="(Default)">21</Value>
+    </Setting>
+    <Setting Name="FtpUser" Type="System.String" Scope="User">
+      <Value Profile="(Default)">robot</Value>
+    </Setting>
+    <Setting Name="FtpPwd" Type="System.String" Scope="User">
+      <Value Profile="(Default)">robot</Value>
+    </Setting>
+    <Setting Name="HttpServerPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">8080</Value>
+    </Setting>
+    <Setting Name="HttpBufferSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">4096</Value>
+    </Setting>
+    <Setting Name="ModbusTcp" Type="System.String" Scope="User">
+      <Value Profile="(Default)">192.168.0.194</Value>
+    </Setting>
+    <Setting Name="Light" Type="System.String" Scope="User">
+      <Value Profile="(Default)">com4</Value>
+    </Setting>
+    <Setting Name="LightFrontHigh" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="LightBackHigh" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="LaserPositioning" Type="System.String" Scope="User">
+      <Value Profile="(Default)">com5</Value>
+    </Setting>
+    <Setting Name="RgvIP" Type="System.String" Scope="User">
+      <Value Profile="(Default)">192.168.0.254</Value>
+    </Setting>
+    <Setting Name="RgvPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">8899</Value>
+    </Setting>
+    <Setting Name="RelayIP" Type="System.String" Scope="User">
+      <Value Profile="(Default)">192.168.0.191</Value>
+    </Setting>
+    <Setting Name="RelayPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">6000</Value>
+    </Setting>
+    <Setting Name="RobotIP" Type="System.String" Scope="User">
+      <Value Profile="(Default)">192.168.0.191</Value>
+    </Setting>
+    <Setting Name="RobotPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">7000</Value>
+    </Setting>
+    <Setting Name="RobotFrontIP" Type="System.String" Scope="User">
+      <Value Profile="(Default)">192.168.0.170</Value>
+    </Setting>
+    <Setting Name="RobotBackIP" Type="System.String" Scope="User">
+      <Value Profile="(Default)">192.168.0.171</Value>
+    </Setting>
+    <Setting Name="Stm32Com" Type="System.String" Scope="User">
+      <Value Profile="(Default)">COM6</Value>
+    </Setting>
+    <Setting Name="Stm32BaudRate" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">115200</Value>
+    </Setting>
+    <Setting Name="Stm32Parity" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Stm32DataBits" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">8</Value>
+    </Setting>
+    <Setting Name="Stm32StopBits" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="RobotFrontPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2000</Value>
+    </Setting>
+    <Setting Name="RobotBackPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2000</Value>
+    </Setting>
+    <Setting Name="RobotID" Type="System.String" Scope="User">
+      <Value Profile="(Default)">0000001</Value>
+    </Setting>
+    <Setting Name="AppServerIP" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="AppServerPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Lidar" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="LineLider" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+  </Settings>
+</SettingsFile>

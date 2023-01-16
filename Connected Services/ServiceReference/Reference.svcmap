@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="4a3be46b-5bd1-4eca-acf1-3528f358ede7" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8002/UpdateService" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="UpdateService1.xsd" MetadataType="Schema" ID="b7a86369-a817-4bb4-8c9c-7fa0275093b6" SourceId="1" SourceUrl="http://localhost:8002/UpdateService?xsd=xsd1" />
+    <MetadataFile FileName="Service.wsdl" MetadataType="Wsdl" ID="d50d124e-b137-4ecc-a063-e11bd525922c" SourceId="1" SourceUrl="http://localhost:8002/UpdateService" />
+    <MetadataFile FileName="UpdateService3.xsd" MetadataType="Schema" ID="8800ba5b-4296-4e54-9c8d-f3b6e6f89b86" SourceId="1" SourceUrl="http://localhost:8002/UpdateService?xsd=xsd3" />
+    <MetadataFile FileName="UpdateService.xsd" MetadataType="Schema" ID="7b4c8cfe-879a-45ae-bca1-20a1ecc8e5b6" SourceId="1" SourceUrl="http://localhost:8002/UpdateService?xsd=xsd0" />
+    <MetadataFile FileName="UpdateService2.xsd" MetadataType="Schema" ID="ffad4450-bc00-45a1-9531-545f6c97ed7d" SourceId="1" SourceUrl="http://localhost:8002/UpdateService?xsd=xsd2" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

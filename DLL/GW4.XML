@@ -1,0 +1,1586 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GW4</name>
+    </assembly>
+    <members>
+        <member name="T:GW4.OracleDB.BaseDAL">
+            <summary>
+            数据库全局控制类
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.BaseDAL.CreateDataBase">
+            <summary> 
+            获取数据库对象 
+            </summary> 
+            <returns>数据库对象</returns> 
+        </member>
+        <member name="T:GW4.OracleDB.BaseGlobal">
+            <summary>
+            ODP配置类
+            </summary>
+        </member>
+        <member name="F:GW4.OracleDB.BaseGlobal.isOpenPrintLog">
+            <summary>
+            是否开启数据库跟踪
+            </summary>
+        </member>
+        <member name="F:GW4.OracleDB.BaseGlobal.isPrintLogToBS">
+            <summary>
+            是否启用BS模式跟踪(CS跟踪下，必须拥有D盘)
+            </summary>
+        </member>
+        <member name="F:GW4.OracleDB.BaseGlobal.connectionString">
+            <summary>
+            数据库连接字符串
+            </summary>
+        </member>
+        <member name="F:GW4.OracleDB.BaseGlobal.csLogPath">
+            <summary>
+            CS跟踪模式下的跟踪记录路径
+            </summary>
+        </member>
+        <member name="T:GW4.OracleDB.PrintSqlLog">
+            <summary>
+            跟踪日志委托
+            </summary>
+        </member>
+        <member name="T:GW4.OracleDB.OracleCommand">
+            <summary>
+            ODP数据库操作类
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleCommand.#ctor">
+            <summary>
+            构造
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleCommand.#ctor(GW4.OracleDB.OracleConnection)">
+            <summary>
+            构造
+            </summary>
+            <param name="connection">数据库连接对象</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleCommand.Cancel">
+            <summary>
+            取消数据库执行
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleCommand.CommandText">
+            <summary>
+            执行语句
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleCommand.CommandTimeout">
+            <summary>
+            等待时间
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleCommand.CommandType">
+            <summary>
+            执行语句的类型
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleCommand.CreateDbParameter">
+            <summary>
+            创建参数化实体
+            </summary>
+            <returns>返回DbParameter对象</returns>
+        </member>
+        <member name="P:GW4.OracleDB.OracleCommand.DbConnection">
+            <summary>
+            数据库连接对象
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleCommand.DbParameterCollection">
+            <summary>
+            参数对象集合
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleCommand.DbTransaction">
+            <summary>
+            事务对象
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleCommand.DesignTimeVisible">
+            <summary>
+            获取或设置一个值，该值指示此命令对象在自定义界面控件中是否可见
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleCommand.ExecuteDbDataReader(System.Data.CommandBehavior)">
+            <summary>
+            查询方法
+            </summary>
+            <param name="behavior">查询说明</param>
+            <returns>返回DataReader</returns>
+        </member>
+        <member name="M:GW4.OracleDB.OracleCommand.ExecuteNonQuery">
+            <summary>
+            增删改方法
+            </summary>
+            <returns>返回影响行数</returns>
+        </member>
+        <member name="M:GW4.OracleDB.OracleCommand.ExecuteScalar">
+            <summary>
+            查询第一行第一列
+            </summary>
+            <returns>返回结果</returns>
+        </member>
+        <member name="M:GW4.OracleDB.OracleCommand.Prepare">
+            <summary>
+            在数据源上创建该命令的准备好的（或已编译的）版本
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleCommand.UpdatedRowSource">
+            <summary>
+            获取或设置命令结果在由 System.Data.Common.DbDataAdapter 的 Update 方法使用时如何应用于 System.Data.DataRow
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleCommand.Command">
+            <summary>
+            数据库执行对象
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleCommand.IsBatch">
+            <summary>
+            是否批量处理
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleCommand.Clone">
+            <summary>
+            克隆方法
+            </summary>
+        </member>
+        <member name="T:GW4.OracleDB.OracleCommandBuilder">
+            <summary>
+            ODP数据库操作对象构建类
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleCommandBuilder.#ctor">
+            <summary>
+            构造
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleCommandBuilder.#ctor(Oracle.DataAccess.Client.OracleDataAdapter)">
+            <summary>
+            构造
+            </summary>
+            <param name="adapter">适配器对象</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleCommandBuilder.#ctor(Oracle.DataAccess.Client.OracleCommandBuilder)">
+            <summary>
+            构造
+            </summary>
+            <param name="commandBuilder">CommandBuilder对象</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleCommandBuilder.GetUpdateCommand">
+            <summary>
+            获取修改执行对象
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleCommandBuilder.GetInsertCommand">
+            <summary>
+            获取添加执行对象
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleCommandBuilder.GetDeleteCommand">
+            <summary>
+            获取删除执行对象
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleCommandBuilder.ApplyParameterInfo(System.Data.Common.DbParameter,System.Data.DataRow,System.Data.StatementType,System.Boolean)">
+            <summary>
+            允许 System.Data.Common.DbCommandBuilder 类的提供程序实现处理附加参数属性
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleCommandBuilder.GetParameterName(System.String)">
+            <summary>
+            给定部分参数名，返回完整参数名
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleCommandBuilder.GetParameterName(System.Int32)">
+            <summary>
+            以 @p# 格式返回指定参数的名称。在生成自定义命令生成器时使用
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleCommandBuilder.GetParameterPlaceholder(System.Int32)">
+            <summary>
+            返回该参数在关联的 SQL 语句中的占位符
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleCommandBuilder.SetRowUpdatingHandler(System.Data.Common.DbDataAdapter)">
+            <summary>
+            注册 System.Data.Common.DbCommandBuilder 以处理 System.Data.Common.DbDataAdapter
+            的 System.Data.OleDb.OleDbDataAdapter.RowUpdating 事件
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleCommandBuilder.InitBase">
+            <summary>
+            初始化字段
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleCommandBuilder.GetParameterName(Oracle.DataAccess.Client.OracleParameterCollection,System.String)">
+            <summary>
+            根据部分参数名获取参数完整名
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleCommandBuilder.GetSelectSqlTableName">
+            <summary>
+            获取查询语句中的表名
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:GW4.OracleDB.OracleCommandBuilder.Clone">
+            <summary>
+            克隆方法
+            </summary>
+        </member>
+        <member name="T:GW4.OracleDB.OracleConnection">
+            <summary>
+            ODP数据库连接对象类
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleConnection.#ctor">
+            <summary>
+            构造
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleConnection.#ctor(System.String)">
+            <summary>
+            构造
+            </summary>
+            <param name="connectinStr">数据库连接字符串</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleConnection.BeginDbTransaction(System.Data.IsolationLevel)">
+            <summary>
+            启动事务的方法
+            </summary>
+            <param name="isolationLevel">指定连接的事务锁定行为</param>
+            <returns>返回事务实例</returns>
+        </member>
+        <member name="M:GW4.OracleDB.OracleConnection.ChangeDatabase(System.String)">
+            <summary>
+            由于Oracle连接中没有获取数据库名称的方法，故而此方法无效
+            </summary>
+            <param name="databaseName">数据库名称</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleConnection.Close">
+            <summary>
+            关闭数据库连接
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleConnection.ConnectionString">
+            <summary>
+            数据库连接字符串
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleConnection.CreateDbCommand">
+            <summary>
+            创建并返回与当前连接关联的 System.Data.Common.DbCommand 对象
+            </summary>
+            <returns>返回 System.Data.Common.DbCommand 对象</returns>
+        </member>
+        <member name="P:GW4.OracleDB.OracleConnection.DataSource">
+            <summary>
+            数据库服务器的名称
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleConnection.Database">
+            <summary>
+            由于Oracle连接中没有获取数据库名称的属性，故而此属性无效
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleConnection.Open">
+            <summary>
+            打开数据库连接
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleConnection.ServerVersion">
+            <summary>
+            服务器的版本的字符串
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleConnection.State">
+            <summary>
+            数据库连接状态
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleConnection.Connection">
+            <summary>
+            获取Oracle数据库连接对象
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleConnection.Clone">
+            <summary>
+            克隆方法
+            </summary>
+        </member>
+        <member name="T:GW4.OracleDB.OracleDataAdapter">
+            <summary>
+            ODP数据库适配器类
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataAdapter.CreateUpdateSql(System.Data.DataRow,System.Data.DataTable,System.String,System.Text.StringBuilder,System.Data.DataColumn[],System.Collections.Generic.List{GW4.OracleDB.OracleDataAdapter.CommandSqlAndParameter})">
+            <summary>
+            生成Update语句
+            </summary>
+            <param name="row">当前数据行</param>
+            <param name="table">当前数据表</param>
+            <param name="sql">修改sql语句</param>
+            <param name="whereSql">修改条件语句</param>
+            <param name="whereColumns">修改条件用到的参数名(列名)</param>
+            <param name="commandSqlParameters">批量处理的结构体集合</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataAdapter.CreateDeleteSql(System.Data.DataRow,System.Data.DataTable,System.String,System.Text.StringBuilder,System.Data.DataColumn[],System.Collections.Generic.List{GW4.OracleDB.OracleDataAdapter.CommandSqlAndParameter},System.Collections.Generic.List{GW4.OracleDB.OracleDataAdapter.CommandSqlAndParameter})">
+            <summary>
+            生成Delete语句
+            </summary>
+            <param name="row">当前数据行</param>
+            <param name="table">当前数据表</param>
+            <param name="sql">删除sql语句</param>
+            <param name="whereSql">删除条件语句</param>
+            <param name="whereColumns">删除条件用到的参数名(列名)</param>
+            <param name="commandSqlParameters">批量处理的结构体集合</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataAdapter.GetParameterType(System.Data.DataColumn)">
+            <summary>
+            获取当前列的数据类型
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataAdapter.GetParameterValue(System.Data.DbType,System.Object,System.Text.StringBuilder,System.String)">
+            <summary>
+            根据类型转换数据类型
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataAdapter.GetParameters(System.Data.DataRow,System.Data.DataTable,System.Text.StringBuilder,System.Data.DataColumn[])">
+            <summary>
+            获取参数集合
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataAdapter.CheckInsertDeleteConfict(GW4.OracleDB.OracleDataAdapter.CommandSqlAndParameter,System.Collections.Generic.List{GW4.OracleDB.OracleDataAdapter.CommandSqlAndParameter})">
+            <summary>
+            处理事务执行过程中，对相同数据进行先删除后添加时的语句冲突问题。该冲突会导致后添加的语句失效
+            </summary>
+            <param name="commandSqlParameter">新增执行对象</param>
+            <param name="commandSqlParameters">删除执行对象集合</param>
+        </member>
+        <member name="T:GW4.OracleDB.OracleDataAdapter.CommandSqlAndParameter">
+            <summary>
+            批量处理用的结构体
+            </summary>
+        </member>
+        <member name="T:GW4.OracleDB.OracleDataBase">
+            <summary>
+            ODP数据库控制类
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataBase.ConnectionClose">
+            <summary>
+            关闭数据库连接
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataBase.SetDataColumnForNull(System.Data.DataSet)">
+            <summary>
+            设置当前数据集中的所有表的所有列，值可以为null
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataBase.SetDataColumnForNull(System.Data.DataTable)">
+            <summary>
+            设置当前表中的所有列，值可以为null
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataBase.SetDataColumnForNull(System.Data.DataColumn)">
+            <summary>
+            设置当前列，值可以为null
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataBase.SetDataColumnMaxLengthForMax(System.Data.DataSet)">
+            <summary>
+            设置当前数据集中的所有表的所有列的值长度为Int.MaxValue
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataBase.SetDataColumnMaxLengthForMax(System.Data.DataTable)">
+            <summary>
+            设置当前表中的所有列的值长度为Int.MaxValue
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataBase.SetDataColumnMaxLengthForMax(System.Data.DataColumn)">
+            <summary>
+            设置当前列的值长度为Int.MaxValue
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataBase.SetDataColumnForCanRepeat(System.Data.DataSet)">
+            <summary>
+            设置当前数据集中的所有表的所有列，值可以重复
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataBase.SetDataColumnForCanRepeat(System.Data.DataTable)">
+            <summary>
+            设置当前表中的所有列，值可以重复
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataBase.SetDataColumnForCanRepeat(System.Data.DataColumn)">
+            <summary>
+            设置当前列，值可以重复
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataBase.SetDataColumnForTopTwo(System.Data.DataTable)">
+            <summary>
+            设置当前表的所有列的值，可以为空，可以重复以及最大长度
+            </summary>
+        </member>
+        <member name="T:GW4.OracleDB.OracleDataReader">
+            <summary>
+            ODP数据库数据读取类
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataReader.#ctor(Oracle.DataAccess.Client.OracleDataReader)">
+            <summary>
+            构造
+            </summary>
+            <param name="dataReader"></param>
+        </member>
+        <member name="P:GW4.OracleDB.OracleDataReader.Cmd">
+            <summary>
+            执行对象
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataReader.Close">
+            <summary>
+            关闭DataReader
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleDataReader.Depth">
+            <summary>
+            嵌套深度
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleDataReader.FieldCount">
+            <summary>
+            当前行的列数
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataReader.GetBoolean(System.Int32)">
+            <summary>
+            获取指定列的布尔形式
+            </summary>
+            <param name="ordinal">列的索引</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataReader.GetByte(System.Int32)">
+            <summary>
+            获取指定列的byte形式
+            </summary>
+            <param name="ordinal">列的索引</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataReader.GetBytes(System.Int32,System.Int64,System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            获取指定列的long形式
+            </summary>
+            <param name="ordinal">列的索引</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataReader.GetChar(System.Int32)">
+            <summary>
+            获取指定列的char形式
+            </summary>
+            <param name="ordinal">列的索引</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataReader.GetChars(System.Int32,System.Int64,System.Char[],System.Int32,System.Int32)">
+            <summary>
+            获取指定列的long形式
+            </summary>
+            <param name="ordinal">列的索引</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataReader.GetDataTypeName(System.Int32)">
+            <summary>
+            获取指定列的string形式
+            </summary>
+            <param name="ordinal">列的索引</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataReader.GetDateTime(System.Int32)">
+            <summary>
+            获取指定列的DateTime形式
+            </summary>
+            <param name="ordinal">列的索引</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataReader.GetDecimal(System.Int32)">
+            <summary>
+            获取指定列的decimal形式
+            </summary>
+            <param name="ordinal">列的索引</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataReader.GetDouble(System.Int32)">
+            <summary>
+            获取指定列的double形式
+            </summary>
+            <param name="ordinal">列的索引</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataReader.GetEnumerator">
+            <summary>
+            获取集合数据
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataReader.GetFieldType(System.Int32)">
+            <summary>
+            获取指定列的Type形式
+            </summary>
+            <param name="ordinal">列的索引</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataReader.GetFloat(System.Int32)">
+            <summary>
+            获取指定列的float形式
+            </summary>
+            <param name="ordinal">列的索引</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataReader.GetGuid(System.Int32)">
+            <summary>
+            获取指定列的Guid形式
+            </summary>
+            <param name="ordinal">列的索引</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataReader.GetInt16(System.Int32)">
+            <summary>
+            获取指定列的short形式
+            </summary>
+            <param name="ordinal">列的索引</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataReader.GetInt32(System.Int32)">
+            <summary>
+            获取指定列的int形式
+            </summary>
+            <param name="ordinal">列的索引</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataReader.GetInt64(System.Int32)">
+            <summary>
+            获取指定列的long形式
+            </summary>
+            <param name="ordinal">列的索引</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataReader.GetName(System.Int32)">
+            <summary>
+            获取指定列的string形式
+            </summary>
+            <param name="ordinal">列的索引</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataReader.GetOrdinal(System.String)">
+            <summary>
+            获取列的序列号
+            </summary>
+            <param name="name">列的名称</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataReader.GetSchemaTable">
+            <summary>
+            获取数据的DataTable实例
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataReader.GetString(System.Int32)">
+            <summary>
+            获取指定列的string形式
+            </summary>
+            <param name="ordinal">列的索引</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataReader.GetValue(System.Int32)">
+            <summary>
+            获取指定列的object形式
+            </summary>
+            <param name="ordinal">列的索引</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataReader.GetValues(System.Object[])">
+            <summary>
+            使用当前行的列值来填充对象数组
+            </summary>
+            <param name="values">容器数组</param>
+            <returns>填充数量</returns>
+        </member>
+        <member name="P:GW4.OracleDB.OracleDataReader.HasRows">
+            <summary>
+            是否包含一个或多个行
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleDataReader.IsClosed">
+            <summary>
+            DataReader是否已经关闭
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataReader.IsDBNull(System.Int32)">
+            <summary>
+            根据索引返回是否包含不存在或null的值
+            </summary>
+            <param name="ordinal">列的索引</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataReader.NextResult">
+            <summary>
+            读取批处理语句的结果时，使读取器前进到下一个结果
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleDataReader.Read">
+            <summary>
+            将读取器前进到结果集中的下一个记录
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleDataReader.RecordsAffected">
+            <summary>
+            通过执行 SQL 语句获取更改、插入或删除的行数
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleDataReader.Item(System.String)">
+            <summary>
+            获取指定列的作为 System.Object 的实例的值
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleDataReader.Item(System.Int32)">
+            <summary>
+            获取指定列的作为 System.Object 的实例的值
+            </summary>
+        </member>
+        <member name="T:GW4.OracleDB.OracleParameter">
+            <summary>
+            ODP数据库参数类
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleParameter.#ctor">
+            <summary>
+            构造
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleParameter.#ctor(System.String,System.Object)">
+            <summary>
+            构造
+            </summary>
+            <param name="name">参数名称</param>
+            <param name="value">参数值</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleParameter.#ctor(System.String,System.Data.DbType,System.Object)">
+            <summary>
+            构造
+            </summary>
+            <param name="name">参数名称</param>
+            <param name="type">参数类型</param>
+            <param name="value">参数值</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleParameter.#ctor(Oracle.DataAccess.Client.OracleParameter)">
+            <summary>
+            构造
+            </summary>
+            <param name="parameter">OracleParameter对象</param>
+        </member>
+        <member name="P:GW4.OracleDB.OracleParameter.DbType">
+            <summary>
+            参数类型
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleParameter.Direction">
+            <summary>
+            获取或设置一个值，该值指示参数是只可输入、只可输出、双向还是存储过程返回值参数
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleParameter.IsNullable">
+            <summary>
+            获取或设置一个值，该值指示参数是否接受 null 值
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleParameter.ParameterName">
+            <summary>
+            参数名称
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleParameter.ResetDbType">
+            <summary>
+            将 DbType 属性重置为其原始设置
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleParameter.Size">
+            <summary>
+            获取或设置列中数据的最大大小（以字节为单位）
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleParameter.SourceColumn">
+            <summary>
+            获取或设置源列的名称，该源列映射到 System.Data.DataSet 并用于加载或返回 System.Data.Common.DbParameter.Value
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleParameter.SourceColumnNullMapping">
+            <summary>
+            设置或获取一个值，该值指示源列是否可为 null。这使得 System.Data.Common.DbCommandBuilder 能够正确地为可以为
+            null 的列生成 Update 语句
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleParameter.SourceVersion">
+            <summary>
+            获取或设置在加载 System.Data.Common.DbParameter.Value 时使用的 System.Data.DataRowVersion
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleParameter.Value">
+            <summary>
+            参数值
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleParameter.Parameter">
+            <summary>
+            参数对象
+            </summary>
+        </member>
+        <member name="T:GW4.OracleDB.NotParameter">
+            <summary>
+            用来判断无效的DbParameter
+            </summary>
+        </member>
+        <member name="T:GW4.OracleDB.OracleParameterCollection">
+            <summary>
+            ODP数据库参数集合类
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleParameterCollection.#ctor(Oracle.DataAccess.Client.OracleParameterCollection)">
+            <summary>
+            构造
+            </summary>
+            <param name="parameters">参数集合</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleParameterCollection.Add(System.Object)">
+            <summary>
+            添加一个参数对象
+            </summary>
+            <param name="value">参数对象</param>
+            <returns>返回该对象的索引</returns>
+        </member>
+        <member name="M:GW4.OracleDB.OracleParameterCollection.AddRange(System.Array)">
+            <summary>
+            添加一个参数集合
+            </summary>
+            <param name="values">参数集合</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleParameterCollection.Clear">
+            <summary>
+            清空参数集合
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleParameterCollection.Contains(System.String)">
+            <summary>
+            判断参数是否存在
+            </summary>
+            <param name="value">参数名称</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleParameterCollection.Contains(System.Object)">
+            <summary>
+            判断参数是否存在
+            </summary>
+            <param name="value">参数对象</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleParameterCollection.CopyTo(System.Array,System.Int32)">
+            <summary>
+            从指定位置开始，将集合复制到指定集合中
+            </summary>
+            <param name="array">容器集合</param>
+            <param name="index">位置索引</param>
+        </member>
+        <member name="P:GW4.OracleDB.OracleParameterCollection.Count">
+            <summary>
+            参数数量
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleParameterCollection.GetEnumerator">
+            <summary>
+            公开 System.Collections.IEnumerable.GetEnumerator() 方法，该方法支持 .NET Framework
+            数据提供程序对集合进行简单的迭代
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleParameterCollection.GetParameter(System.String)">
+            <summary>
+            获取参数对象
+            </summary>
+            <param name="parameterName">参数名称</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleParameterCollection.GetParameter(System.Int32)">
+            <summary>
+            获取参数对象
+            </summary>
+            <param name="index">参数索引</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleParameterCollection.IndexOf(System.String)">
+            <summary>
+            获取指定参数名称的参数索引
+            </summary>
+            <param name="parameterName">参数名称</param>
+            <returns>返回索引</returns>
+        </member>
+        <member name="M:GW4.OracleDB.OracleParameterCollection.IndexOf(System.Object)">
+            <summary>
+            获取指定参数对象的参数索引
+            </summary>
+            <param name="value">参数对象</param>
+            <returns>返回索引</returns>
+        </member>
+        <member name="M:GW4.OracleDB.OracleParameterCollection.Insert(System.Int32,System.Object)">
+            <summary>
+            在指定的位置上插入新的参数对象
+            </summary>
+            <param name="index">索引</param>
+            <param name="value">参数对象</param>
+        </member>
+        <member name="P:GW4.OracleDB.OracleParameterCollection.IsFixedSize">
+            <summary>
+            指定该集合的大小是否是固定的
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleParameterCollection.IsReadOnly">
+            <summary>
+            指定该集合是否为只读
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleParameterCollection.IsSynchronized">
+            <summary>
+            指定集合是否是同步的
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleParameterCollection.Remove(System.Object)">
+            <summary>
+            移除指定的参数对象
+            </summary>
+            <param name="value">参数对象</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleParameterCollection.RemoveAt(System.String)">
+            <summary>
+            移除指定名称的参数
+            </summary>
+            <param name="parameterName">参数名称</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleParameterCollection.RemoveAt(System.Int32)">
+            <summary>
+            移除指定索引的参数
+            </summary>
+            <param name="index">索引</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleParameterCollection.SetParameter(System.String,System.Data.Common.DbParameter)">
+            <summary>
+            根据指定参数名称重新设置参数
+            </summary>
+            <param name="parameterName">参数名称</param>
+            <param name="value">新的参数对象</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleParameterCollection.SetParameter(System.Int32,System.Data.Common.DbParameter)">
+            <summary>
+            根据指定的索引重新设置参数
+            </summary>
+            <param name="index">索引</param>
+            <param name="value">新的参数对象</param>
+        </member>
+        <member name="P:GW4.OracleDB.OracleParameterCollection.SyncRoot">
+            <summary>
+            指定要用于同步对集合访问的 System.Object
+            </summary>
+        </member>
+        <member name="T:GW4.OracleDB.OracleProviderFactory">
+            <summary>
+            ODP数据库工厂类
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleProviderFactory.#ctor">
+            <summary>
+            构造
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleProviderFactory.Cmd">
+            <summary>
+            OracleCommand对象
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleProviderFactory.CmdBuilder">
+            <summary>
+            OracleCommandBuilder对象
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleProviderFactory.Con">
+            <summary>
+            OracleConnection对象
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleProviderFactory.CreateCommand">
+            <summary>
+            根据OracleCommand对象中的IsBatch属性来决定是创建新的DbCommand实例，还是直接返回OracleCommand对象
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleProviderFactory.CreateCommandBuilder">
+            <summary>
+            获取OracleCommandBuilder对象
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleProviderFactory.CreateConnection">
+            <summary>
+            获取OracleConnection对象
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleProviderFactory.CreateDataAdapter">
+            <summary>
+            创建一个OracleDataAdapter的实例
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleProviderFactory.CreateParameter">
+            <summary>
+            创建一个OracleParameter的实例
+            </summary>
+        </member>
+        <member name="T:GW4.OracleDB.OracleTransaction">
+            <summary>
+            ODP数据库事务类
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleTransaction.#ctor(Oracle.DataAccess.Client.OracleTransaction,GW4.OracleDB.OracleConnection)">
+            <summary>
+            构造
+            </summary>
+            <param name="transaction">事务对象</param>
+            <param name="connection">数据库连接对象</param>
+        </member>
+        <member name="M:GW4.OracleDB.OracleTransaction.Commit">
+            <summary>
+            提交事务
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleTransaction.DbConnection">
+            <summary>
+            获取数据库连接对象
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleTransaction.IsolationLevel">
+            <summary>
+            获取事务锁定的行为
+            </summary>
+        </member>
+        <member name="M:GW4.OracleDB.OracleTransaction.Rollback">
+            <summary>
+            回退事务
+            </summary>
+        </member>
+        <member name="P:GW4.OracleDB.OracleTransaction.Transaction">
+            <summary>
+            事务对象
+            </summary>
+        </member>
+        <member name="T:GW4.OracleDB.SqlLog">
+            <summary>
+            SqlLog 的摘要说明
+            </summary>
+        </member>
+        <member name="T:GW4.Extend">
+            <summary>
+            扩展方法类
+            </summary>
+        </member>
+        <member name="M:GW4.Extend.CalculatedArea(System.Drawing.Size)">
+            <summary>
+            计算面积
+            </summary>
+            <returns>返回面积结果</returns>
+        </member>
+        <member name="M:GW4.Extend.CalculatedArea(System.Drawing.SizeF)">
+            <summary>
+            计算面积
+            </summary>
+            <returns>返回面积结果</returns>
+        </member>
+        <member name="M:GW4.Extend.ComputingDistance(System.Drawing.Point,System.Drawing.Point)">
+            <summary>
+            计算坐标点的距离
+            </summary>
+            <param name="point">另一个坐标点</param>
+            <returns>返回最短距离</returns>
+        </member>
+        <member name="M:GW4.Extend.ComputingDistance(System.Drawing.Point,System.Drawing.PointF)">
+            <summary>
+            计算坐标点的距离
+            </summary>
+            <param name="point">另一个坐标点</param>
+            <returns>返回最短距离</returns>
+        </member>
+        <member name="M:GW4.Extend.ComputingDistance(System.Drawing.PointF,System.Drawing.Point)">
+            <summary>
+            计算坐标点的距离
+            </summary>
+            <param name="point">另一个坐标点</param>
+            <returns>返回最短距离</returns>
+        </member>
+        <member name="M:GW4.Extend.ComputingDistance(System.Drawing.PointF,System.Drawing.PointF)">
+            <summary>
+            计算坐标点的距离
+            </summary>
+            <param name="point">另一个坐标点</param>
+            <returns>返回最短距离</returns>
+        </member>
+        <member name="M:GW4.Extend.ToModels(System.Data.DataTable,System.Boolean)">
+            <summary>
+            通过数据表生成动态实体
+            </summary>
+            <param name="dt">数据表</param>
+            <param name="isCaseSensitive">属性名是否区分大小写(默认区分大小写)</param>
+        </member>
+        <member name="M:GW4.Extend.ToModels(System.Data.IDataReader,System.Boolean)">
+            <summary>
+            通过数据生成动态实体
+            </summary>
+            <param name="dr">数据</param>
+            <param name="isCaseSensitive">属性名是否区分大小写(默认区分大小写)</param>
+        </member>
+        <member name="M:GW4.Extend.DeDuplication``1(System.Collections.Generic.List{``0})">
+            <summary>
+            去除重复项
+            </summary>
+        </member>
+        <member name="M:GW4.Extend.DataExchange``1(System.Collections.Generic.List{``0},System.Int32,System.Int32)">
+            <summary>
+            交换集合中两个数据的位置
+            </summary>
+            <param name="i">数据1的索引</param>
+            <param name="j">数据2的索引</param>
+        </member>
+        <member name="M:GW4.Extend.GetContain``1(System.Collections.Generic.List{``0},System.Collections.Generic.List{``0})">
+            <summary>
+            获取两个集合中共同的元素的集合（交集）
+            </summary>
+            <param name="items">比较集合</param>
+            <returns>返回包含在两个集合中的元素集合</returns>
+        </member>
+        <member name="M:GW4.Extend.GetDifference``1(System.Collections.Generic.List{``0},System.Collections.Generic.List{``0})">
+            <summary>
+            获取两个集合中差异的元素的集合（差集）
+            </summary>
+            <param name="items">比较集合</param>
+            <returns>返回两个集合中的不同的元素的集合</returns>
+        </member>
+        <member name="M:GW4.Extend.ToDataTable(System.Collections.Generic.List{System.Object})">
+            <summary>
+            转数据表（DataTable）
+            </summary>
+        </member>
+        <member name="M:GW4.Extend.ToObjects(System.Collections.Generic.List{System.Object})">
+            <summary>
+            转匿名实体集合（用于数据绑定）
+            </summary>
+            <returns>将动态实体类集合转换为一般类实体集合</returns>
+        </member>
+        <member name="M:GW4.Extend.ToObjects``1(System.Collections.Generic.List{System.Object})">
+            <summary>
+            转泛型实体集合（用于数据绑定）
+            </summary>
+            <returns>将动态实体类集合转换为一般类实体集合</returns>
+        </member>
+        <member name="M:GW4.Extend.SortAscending(System.Collections.Generic.List{System.Object},System.String,System.Int32)">
+            <summary>
+            正序排序（效率不高）
+            </summary>
+            <param name="sortPropertyName">根据某个属性进行排序</param>
+            <param name="sortType">排序类型（0插入排序;1冒泡排序;2选择排序;3归并排序;4快速排序;5堆排序;6计数排序;7基数排序;8桶排序）</param>
+        </member>
+        <member name="M:GW4.Extend.SortDescending(System.Collections.Generic.List{System.Object},System.String,System.Int32)">
+            <summary>
+            倒序排序（效率不高）
+            </summary>
+            <param name="sortPropertyName">根据某个属性进行排序</param>
+            <param name="sortType">排序类型（0插入排序;1冒泡排序;2选择排序;3归并排序;4快速排序;5堆排序;6计数排序;7基数排序;8桶排序）</param>
+        </member>
+        <member name="M:GW4.Extend.SortAscending(System.Collections.Generic.List{GW4.TrendsModel},System.String,System.Int32)">
+            <summary>
+            正序排序（效率不高）
+            </summary>
+            <param name="sortPropertyName">根据某个属性进行排序</param>
+            <param name="sortType">排序类型（0插入排序;1冒泡排序;2选择排序;3归并排序;4快速排序;5堆排序;6计数排序;7基数排序;8桶排序）</param>
+        </member>
+        <member name="M:GW4.Extend.SortDescending(System.Collections.Generic.List{GW4.TrendsModel},System.String,System.Int32)">
+            <summary>
+            倒序排序（效率不高）
+            </summary>
+            <param name="sortPropertyName">根据某个属性进行排序</param>
+            <param name="sortType">排序类型（0插入排序;1冒泡排序;2选择排序;3归并排序;4快速排序;5堆排序;6计数排序;7基数排序;8桶排序）</param>
+        </member>
+        <member name="T:GW4.TrendsModel">
+            <summary>
+            动态实体类
+            </summary>
+        </member>
+        <member name="M:GW4.TrendsModel.#ctor">
+            <summary>
+            构造
+            </summary>
+        </member>
+        <member name="M:GW4.TrendsModel.#ctor(System.Boolean)">
+            <summary>
+            构造
+            </summary>
+        </member>
+        <member name="M:GW4.TrendsModel.#ctor(System.String[])">
+            <summary>
+            构造
+            </summary>
+            <param name="propertyNames">创建指定的属性</param>
+        </member>
+        <member name="P:GW4.TrendsModel.Propertys">
+            <summary>
+            属性字典
+            </summary>
+        </member>
+        <member name="P:GW4.TrendsModel.Methods">
+            <summary>
+            方法字典
+            </summary>
+        </member>
+        <member name="P:GW4.TrendsModel.IsCaseSensitive">
+            <summary>
+            属性和方法的名称是否区分大小写（默认不区分）
+            </summary>
+        </member>
+        <member name="P:GW4.TrendsModel.Item(System.String)">
+            <summary>
+            索引器，获取属性值
+            </summary>
+            <param name="name">属性名</param>
+            <returns>返回属性值</returns>
+        </member>
+        <member name="M:GW4.TrendsModel.TryInvokeMember(System.Dynamic.InvokeMemberBinder,System.Object[],System.Object@)">
+            <summary>
+            重写执行方法
+            </summary>
+        </member>
+        <member name="M:GW4.TrendsModel.TryGetMember(System.Dynamic.GetMemberBinder,System.Object@)">
+            <summary>
+            重写获取属性
+            </summary>
+        </member>
+        <member name="M:GW4.TrendsModel.TrySetMember(System.Dynamic.SetMemberBinder,System.Object)">
+            <summary>
+            重写设置属性
+            </summary>
+        </member>
+        <member name="M:GW4.TrendsModel.AnonymousType">
+            <summary>
+            获取匿名类类型（动态编译）
+            </summary>
+        </member>
+        <member name="M:GW4.TrendsModel.Clone">
+            <summary>
+            克隆方法
+            </summary>
+        </member>
+        <member name="M:GW4.TrendsModel.ContainsProperty(System.String)">
+            <summary>
+            验证属性是否存在
+            </summary>
+            <param name="name">属性名</param>
+        </member>
+        <member name="M:GW4.TrendsModel.ContainsMethod(System.String)">
+            <summary>
+            验证方法是否存在
+            </summary>
+            <param name="name">方法名</param>
+        </member>
+        <member name="M:GW4.TrendsModel.Equals(GW4.TrendsModel)">
+            <summary>
+            比较
+            </summary>
+        </member>
+        <member name="M:GW4.TrendsModel.ToBytes">
+            <summary>
+            序列化对象
+            </summary>
+        </member>
+        <member name="M:GW4.TrendsModel.ToObject(System.Type)">
+            <summary>
+            转普通实体（用于数据绑定）
+            </summary>
+            <param name="type">转换成的类型</param>
+        </member>
+        <member name="T:GW4.XML.XmlModel">
+            <summary>
+            XML算法类
+            </summary>
+        </member>
+        <member name="F:GW4.XML.XmlModel.isCaseSensitive">
+            <summary>
+            是否区分大小写
+            </summary>
+        </member>
+        <member name="F:GW4.XML.XmlModel.name">
+            <summary>
+            节点名
+            </summary>
+        </member>
+        <member name="F:GW4.XML.XmlModel.InnerText">
+            <summary>
+            文本
+            </summary>
+        </member>
+        <member name="F:GW4.XML.XmlModel.parent">
+            <summary>
+            父节点
+            </summary>
+        </member>
+        <member name="F:GW4.XML.XmlModel.attributes">
+            <summary>
+            节点属性字典
+            </summary>
+        </member>
+        <member name="F:GW4.XML.XmlModel.propertys">
+            <summary>
+            类属性字典
+            </summary>
+        </member>
+        <member name="P:GW4.XML.XmlModel.Propertys">
+            <summary>
+            节点字典
+            </summary>
+        </member>
+        <member name="P:GW4.XML.XmlModel.Item(System.Int32)">
+            <summary>
+            索引器
+            </summary>
+            <param name="index">相同节点的索引</param>
+        </member>
+        <member name="M:GW4.XML.XmlModel.TryGetMember(System.Dynamic.GetMemberBinder,System.Object@)">
+            <summary>
+            重写获取属性
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.TrySetMember(System.Dynamic.SetMemberBinder,System.Object)">
+            <summary>
+            重写设置属性
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.CreateXmlModel">
+            <summary>
+            创建一个空XML对象
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.CreateXmlModelFromPath(System.String,System.Boolean)">
+            <summary>
+            根据XML文件路径创建XML对象
+            </summary>
+            <param name="XmlPath">XML路径</param>
+            <param name="isCaseSensitive">节点名是否区分大小写，默认区分</param>
+        </member>
+        <member name="M:GW4.XML.XmlModel.CreateXmlModelFromString(System.String,System.Boolean)">
+            <summary>
+            根据XML字符串创建XML对象
+            </summary>
+            <param name="XmlStr">XML字符串</param>
+            <param name="isCaseSensitive">节点名是否区分大小写，默认区分</param>
+        </member>
+        <member name="M:GW4.XML.XmlModel.CreateXmlModelFromFile(System.IO.Stream,System.Boolean)">
+            <summary>
+            根据XML文件流创建XML对象
+            </summary>
+            <param name="XmlStream">XML文件流</param>
+            <param name="isCaseSensitive">节点名是否区分大小写，默认区分</param>
+            <returns></returns>
+        </member>
+        <member name="M:GW4.XML.XmlModel.SetAttribute(System.String,System.String)">
+            <summary>
+            设置节点属性
+            </summary>
+            <param name="name">属性名</param>
+            <param name="value">属性值</param>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ExistsAttribute(System.String)">
+            <summary>
+            节点属性是否存在
+            </summary>
+            <param name="name">属性名</param>
+        </member>
+        <member name="M:GW4.XML.XmlModel.GetAttribute(System.String)">
+            <summary>
+            获取节点属性
+            </summary>
+            <param name="name">属性名</param>
+        </member>
+        <member name="M:GW4.XML.XmlModel.GetBrotherCount">
+            <summary>
+            获取同名节点数量
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.GetChildCount">
+            <summary>
+            获取子节点数量
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.Save(System.String)">
+            <summary>
+            存储XML
+            </summary>
+            <param name="path">存储位置</param>
+        </member>
+        <member name="M:GW4.XML.XmlModel.InnerXml">
+            <summary>
+            生成XML字符串
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.op_Implicit(System.String)~GW4.XML.XmlModel">
+            <summary>
+            赋值
+            </summary>
+            <param name="value">值</param>
+        </member>
+        <member name="M:GW4.XML.XmlModel.op_Implicit(System.Text.StringBuilder)~GW4.XML.XmlModel">
+            <summary>
+            赋值
+            </summary>
+            <param name="value">值</param>
+        </member>
+        <member name="M:GW4.XML.XmlModel.op_Implicit(System.Int16)~GW4.XML.XmlModel">
+            <summary>
+            赋值
+            </summary>
+            <param name="value">值</param>
+        </member>
+        <member name="M:GW4.XML.XmlModel.op_Implicit(System.UInt16)~GW4.XML.XmlModel">
+            <summary>
+            赋值
+            </summary>
+            <param name="value">值</param>
+        </member>
+        <member name="M:GW4.XML.XmlModel.op_Implicit(System.Int32)~GW4.XML.XmlModel">
+            <summary>
+            赋值
+            </summary>
+            <param name="value">值</param>
+        </member>
+        <member name="M:GW4.XML.XmlModel.op_Implicit(System.UInt32)~GW4.XML.XmlModel">
+            <summary>
+            赋值
+            </summary>
+            <param name="value">值</param>
+        </member>
+        <member name="M:GW4.XML.XmlModel.op_Implicit(System.Int64)~GW4.XML.XmlModel">
+            <summary>
+            赋值
+            </summary>
+            <param name="value">值</param>
+        </member>
+        <member name="M:GW4.XML.XmlModel.op_Implicit(System.UInt64)~GW4.XML.XmlModel">
+            <summary>
+            赋值
+            </summary>
+            <param name="value">值</param>
+        </member>
+        <member name="M:GW4.XML.XmlModel.op_Implicit(System.Boolean)~GW4.XML.XmlModel">
+            <summary>
+            赋值
+            </summary>
+            <param name="value">值</param>
+        </member>
+        <member name="M:GW4.XML.XmlModel.op_Implicit(System.Single)~GW4.XML.XmlModel">
+            <summary>
+            赋值
+            </summary>
+            <param name="value">值</param>
+        </member>
+        <member name="M:GW4.XML.XmlModel.op_Implicit(System.Double)~GW4.XML.XmlModel">
+            <summary>
+            赋值
+            </summary>
+            <param name="value">值</param>
+        </member>
+        <member name="M:GW4.XML.XmlModel.op_Implicit(System.Decimal)~GW4.XML.XmlModel">
+            <summary>
+            赋值
+            </summary>
+            <param name="value">值</param>
+        </member>
+        <member name="M:GW4.XML.XmlModel.op_Implicit(System.DateTime)~GW4.XML.XmlModel">
+            <summary>
+            赋值
+            </summary>
+            <param name="value">值</param>
+        </member>
+        <member name="M:GW4.XML.XmlModel.op_Implicit(System.Char)~GW4.XML.XmlModel">
+            <summary>
+            赋值
+            </summary>
+            <param name="value">值</param>
+        </member>
+        <member name="M:GW4.XML.XmlModel.op_Implicit(System.Byte)~GW4.XML.XmlModel">
+            <summary>
+            赋值
+            </summary>
+            <param name="value">值</param>
+        </member>
+        <member name="M:GW4.XML.XmlModel.op_Implicit(System.SByte)~GW4.XML.XmlModel">
+            <summary>
+            赋值
+            </summary>
+            <param name="value">值</param>
+        </member>
+        <member name="M:GW4.XML.XmlModel.op_Implicit(System.Enum)~GW4.XML.XmlModel">
+            <summary>
+            赋值
+            </summary>
+            <param name="value">值</param>
+        </member>
+        <member name="M:GW4.XML.XmlModel.CreateModel(System.Object)">
+            <summary>
+            创建XML节点对象
+            </summary>
+            <param name="value">值</param>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToTypeCode">
+            <summary>
+            转TypeCode
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToBoolean">
+            <summary>
+            转Bool
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToByte">
+            <summary>
+            转Byte
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToChar">
+            <summary>
+            转Char
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToDateTime">
+            <summary>
+            转DateTime
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToDecimal">
+            <summary>
+            转Decimal
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToDouble">
+            <summary>
+            转Double
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToShort">
+            <summary>
+            转Short
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToInt">
+            <summary>
+            转Int
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToLong">
+            <summary>
+            转Long
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToSByte">
+            <summary>
+            转Sbyte
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToFloat">
+            <summary>
+            转Float
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToString">
+            <summary>
+            转String
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToUShort">
+            <summary>
+            转UShort
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToUInt">
+            <summary>
+            转UInt
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToULong">
+            <summary>
+            转ULong
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.GetTypeCode">
+            <summary>
+            转TypeCode
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToBoolean(System.IFormatProvider)">
+            <summary>
+            转Bool
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToByte(System.IFormatProvider)">
+            <summary>
+            转Byte
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToChar(System.IFormatProvider)">
+            <summary>
+            转Char
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToDateTime(System.IFormatProvider)">
+            <summary>
+            转DateTime
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToDecimal(System.IFormatProvider)">
+            <summary>
+            转Decimal
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToDouble(System.IFormatProvider)">
+            <summary>
+            转Double
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToInt16(System.IFormatProvider)">
+            <summary>
+            转Short
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToInt32(System.IFormatProvider)">
+            <summary>
+            转Int
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToInt64(System.IFormatProvider)">
+            <summary>
+            转Long
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToSByte(System.IFormatProvider)">
+            <summary>
+            转SByte
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToSingle(System.IFormatProvider)">
+            <summary>
+            转Float
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToString(System.IFormatProvider)">
+            <summary>
+            转String
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToType(System.Type,System.IFormatProvider)">
+            <summary>
+            转Type
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToUInt16(System.IFormatProvider)">
+            <summary>
+            转UShort
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToUInt32(System.IFormatProvider)">
+            <summary>
+            转UInt
+            </summary>
+        </member>
+        <member name="M:GW4.XML.XmlModel.ToUInt64(System.IFormatProvider)">
+            <summary>
+            转ULong
+            </summary>
+        </member>
+    </members>
+</doc>

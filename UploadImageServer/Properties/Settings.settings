@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="UploadImageServer.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="UploadPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\PuzzleService\Upload\</Value>
+    </Setting>
+    <Setting Name="PuzzlePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\PuzzleService\Puzzle\</Value>
+    </Setting>
+    <Setting Name="ZipPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\PuzzleService\Zip\{0}.zip</Value>
+    </Setting>
+    <Setting Name="PuzzleExeConfig" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\PuzzleService\Upload\config.txt</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

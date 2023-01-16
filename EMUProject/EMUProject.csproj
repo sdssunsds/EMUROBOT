@@ -1,0 +1,411 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{01716CE0-1F3F-4193-8DAE-46C1AB3DB024}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Project</RootNamespace>
+    <AssemblyName>EMUProject</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AGauge">
+      <HintPath>..\DLL\AGauge.dll</HintPath>
+    </Reference>
+    <Reference Include="GW">
+      <HintPath>..\DLL\GW.dll</HintPath>
+    </Reference>
+    <Reference Include="GW4">
+      <HintPath>..\DLL\GW4.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AGVServer.cs" />
+    <Compile Include="AGV\Form\TestAGVForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AGV\Form\TestAGVForm.Designer.cs">
+      <DependentUpon>TestAGVForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AGV\Form\SetAgvPointForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AGV\Form\SetAgvPointForm.Designer.cs">
+      <DependentUpon>SetAgvPointForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AGV\UserControl\TestAGVControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AGV\UserControl\TestAGVControl.Designer.cs">
+      <DependentUpon>TestAGVControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AGV\UserControl\TestControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AGV\UserControl\TestControl.Designer.cs">
+      <DependentUpon>TestControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Global.cs" />
+    <Compile Include="ServerClass\Extent.cs" />
+    <Compile Include="UI\Form\PictureForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Form\PictureForm.Designer.cs">
+      <DependentUpon>PictureForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\UserControl\PagesControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\UserControl\PagesControl.Designer.cs">
+      <DependentUpon>PagesControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Robot.cs" />
+    <Compile Include="Server.cs" />
+    <Compile Include="ServerClass\AndroidServer.cs" />
+    <Compile Include="ServerClass\AppServer.cs" />
+    <Compile Include="ServerClass\Form\SettingDataForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ServerClass\Form\SettingDataForm.Designer.cs">
+      <DependentUpon>SettingDataForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ServerClass\Form\TestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ServerClass\Form\TestForm.Designer.cs">
+      <DependentUpon>TestForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ServerClass\Form\SettingScrewLocationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ServerClass\Form\SettingScrewLocationForm.Designer.cs">
+      <DependentUpon>SettingScrewLocationForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ServerClass\Model\TestStandard3D.cs" />
+    <Compile Include="ServerClass\Form\TrainModeSnForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ServerClass\Form\TrainModeSnForm.Designer.cs">
+      <DependentUpon>TrainModeSnForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ServerClass\Form\ResultListForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ServerClass\Form\ResultListForm.Designer.cs">
+      <DependentUpon>ResultListForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ServerClass\UserControl\ResultListControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ServerClass\UserControl\ResultListControl.Designer.cs">
+      <DependentUpon>ResultListControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ServerClass\UserControl\DetectionResultControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ServerClass\UserControl\DetectionResultControl.Designer.cs">
+      <DependentUpon>DetectionResultControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ServerClass\UserControl\DetectionResultHistoryControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ServerClass\UserControl\DetectionResultHistoryControl.Designer.cs">
+      <DependentUpon>DetectionResultHistoryControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ServerClass\Form\DetectionResultInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ServerClass\Form\DetectionResultInfoForm.Designer.cs">
+      <DependentUpon>DetectionResultInfoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ServerClass\Form\InputForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ServerClass\Form\InputForm.Designer.cs">
+      <DependentUpon>InputForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ServerClass\Model\AlgorithmParemeter.cs" />
+    <Compile Include="ServerClass\Model\ProjectModel.cs" />
+    <Compile Include="ServerClass\Model\ProjectResultDict.cs" />
+    <Compile Include="ServerClass\Model\ResultStatisticsCollection.cs" />
+    <Compile Include="ServerClass\Model\ResultStatisticsModel.cs" />
+    <Compile Include="ServerClass\UserControl\ProjectControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ServerClass\UserControl\ProjectControl.Designer.cs">
+      <DependentUpon>ProjectControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ServerClass\Form\ProjectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ServerClass\Form\ProjectForm.Designer.cs">
+      <DependentUpon>ProjectForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ServerClass\UserControl\ResultControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ServerClass\UserControl\ResultControl.Designer.cs">
+      <DependentUpon>ResultControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ServerClass\Form\ResultUpdForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ServerClass\Form\ResultUpdForm.Designer.cs">
+      <DependentUpon>ResultUpdForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ServerClass\UserControl\RgvInfoControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ServerClass\UserControl\RgvInfoControl.Designer.cs">
+      <DependentUpon>RgvInfoControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ServerClass\RgvTask.cs" />
+    <Compile Include="ServerClass\UserControl\RobotControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ServerClass\UserControl\RobotControl.Designer.cs">
+      <DependentUpon>RobotControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ServerClass\RobotServer.cs" />
+    <Compile Include="ServerClass\RobotTask.cs" />
+    <Compile Include="ServerClass\ServerGlobal.cs" />
+    <Compile Include="ServerClass\ServerTask.cs" />
+    <Compile Include="ServerClass\UserControl\TaskProjectControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ServerClass\UserControl\TaskProjectControl.Designer.cs">
+      <DependentUpon>TaskProjectControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ServerClass\UserControl\XzOrMzRunControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ServerClass\UserControl\XzOrMzRunControl.Designer.cs">
+      <DependentUpon>XzOrMzRunControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\UserControl\SignControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\UserControl\SignControl.Designer.cs">
+      <DependentUpon>SignControl.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AlgorithmLib\AlgorithmLib.csproj">
+      <Project>{ed808460-411b-477b-8202-61b4dc31a104}</Project>
+      <Name>AlgorithmLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ApplicationDataLib\ApplicationDataLib.csproj">
+      <Project>{4E7B058E-6AA9-4E63-AEFC-B8BC5C1C3A24}</Project>
+      <Name>ApplicationDataLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BaslerLib\BaslerLib.csproj">
+      <Project>{72378425-C9DC-47B1-B326-7CB59391DEE6}</Project>
+      <Name>BaslerLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BusinessLib\BusinessLib.csproj">
+      <Project>{2AA8A877-31E0-4675-B016-D77246F2ADBD}</Project>
+      <Name>BusinessLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BusinessManagerLib\BusinessManagerLib.csproj">
+      <Project>{5080A03B-61BB-4519-A18A-984FE20A0C62}</Project>
+      <Name>BusinessManagerLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ImageTransmissionLib\ImageTransmissionLib.csproj">
+      <Project>{2AA17FDE-E527-4578-8400-7463AC929208}</Project>
+      <Name>ImageTransmissionLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\InterfaceLib\InterfaceLib.csproj">
+      <Project>{d99d672a-ac05-4934-9125-e1f22e518ee6}</Project>
+      <Name>InterfaceLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LaserLib\LaserLib.csproj">
+      <Project>{01E9E105-97C1-4D12-8F6E-17EC415C8C0F}</Project>
+      <Name>LaserLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LightLib\LightLib.csproj">
+      <Project>{836CB2B4-C2B9-41CD-8DC3-EF9B4F01BEF6}</Project>
+      <Name>LightLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ParameteLib\ParameterLib.csproj">
+      <Project>{D81DBC99-8345-4C67-A430-3F63336CE860}</Project>
+      <Name>ParameterLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RgvLib\RgvLib.csproj">
+      <Project>{8AF784E3-A2AB-4E4A-B21E-587115E8B1F2}</Project>
+      <Name>RgvLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RobotLib\RobotLib.csproj">
+      <Project>{1A4B9793-5E8E-4C30-9130-FC2813509E5C}</Project>
+      <Name>RobotLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UploadImageServer\UploadImageServer.csproj">
+      <Project>{D3D4D5AB-5542-4246-822F-36BFCC2BE71A}</Project>
+      <Name>UploadImageServer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UtilLib\UtilLib.csproj">
+      <Project>{E1540D9D-848C-482E-9F7B-439D06BA577D}</Project>
+      <Name>UtilLib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AGV\文档\AGV上位机通讯协议-20220824-V1.0.1.xlsx" />
+    <None Include="AGV\文档\AGV－上位机控制命令说明－20220824－V1.0.1%281%29.docx" />
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <None Include="Properties\DataSources\System.Data.DataTable.datasource" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AGV\Form\SetAgvPointForm.resx">
+      <DependentUpon>SetAgvPointForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AGV\Form\TestAGVForm.resx">
+      <DependentUpon>TestAGVForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AGV\UserControl\TestAGVControl.resx">
+      <DependentUpon>TestAGVControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AGV\UserControl\TestControl.resx">
+      <DependentUpon>TestControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Form\PictureForm.resx">
+      <DependentUpon>PictureForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerClass\Form\ResultListForm.resx">
+      <DependentUpon>ResultListForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerClass\Form\SettingDataForm.resx">
+      <DependentUpon>SettingDataForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerClass\Form\TestForm.resx">
+      <DependentUpon>TestForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerClass\Form\SettingScrewLocationForm.resx">
+      <DependentUpon>SettingScrewLocationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerClass\Form\TrainModeSnForm.resx">
+      <DependentUpon>TrainModeSnForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerClass\UserControl\DetectionResultControl.resx">
+      <DependentUpon>DetectionResultControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerClass\UserControl\DetectionResultHistoryControl.resx">
+      <DependentUpon>DetectionResultHistoryControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerClass\Form\DetectionResultInfoForm.resx">
+      <DependentUpon>DetectionResultInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerClass\Form\InputForm.resx">
+      <DependentUpon>InputForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerClass\UserControl\ProjectControl.resx">
+      <DependentUpon>ProjectControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerClass\Form\ProjectForm.resx">
+      <DependentUpon>ProjectForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerClass\UserControl\ResultControl.resx">
+      <DependentUpon>ResultControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerClass\Form\ResultUpdForm.resx">
+      <DependentUpon>ResultUpdForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerClass\UserControl\ResultListControl.resx">
+      <DependentUpon>ResultListControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerClass\UserControl\RgvInfoControl.resx">
+      <DependentUpon>RgvInfoControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerClass\UserControl\RobotControl.resx">
+      <DependentUpon>RobotControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerClass\UserControl\TaskProjectControl.resx">
+      <DependentUpon>TaskProjectControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerClass\UserControl\XzOrMzRunControl.resx">
+      <DependentUpon>XzOrMzRunControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\UserControl\PagesControl.resx">
+      <DependentUpon>PagesControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\UserControl\SignControl.resx">
+      <DependentUpon>SignControl.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

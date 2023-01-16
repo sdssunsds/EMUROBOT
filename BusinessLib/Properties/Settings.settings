@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="EMU.Business.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ImgSavePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Image</Value>
+    </Setting>
+    <Setting Name="DataJsonSavePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Json</Value>
+    </Setting>
+    <Setting Name="TaskJsonSave" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Json</Value>
+    </Setting>
+    <Setting Name="VppPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\Vpp\test.vpp</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
