@@ -42,6 +42,7 @@ namespace Project.AGV
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.flp = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.btn_cancel_move = new System.Windows.Forms.Button();
             this.btn_close = new System.Windows.Forms.Button();
             this.btn_shutdown = new System.Windows.Forms.Button();
             this.btn_setting = new System.Windows.Forms.Button();
@@ -63,7 +64,6 @@ namespace Project.AGV
             this.lb_error = new System.Windows.Forms.Label();
             this.btn_start_server = new System.Windows.Forms.Button();
             this.btn_close_server = new System.Windows.Forms.Button();
-            this.btn_cancel_move = new System.Windows.Forms.Button();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_car)).BeginInit();
             this.groupBox4.SuspendLayout();
@@ -81,9 +81,9 @@ namespace Project.AGV
             this.groupBox2.Controls.Add(this.dgv_car);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox2.Location = new System.Drawing.Point(0, 80);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(2);
             this.groupBox2.Size = new System.Drawing.Size(717, 395);
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
@@ -96,7 +96,7 @@ namespace Project.AGV
             this.dgv_car.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgv_car.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgv_car.Location = new System.Drawing.Point(2, 16);
-            this.dgv_car.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dgv_car.Margin = new System.Windows.Forms.Padding(2);
             this.dgv_car.Name = "dgv_car";
             this.dgv_car.ReadOnly = true;
             this.dgv_car.RowHeadersVisible = false;
@@ -114,9 +114,9 @@ namespace Project.AGV
             this.groupBox4.Controls.Add(this.pb_map);
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox4.Location = new System.Drawing.Point(717, 80);
-            this.groupBox4.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox4.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox4.Padding = new System.Windows.Forms.Padding(2);
             this.groupBox4.Size = new System.Drawing.Size(275, 395);
             this.groupBox4.TabIndex = 5;
             this.groupBox4.TabStop = false;
@@ -157,13 +157,14 @@ namespace Project.AGV
             // 
             this.pb_map.ContextMenuStrip = this.contextMenuStrip1;
             this.pb_map.Location = new System.Drawing.Point(4, 16);
-            this.pb_map.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pb_map.Margin = new System.Windows.Forms.Padding(2);
             this.pb_map.Name = "pb_map";
             this.pb_map.Size = new System.Drawing.Size(179, 212);
             this.pb_map.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pb_map.TabIndex = 1;
             this.pb_map.TabStop = false;
             this.pb_map.LocationChanged += new System.EventHandler(this.pb_map_LocationChanged);
+            this.pb_map.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.pb_map_MouseDoubleClick);
             this.pb_map.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pb_map_MouseDown);
             this.pb_map.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pb_map_MouseMove);
             this.pb_map.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pb_map_MouseUp);
@@ -175,7 +176,7 @@ namespace Project.AGV
             this.panel1.Controls.Add(this.groupBox1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(992, 80);
             this.panel1.TabIndex = 6;
@@ -185,9 +186,9 @@ namespace Project.AGV
             this.groupBox5.Controls.Add(this.flp);
             this.groupBox5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox5.Location = new System.Drawing.Point(717, 0);
-            this.groupBox5.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox5.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox5.Padding = new System.Windows.Forms.Padding(2);
             this.groupBox5.Size = new System.Drawing.Size(275, 80);
             this.groupBox5.TabIndex = 6;
             this.groupBox5.TabStop = false;
@@ -198,7 +199,7 @@ namespace Project.AGV
             this.flp.AutoScroll = true;
             this.flp.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flp.Location = new System.Drawing.Point(2, 16);
-            this.flp.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.flp.Margin = new System.Windows.Forms.Padding(2);
             this.flp.Name = "flp";
             this.flp.Size = new System.Drawing.Size(271, 62);
             this.flp.TabIndex = 0;
@@ -220,20 +221,33 @@ namespace Project.AGV
             this.groupBox3.Controls.Add(this.btn_forward);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox3.Location = new System.Drawing.Point(295, 0);
-            this.groupBox3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox3.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox3.Padding = new System.Windows.Forms.Padding(2);
             this.groupBox3.Size = new System.Drawing.Size(422, 80);
             this.groupBox3.TabIndex = 5;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "AGV控制";
+            // 
+            // btn_cancel_move
+            // 
+            this.btn_cancel_move.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btn_cancel_move.ForeColor = System.Drawing.Color.Orange;
+            this.btn_cancel_move.Location = new System.Drawing.Point(140, 29);
+            this.btn_cancel_move.Margin = new System.Windows.Forms.Padding(2);
+            this.btn_cancel_move.Name = "btn_cancel_move";
+            this.btn_cancel_move.Size = new System.Drawing.Size(46, 44);
+            this.btn_cancel_move.TabIndex = 12;
+            this.btn_cancel_move.Text = "取消导航";
+            this.btn_cancel_move.UseVisualStyleBackColor = true;
+            this.btn_cancel_move.Click += new System.EventHandler(this.btn_cancel_move_Click);
             // 
             // btn_close
             // 
             this.btn_close.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btn_close.ForeColor = System.Drawing.Color.Black;
             this.btn_close.Location = new System.Drawing.Point(356, 47);
-            this.btn_close.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btn_close.Margin = new System.Windows.Forms.Padding(2);
             this.btn_close.Name = "btn_close";
             this.btn_close.Size = new System.Drawing.Size(62, 29);
             this.btn_close.TabIndex = 11;
@@ -246,7 +260,7 @@ namespace Project.AGV
             this.btn_shutdown.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btn_shutdown.ForeColor = System.Drawing.Color.Black;
             this.btn_shutdown.Location = new System.Drawing.Point(356, 14);
-            this.btn_shutdown.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btn_shutdown.Margin = new System.Windows.Forms.Padding(2);
             this.btn_shutdown.Name = "btn_shutdown";
             this.btn_shutdown.Size = new System.Drawing.Size(62, 29);
             this.btn_shutdown.TabIndex = 10;
@@ -259,7 +273,7 @@ namespace Project.AGV
             this.btn_setting.Font = new System.Drawing.Font("楷体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btn_setting.ForeColor = System.Drawing.Color.Black;
             this.btn_setting.Location = new System.Drawing.Point(298, 29);
-            this.btn_setting.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btn_setting.Margin = new System.Windows.Forms.Padding(2);
             this.btn_setting.Name = "btn_setting";
             this.btn_setting.Size = new System.Drawing.Size(45, 44);
             this.btn_setting.TabIndex = 9;
@@ -270,7 +284,7 @@ namespace Project.AGV
             // tb_turn
             // 
             this.tb_turn.Location = new System.Drawing.Point(245, 53);
-            this.tb_turn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tb_turn.Margin = new System.Windows.Forms.Padding(2);
             this.tb_turn.Name = "tb_turn";
             this.tb_turn.Size = new System.Drawing.Size(50, 21);
             this.tb_turn.TabIndex = 8;
@@ -281,7 +295,7 @@ namespace Project.AGV
             // tb_speed
             // 
             this.tb_speed.Location = new System.Drawing.Point(245, 28);
-            this.tb_speed.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tb_speed.Margin = new System.Windows.Forms.Padding(2);
             this.tb_speed.Name = "tb_speed";
             this.tb_speed.Size = new System.Drawing.Size(50, 21);
             this.tb_speed.TabIndex = 7;
@@ -314,7 +328,7 @@ namespace Project.AGV
             this.btn_stop.Font = new System.Drawing.Font("楷体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btn_stop.ForeColor = System.Drawing.Color.Red;
             this.btn_stop.Location = new System.Drawing.Point(84, 29);
-            this.btn_stop.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btn_stop.Margin = new System.Windows.Forms.Padding(2);
             this.btn_stop.Name = "btn_stop";
             this.btn_stop.Size = new System.Drawing.Size(52, 44);
             this.btn_stop.TabIndex = 4;
@@ -325,7 +339,7 @@ namespace Project.AGV
             // btn_right
             // 
             this.btn_right.Location = new System.Drawing.Point(58, 38);
-            this.btn_right.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btn_right.Margin = new System.Windows.Forms.Padding(2);
             this.btn_right.Name = "btn_right";
             this.btn_right.Size = new System.Drawing.Size(22, 24);
             this.btn_right.TabIndex = 3;
@@ -336,7 +350,7 @@ namespace Project.AGV
             // btn_backward
             // 
             this.btn_backward.Location = new System.Drawing.Point(32, 56);
-            this.btn_backward.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btn_backward.Margin = new System.Windows.Forms.Padding(2);
             this.btn_backward.Name = "btn_backward";
             this.btn_backward.Size = new System.Drawing.Size(22, 24);
             this.btn_backward.TabIndex = 2;
@@ -347,7 +361,7 @@ namespace Project.AGV
             // btn_left
             // 
             this.btn_left.Location = new System.Drawing.Point(4, 38);
-            this.btn_left.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btn_left.Margin = new System.Windows.Forms.Padding(2);
             this.btn_left.Name = "btn_left";
             this.btn_left.Size = new System.Drawing.Size(22, 24);
             this.btn_left.TabIndex = 1;
@@ -358,7 +372,7 @@ namespace Project.AGV
             // btn_forward
             // 
             this.btn_forward.Location = new System.Drawing.Point(32, 17);
-            this.btn_forward.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btn_forward.Margin = new System.Windows.Forms.Padding(2);
             this.btn_forward.Name = "btn_forward";
             this.btn_forward.Size = new System.Drawing.Size(22, 24);
             this.btn_forward.TabIndex = 0;
@@ -371,9 +385,9 @@ namespace Project.AGV
             this.groupBox1.Controls.Add(this.flowLayoutPanel2);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
             this.groupBox1.Size = new System.Drawing.Size(295, 80);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
@@ -390,7 +404,7 @@ namespace Project.AGV
             this.flowLayoutPanel2.Controls.Add(this.btn_close_server);
             this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel2.Location = new System.Drawing.Point(2, 16);
-            this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(2);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
             this.flowLayoutPanel2.Size = new System.Drawing.Size(291, 62);
             this.flowLayoutPanel2.TabIndex = 0;
@@ -408,7 +422,7 @@ namespace Project.AGV
             // tb_ip
             // 
             this.tb_ip.Location = new System.Drawing.Point(59, 2);
-            this.tb_ip.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tb_ip.Margin = new System.Windows.Forms.Padding(2);
             this.tb_ip.Name = "tb_ip";
             this.tb_ip.Size = new System.Drawing.Size(84, 21);
             this.tb_ip.TabIndex = 1;
@@ -428,7 +442,7 @@ namespace Project.AGV
             // tb_port
             // 
             this.tb_port.Location = new System.Drawing.Point(204, 2);
-            this.tb_port.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tb_port.Margin = new System.Windows.Forms.Padding(2);
             this.tb_port.Name = "tb_port";
             this.tb_port.Size = new System.Drawing.Size(84, 21);
             this.tb_port.TabIndex = 3;
@@ -448,7 +462,7 @@ namespace Project.AGV
             // btn_start_server
             // 
             this.btn_start_server.Location = new System.Drawing.Point(146, 27);
-            this.btn_start_server.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btn_start_server.Margin = new System.Windows.Forms.Padding(2);
             this.btn_start_server.Name = "btn_start_server";
             this.btn_start_server.Size = new System.Drawing.Size(68, 24);
             this.btn_start_server.TabIndex = 4;
@@ -460,26 +474,13 @@ namespace Project.AGV
             // 
             this.btn_close_server.Enabled = false;
             this.btn_close_server.Location = new System.Drawing.Point(218, 27);
-            this.btn_close_server.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btn_close_server.Margin = new System.Windows.Forms.Padding(2);
             this.btn_close_server.Name = "btn_close_server";
             this.btn_close_server.Size = new System.Drawing.Size(68, 24);
             this.btn_close_server.TabIndex = 5;
             this.btn_close_server.Text = "关闭服务";
             this.btn_close_server.UseVisualStyleBackColor = true;
             this.btn_close_server.Click += new System.EventHandler(this.btn_close_server_Click);
-            // 
-            // btn_cancel_move
-            // 
-            this.btn_cancel_move.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btn_cancel_move.ForeColor = System.Drawing.Color.Orange;
-            this.btn_cancel_move.Location = new System.Drawing.Point(140, 29);
-            this.btn_cancel_move.Margin = new System.Windows.Forms.Padding(2);
-            this.btn_cancel_move.Name = "btn_cancel_move";
-            this.btn_cancel_move.Size = new System.Drawing.Size(46, 44);
-            this.btn_cancel_move.TabIndex = 12;
-            this.btn_cancel_move.Text = "取消导航";
-            this.btn_cancel_move.UseVisualStyleBackColor = true;
-            this.btn_cancel_move.Click += new System.EventHandler(this.btn_cancel_move_Click);
             // 
             // TestControl
             // 
@@ -488,7 +489,7 @@ namespace Project.AGV
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.panel1);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "TestControl";
             this.Size = new System.Drawing.Size(992, 475);
             this.groupBox2.ResumeLayout(false);

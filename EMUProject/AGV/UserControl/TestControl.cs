@@ -262,6 +262,42 @@ namespace Project.AGV
             lastLocation = new Point(pb_map.Location.X + width, pb_map.Location.Y + height);
         }
 
+        private void pb_map_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                int x = (int)(e.X / mapZoom);
+                int y = (int)(e.Y / mapZoom);
+                SetAgvPointForm pointForm = new SetAgvPointForm();
+                if (pointForm.ShowDialog(this) != DialogResult.OK)
+                {
+                    return;
+                }
+                if (string.IsNullOrEmpty(pointForm.NameValue))
+                {
+                    return;
+                }
+                PointLocation location = new PointLocation()
+                {
+                    Name = pointForm.NameValue,
+                    Turn = pointForm.TurnValue,
+                    Point = new Point(x, y)
+                };
+                locations.Add(location);
+
+                GroupBox group = new GroupBox() { Text = location.Name, Size = new Size(200, 40), Tag = location };
+                Button[] buttons =
+                {
+                    new Button(){ Text = "运动到点", Size = new Size(100,25), Location = new Point(3, 11), Tag = location },
+                    new Button(){ Text = "删除点", Size = new Size(80, 25), Location = new Point(110, 11), Tag = location }
+                };
+                buttons[0].Click += Move_Location_Click;
+                buttons[1].Click += Delete_Location_Click;
+                group.Controls.AddRange(buttons);
+                flp.Controls.Add(group);
+            }
+        }
+
         private void pb_map_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -294,29 +330,6 @@ namespace Project.AGV
                 {
                     isMapClick = false;
                 }
-                if (mapZoom == 1d && (Math.Abs(upLocation.X - startLocation.X) < 1 || Math.Abs(upLocation.Y - startLocation.Y) < 1))
-                {
-                    SetAgvPointForm pointForm = new SetAgvPointForm();
-                    pointForm.ShowDialog(this);
-                    PointLocation location = new PointLocation()
-                    {
-                        Name = pointForm.NameValue,
-                        Turn = pointForm.TurnValue,
-                        Point = new Point(e.X, e.Y)
-                    };
-                    locations.Add(location);
-
-                    GroupBox group = new GroupBox() { Text = location.Name, Size = new Size(200, 40), Tag = location };
-                    Button[] buttons =
-                    {
-                        new Button(){ Text = "运动到点", Size = new Size(100,25), Location = new Point(3, 11), Tag = location },
-                        new Button(){ Text = "删除点", Size = new Size(80, 25), Location = new Point(110, 11), Tag = location }
-                    };
-                    buttons[0].Click += Move_Location_Click;
-                    buttons[1].Click += Delete_Location_Click;
-                    group.Controls.AddRange(buttons);
-                    flp.Controls.Add(group);
-                }
             }
         }
 
@@ -346,6 +359,7 @@ namespace Project.AGV
                 mapWidth = map.Width;
                 mapHeight = map.Height;
                 pb_map.Size = new Size(mapWidth, mapHeight);
+                pb_map.Location = new Point(0 - mapWidth / 2 + groupBox4.Width / 2, 0 - mapHeight / 2 + groupBox4.Height / 2);
                 mapZoom = 1d;
             }
         }

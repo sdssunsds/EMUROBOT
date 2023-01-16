@@ -26,6 +26,14 @@ namespace Project.AGV
             TurnValue = (float)Extend.GetRadian(trackBar1.Value);
         }
 
+        private void textBox1_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                this.DialogResult = DialogResult.OK;
+            }
+        }
+
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
             DrawTurn();
