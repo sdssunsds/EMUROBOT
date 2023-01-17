@@ -7,13 +7,17 @@ namespace Project.AGV
 {
     public partial class TestAGVForm : Form
     {
+        private LogForm logForm;
+
         public TestAGVForm()
         {
             InitializeComponent();
+            logForm = new LogForm();
         }
 
         private void TestAGVForm_Shown(object sender, EventArgs e)
         {
+            testControl1.SocketRecvMessage = logForm.AddLog;
             Task.Run(() =>
             {
                 while (true)
@@ -22,6 +26,11 @@ namespace Project.AGV
                     Thread.Sleep(250);
                 }
             });
+        }
+
+        private void btn_open_log_Click(object sender, EventArgs e)
+        {
+            logForm.ShowDialog(this);
         }
     }
 }

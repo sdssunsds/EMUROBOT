@@ -33,6 +33,8 @@ namespace Project.AGV
         private Dictionary<string, int> agvOutTimeDict = null;
         private Dictionary<string, StringBuilder> messageDict = null;
 
+        public Action<string> SocketRecvMessage { get; set; }
+
         public TestControl()
         {
             InitializeComponent();
@@ -404,6 +406,7 @@ namespace Project.AGV
 
         private void SocketRecvMessageEvent(Socket socket, string msg)
         {
+            SocketRecvMessage?.Invoke(msg);
             string ip = socket.RemoteEndPoint.ToString();
             AddSocket(ip);
             if (messageDict.ContainsKey(ip))
@@ -463,7 +466,15 @@ namespace Project.AGV
                     par += pars[i];
                 }
             }
-            Socket client = socket.clientSockets.Find(s => s.RemoteEndPoint.ToString() == models[selected].IP);
+            for (int i = 0; i < socket.clientSockets.Count; i++)
+            {
+                if (!socket.clientSockets[i].Connected)
+                {
+                    socket.clientSockets.RemoveAt(i);
+                    i--;
+                }
+            }
+            Socket client = socket.clientSockets.Find(s => s.Connected && s.RemoteEndPoint.ToString() == models[selected].IP);
             if (client != null && client.Connected)
             {
                 try

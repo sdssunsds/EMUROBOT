@@ -89,6 +89,12 @@
     <Compile Include="AGV\Form\SetAgvPointForm.Designer.cs">
       <DependentUpon>SetAgvPointForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="AGV\Form\LogForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AGV\Form\LogForm.Designer.cs">
+      <DependentUpon>LogForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="AGV\UserControl\TestAGVControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -331,6 +337,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AGV\Form\TestAGVForm.resx">
       <DependentUpon>TestAGVForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AGV\Form\LogForm.resx">
+      <DependentUpon>LogForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AGV\UserControl\TestAGVControl.resx">
       <DependentUpon>TestAGVControl.cs</DependentUpon>

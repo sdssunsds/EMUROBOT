@@ -35,9 +35,9 @@ namespace EMU.Util
         //控制tcp客户端连接数量的信号量
         private Semaphore maxNumberAcceptedClients = null;
 
-        ///// <summary>
-        ///// RelaytHandleTask取消条件
-        ///// </summary>
+        /// <summary>
+        /// RelaytHandleTask取消条件
+        /// </summary>
         private CancellationTokenSource cancelTokenSource;
 
         //tcp连接缓冲区
@@ -108,6 +108,7 @@ namespace EMU.Util
                             //添加session
                             lock (clientSockets)
                             {
+                                clientSockets.RemoveAll(c => !c.Connected);
                                 clientSockets.Add(acceptSocket);
                             }
 
