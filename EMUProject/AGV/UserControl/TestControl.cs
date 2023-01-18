@@ -24,7 +24,6 @@ namespace Project.AGV
         private Point lastLocation = new Point(0, 0);
         private Point upLocation = new Point(0, 0);
         private Point upMoving = new Point(0, 0);
-        private Point startLocation = new Point(0, 0);
 
         private Bitmap map = null;
         private TcpServiceSocket socket = null;
@@ -305,7 +304,7 @@ namespace Project.AGV
             if (e.Button == MouseButtons.Left)
             {
                 isMapClick = true;
-                upLocation = startLocation = e.Location;
+                upLocation = e.Location;
             }
         }
 
@@ -426,16 +425,24 @@ namespace Project.AGV
                         model.编号 = datas[0];
                         model.行驶速度 = (int)(float.Parse(datas[1]) * 1000);
                         model.转向速度 = float.Parse(datas[2]);
-                        model.X = (int)(float.Parse(datas[3]) * 20) + 1000;
-#if mapFlip
-                        model.Y = (int)(float.Parse(datas[4]) * 20) + 1000;
-#else
-                        model.Y = 1983 - ((int)(float.Parse(datas[4]) * 20) + 1000);
-#endif
                         model.弧度 = float.Parse(datas[5]);
-                        model.导航状态 = Get导航状态(int.Parse(datas[6]));
-                        model.报警 = Get报警(int.Parse(datas[7]));
-                        model.机器人状态 = Get机器人状态(int.Parse(datas[8]));
+                        int x = (int)(float.Parse(datas[3]) * 20) + 1000;
+                        int y =
+#if mapFlip
+                            (int)(float.Parse(datas[4]) * 20) + 1000;
+#else
+                            ((int)(float.Parse(datas[4]) * 20) + 1000);
+#endif
+                        bool refreshLocation = !(model.Y == y && model.X < x) ||
+                            (Extend.GetRadian(45) > model.弧度 && Extend.GetRadian(315) < model.弧度);
+                        if (refreshLocation)
+                        {
+                            model.X = x;
+                            model.Y = y;
+                        }
+                        model.导航状态 = ((Navigation)(int.Parse(datas[6]))).ToString();
+                        model.报警 = ((Alarm)(int.Parse(datas[7]))).ToString();
+                        model.机器人状态 = ((Status)(int.Parse(datas[8]))).ToString();
                         model.电量 = int.Parse(datas[9]);
                         model.电压 = float.Parse(datas[10]);
                         if (agvOutTimeDict.ContainsKey(ip))
@@ -543,39 +550,6 @@ namespace Project.AGV
             }
         }
 
-        private string Get导航状态(int id)
-        {
-            switch (id)
-            {
-                case 1:
-                    return "导航中";
-                case 2:
-                    return "导航完成";
-                case 3:
-                    return "导航异常";
-                default:
-                    return "未导航";
-            }
-        }
-
-        private string Get报警(int id)
-        {
-            switch (id)
-            {
-                default:
-                    return "无报警";
-            }
-        }
-
-        private string Get机器人状态(int id)
-        {
-            switch (id)
-            {
-                default:
-                    return "正常";
-            }
-        }
-
         private class AGVModel
         {
             public string 编号 { get; set; }
@@ -599,6 +573,11 @@ namespace Project.AGV
             public Point Point { get; set; }
         }
 
+        private enum Alarm
+        {
+            无报警 = 0
+        }
+
         private enum Cmd
         {
             forward,
@@ -612,6 +591,16 @@ namespace Project.AGV
             hardware_close,
             move_point,
             cancel_move
+        }
+
+        private enum Navigation
+        {
+            未导航 = 0, 导航中, 导航完成, 导航异常, 取消导航
+        }
+
+        private enum Status
+        {
+            待机 = 0, 前进, 后退, 左转, 右转, 停车, 导航
         }
     }
 }
