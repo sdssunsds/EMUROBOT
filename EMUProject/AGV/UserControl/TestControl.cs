@@ -23,7 +23,6 @@ namespace Project.AGV
 
         private Point lastLocation = new Point(0, 0);
         private Point upLocation = new Point(0, 0);
-        private Point upMoving = new Point(0, 0);
 
         private Bitmap map = null;
         private TcpServiceSocket socket = null;
@@ -98,26 +97,33 @@ namespace Project.AGV
                 return;
             }
             Bitmap bitmap = new Bitmap(mapWidth, mapHeight);
-            Graphics mapGraphics = Graphics.FromImage(bitmap);
-            mapGraphics.DrawImage(map, new Point(0, 0));
-            Brush brush = new SolidBrush(Color.Gold);
-            Pen pen = new Pen(Color.Gold);
-            foreach (PointLocation location in locations)
+            try
             {
-                Size size = TextRenderer.MeasureText(location.Name, this.Font);
-                mapGraphics.DrawString(location.Name, this.Font, brush, location.Point.X - size.Width / 2, location.Point.Y - 15);
-                mapGraphics.FillRectangle(brush, location.Point.X - 1, location.Point.Y - 1, 3, 3);
-                double d = Extend.GetAngle(location.Turn);
-                mapGraphics.DrawLine(pen, location.Point, Extend.GetRadianLineEnd(Extend.GetRadian(d), 4, location.Point));
+                Graphics mapGraphics = Graphics.FromImage(bitmap);
+                mapGraphics.DrawImage(map, new Point(0, 0));
+                Brush brush = new SolidBrush(Color.Gold);
+                Pen pen = new Pen(Color.Gold);
+                foreach (PointLocation location in locations)
+                {
+                    Size size = TextRenderer.MeasureText(location.Name, this.Font);
+                    mapGraphics.DrawString(location.Name, this.Font, brush, location.Point.X - size.Width / 2, location.Point.Y - 15);
+                    mapGraphics.FillRectangle(brush, location.Point.X - 1, location.Point.Y - 1, 3, 3);
+                    double d = Extend.GetAngle(location.Turn);
+                    mapGraphics.DrawLine(pen, location.Point, Extend.GetRadianLineEnd(Extend.GetRadian(d), 4, location.Point));
+                }
+                pen.Color = Color.Blue;
+                foreach (AGVModel item in models)
+                {
+                    // w:14 l:19
+                    mapGraphics.DrawEllipse(pen, item.X - 9, item.Y - 9, 19, 19);
+                    Point origin = new Point(item.X, item.Y);
+                    double d = Extend.GetAngle(item.弧度);
+                    mapGraphics.DrawLine(pen, origin, Extend.GetRadianLineEnd(Extend.GetRadian(d), 9, origin));
+                }
             }
-            pen.Color = Color.Blue;
-            foreach (AGVModel item in models)
+            catch (Exception e)
             {
-                // w:14 l:19
-                mapGraphics.DrawEllipse(pen, item.X - 9, item.Y - 9, 19, 19);
-                Point origin = new Point(item.X, item.Y);
-                double d = Extend.GetAngle(item.弧度);
-                mapGraphics.DrawLine(pen, origin, Extend.GetRadianLineEnd(Extend.GetRadian(d), 9, origin));
+                MessageBox.Show(e.Message);
             }
             try
             {
@@ -312,14 +318,11 @@ namespace Project.AGV
         {
             if (isMapClick)
             {
-                int moveX = e.Location.X - upLocation.X;
-                int moveY = e.Location.Y - upLocation.Y;
-                if (Math.Abs(upMoving.X - Math.Abs(moveX)) > 0 && Math.Abs(upMoving.Y - Math.Abs(moveY)) > 0)
-                {
-                    upMoving = new Point(Math.Abs(moveX), Math.Abs(moveY));
-                    pb_map.Location = new Point(pb_map.Location.X + moveX, pb_map.Location.Y + moveY);
-                    upLocation = e.Location;
-                }
+                int x = pb_map.Location.X;
+                int y = pb_map.Location.Y;
+                x += e.X - upLocation.X;
+                y += e.Y - upLocation.Y;
+                pb_map.Location = new Point(x, y);
             }
         }
 
@@ -339,13 +342,16 @@ namespace Project.AGV
             if (e.Delta < 0)
             {
                 mapZoom -= 0.02;
-                ZoomMap();
             }
             else
             {
                 mapZoom += 0.02;
-                ZoomMap();
             }
+            if (mapZoom <= 0)
+            {
+                mapZoom = 0.02;
+            }
+            ZoomMap();
         }
 
         private void 加载地图ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -360,7 +366,8 @@ namespace Project.AGV
                 mapWidth = map.Width;
                 mapHeight = map.Height;
                 pb_map.Size = new Size(mapWidth, mapHeight);
-                pb_map.Location = new Point(0 - mapWidth / 2 + groupBox4.Width / 2, 0 - mapHeight / 2 + groupBox4.Height / 2);
+                pb_map.Location = new Point(721 - mapWidth / 2 + groupBox2.Width / 2, 80 - mapHeight / 2 + groupBox2.Height / 2);
+                groupBox4.Visible = false;
                 mapZoom = 1d;
             }
         }

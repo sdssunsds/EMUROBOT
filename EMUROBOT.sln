@@ -61,6 +61,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "角色权限", "角色权�
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RolePermissions", "RolePermissions\RolePermissions.csproj", "{F0C69513-553D-47D1-8440-C76CFCDC8FC6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AStarAlgorithm", "AStarAlgorithm\AStarAlgorithm.csproj", "{9DA45E22-9800-4DC3-9849-D17E430B8BF3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapLib", "MapLib\MapLib.csproj", "{8997C196-BC5E-4D8C-9460-29FEE410FB8C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -167,6 +171,14 @@ Global
 		{F0C69513-553D-47D1-8440-C76CFCDC8FC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F0C69513-553D-47D1-8440-C76CFCDC8FC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F0C69513-553D-47D1-8440-C76CFCDC8FC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DA45E22-9800-4DC3-9849-D17E430B8BF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DA45E22-9800-4DC3-9849-D17E430B8BF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DA45E22-9800-4DC3-9849-D17E430B8BF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DA45E22-9800-4DC3-9849-D17E430B8BF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8997C196-BC5E-4D8C-9460-29FEE410FB8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8997C196-BC5E-4D8C-9460-29FEE410FB8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8997C196-BC5E-4D8C-9460-29FEE410FB8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8997C196-BC5E-4D8C-9460-29FEE410FB8C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

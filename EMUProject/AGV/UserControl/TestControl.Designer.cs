@@ -32,12 +32,10 @@ namespace Project.AGV
             this.components = new System.ComponentModel.Container();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.dgv_car = new System.Windows.Forms.DataGridView();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.加载地图ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.清空点位ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.还原缩放ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pb_map = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.flp = new System.Windows.Forms.FlowLayoutPanel();
@@ -64,16 +62,17 @@ namespace Project.AGV
             this.lb_error = new System.Windows.Forms.Label();
             this.btn_start_server = new System.Windows.Forms.Button();
             this.btn_close_server = new System.Windows.Forms.Button();
+            this.pb_map = new System.Windows.Forms.PictureBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_car)).BeginInit();
-            this.groupBox4.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pb_map)).BeginInit();
             this.panel1.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_map)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox2
@@ -108,20 +107,6 @@ namespace Project.AGV
             this.dgv_car.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_car_CellContentClick);
             this.dgv_car.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_car_DataError);
             // 
-            // groupBox4
-            // 
-            this.groupBox4.ContextMenuStrip = this.contextMenuStrip1;
-            this.groupBox4.Controls.Add(this.pb_map);
-            this.groupBox4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox4.Location = new System.Drawing.Point(717, 80);
-            this.groupBox4.Margin = new System.Windows.Forms.Padding(2);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox4.Size = new System.Drawing.Size(275, 395);
-            this.groupBox4.TabIndex = 5;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "地图";
-            // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
@@ -152,22 +137,6 @@ namespace Project.AGV
             this.还原缩放ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.还原缩放ToolStripMenuItem.Text = "还原缩放";
             this.还原缩放ToolStripMenuItem.Click += new System.EventHandler(this.还原缩放ToolStripMenuItem_Click);
-            // 
-            // pb_map
-            // 
-            this.pb_map.ContextMenuStrip = this.contextMenuStrip1;
-            this.pb_map.Location = new System.Drawing.Point(4, 16);
-            this.pb_map.Margin = new System.Windows.Forms.Padding(2);
-            this.pb_map.Name = "pb_map";
-            this.pb_map.Size = new System.Drawing.Size(179, 212);
-            this.pb_map.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pb_map.TabIndex = 1;
-            this.pb_map.TabStop = false;
-            this.pb_map.LocationChanged += new System.EventHandler(this.pb_map_LocationChanged);
-            this.pb_map.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.pb_map_MouseDoubleClick);
-            this.pb_map.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pb_map_MouseDown);
-            this.pb_map.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pb_map_MouseMove);
-            this.pb_map.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pb_map_MouseUp);
             // 
             // panel1
             // 
@@ -482,6 +451,33 @@ namespace Project.AGV
             this.btn_close_server.UseVisualStyleBackColor = true;
             this.btn_close_server.Click += new System.EventHandler(this.btn_close_server_Click);
             // 
+            // pb_map
+            // 
+            this.pb_map.ContextMenuStrip = this.contextMenuStrip1;
+            this.pb_map.Location = new System.Drawing.Point(721, 80);
+            this.pb_map.Margin = new System.Windows.Forms.Padding(2);
+            this.pb_map.Name = "pb_map";
+            this.pb_map.Size = new System.Drawing.Size(269, 395);
+            this.pb_map.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pb_map.TabIndex = 7;
+            this.pb_map.TabStop = false;
+            this.pb_map.LocationChanged += new System.EventHandler(this.pb_map_LocationChanged);
+            this.pb_map.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.pb_map_MouseDoubleClick);
+            this.pb_map.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pb_map_MouseDown);
+            this.pb_map.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pb_map_MouseMove);
+            this.pb_map.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pb_map_MouseUp);
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.ContextMenuStrip = this.contextMenuStrip1;
+            this.groupBox4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox4.Location = new System.Drawing.Point(717, 80);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(275, 395);
+            this.groupBox4.TabIndex = 8;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "地图";
+            // 
             // TestControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -489,14 +485,13 @@ namespace Project.AGV
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.panel1);
+            this.Controls.Add(this.pb_map);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "TestControl";
             this.Size = new System.Drawing.Size(992, 475);
             this.groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgv_car)).EndInit();
-            this.groupBox4.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pb_map)).EndInit();
             this.panel1.ResumeLayout(false);
             this.groupBox5.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
@@ -504,6 +499,7 @@ namespace Project.AGV
             this.groupBox1.ResumeLayout(false);
             this.flowLayoutPanel2.ResumeLayout(false);
             this.flowLayoutPanel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_map)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -511,7 +507,6 @@ namespace Project.AGV
         #endregion
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.DataGridView dgv_car;
-        private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Button btn_setting;
@@ -540,8 +535,9 @@ namespace Project.AGV
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem 加载地图ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 清空点位ToolStripMenuItem;
-        private System.Windows.Forms.PictureBox pb_map;
         private System.Windows.Forms.ToolStripMenuItem 还原缩放ToolStripMenuItem;
         private System.Windows.Forms.Button btn_cancel_move;
+        private System.Windows.Forms.PictureBox pb_map;
+        private System.Windows.Forms.GroupBox groupBox4;
     }
 }

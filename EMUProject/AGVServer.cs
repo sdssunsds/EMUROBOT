@@ -82,7 +82,7 @@ namespace Project
                         Text = "AGV 控制"
                     }, new ToolStripMenuItem()
                     {
-                        Text = ""
+                        Text = "地图编辑"
                     }, new ToolStripMenuItem()
                     {
                         Text = ""
@@ -99,7 +99,7 @@ namespace Project
                     });
                     addMenu[1].Click += new EventHandler((object sender, EventArgs e) =>
                     {
-                        
+                        new MapManagerForm().Show();
                     });
                     addMenu[2].Click += new EventHandler((object sender, EventArgs e) =>
                     {
@@ -114,6 +114,7 @@ namespace Project
                         
                     });
                     item.DropDownItems.Insert(0, addMenu[0]);
+                    item.DropDownItems.Insert(0, addMenu[1]);
                 }
             }
         }

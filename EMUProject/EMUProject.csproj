@@ -77,6 +77,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AGVServer.cs" />
+    <Compile Include="AGV\Form\ImageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AGV\Form\ImageForm.Designer.cs">
+      <DependentUpon>ImageForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="AGV\Form\TestAGVForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -94,6 +100,12 @@
     </Compile>
     <Compile Include="AGV\Form\LogForm.Designer.cs">
       <DependentUpon>LogForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AGV\Form\MapManagerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AGV\Form\MapManagerForm.Designer.cs">
+      <DependentUpon>MapManagerForm.cs</DependentUpon>
     </Compile>
     <Compile Include="AGV\UserControl\TestAGVControl.cs">
       <SubType>UserControl</SubType>
@@ -271,6 +283,10 @@
       <Project>{4E7B058E-6AA9-4E63-AEFC-B8BC5C1C3A24}</Project>
       <Name>ApplicationDataLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AStarAlgorithm\AStarAlgorithm.csproj">
+      <Project>{9da45e22-9800-4dc3-9849-d17e430b8bf3}</Project>
+      <Name>AStarAlgorithm</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BaslerLib\BaslerLib.csproj">
       <Project>{72378425-C9DC-47B1-B326-7CB59391DEE6}</Project>
       <Name>BaslerLib</Name>
@@ -298,6 +314,10 @@
     <ProjectReference Include="..\LightLib\LightLib.csproj">
       <Project>{836CB2B4-C2B9-41CD-8DC3-EF9B4F01BEF6}</Project>
       <Name>LightLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MapLib\MapLib.csproj">
+      <Project>{8997c196-bc5e-4d8c-9460-29fee410fb8c}</Project>
+      <Name>MapLib</Name>
     </ProjectReference>
     <ProjectReference Include="..\ParameteLib\ParameterLib.csproj">
       <Project>{D81DBC99-8345-4C67-A430-3F63336CE860}</Project>
@@ -332,6 +352,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="AGV\Form\ImageForm.resx">
+      <DependentUpon>ImageForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AGV\Form\MapManagerForm.resx">
+      <DependentUpon>MapManagerForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AGV\Form\SetAgvPointForm.resx">
       <DependentUpon>SetAgvPointForm.cs</DependentUpon>
     </EmbeddedResource>
