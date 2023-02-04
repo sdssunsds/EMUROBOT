@@ -1,10 +1,13 @@
 ﻿using EMU.Interface;
+using EMU.Parameter;
 using EMU.Util;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 using UploadImageServer;
+using static EMU.Util.LogManager;
 
 namespace Project
 {
@@ -19,7 +22,7 @@ namespace Project
         public IRobotControl robot { get; set; }
         public IService upload { get; set; }
         public IHomePage homePage { get; set; }
-        public string PathParameter1 { get; set; } = Application.StartupPath + "\\operation.ini";
+        public string PathParameter1 { get; set; } = Application.StartupPath + "\\opration.ini";
         public string PathParameter2 { get; set; }
         public string PathParameter3 { get; set; }
         public string PathParameter4 { get; set; }
@@ -171,11 +174,20 @@ namespace Project
         #region 接口专用变量
         private bool isRunInterface = false;
         private int reportSleep = 0;
-        private string reportInput = "";
-        private string reportOutput = "";
-        private string reportUrl = "";
+        private string inName, outName;
+        private RedisHelper RedisHelper = null;
+        private Dictionary<string, long> redisDB = new Dictionary<string, long>()
+        {
+            { "in", 0 },
+            { "out", 1 }
+        };
 
         public string RedisThreadName = "Redis请求线程";
+        public string inParName1 = "name";
+        public string inParName2 = "name";
+        public string inParName3 = "name";
+        public string inParName4 = "name";
+        public string outParName1 = "return";
         #endregion
 
         #region 接口专用方法
@@ -189,7 +201,32 @@ namespace Project
                     while (isRunInterface)
                     {
                         Thread.Sleep(reportSleep);
+                        try
+                        {
+                            if (redisDB.ContainsKey(inName))
+                            {
+                                RedisHelper.ChangeDB(redisDB[inName]);
+                            }
+                            string par1 = RedisHelper.GetValue<string>(inParName1);
+                            string par2 = RedisHelper.GetValue<string>(inParName2);
+                            string par3 = RedisHelper.GetValue<string>(inParName3);
+                            string par4 = RedisHelper.GetValue<string>(inParName4);
+                            threadEventArgs.AddVariable(inParName1, par1);
+                            threadEventArgs.AddVariable(inParName2, par2);
+                            threadEventArgs.AddVariable(inParName3, par3);
+                            threadEventArgs.AddVariable(inParName4, par4);
 
+                            if (redisDB.ContainsKey(outName))
+                            {
+                                RedisHelper.ChangeDB(redisDB[outName]);
+                            }
+
+                        }
+                        catch (Exception e)
+                        {
+                            AddLog(e.Message, LogType.ErrorLog);
+                        }
+                        RedisHelper.SetValue<string>(outParName1, "2");
                     } 
                 }
             });
@@ -197,11 +234,17 @@ namespace Project
 
         public void RunInterface(string url, string inputName, string outputName, int sleep)
         {
-            reportUrl = url;
-            reportInput = inputName;
-            reportOutput = outputName;
-            reportSleep = sleep;
-            isRunInterface = true;
+            isRunInterface = false;
+            Thread.Sleep(50);
+            if (!string.IsNullOrEmpty(url))
+            {
+                RedisHelper?.CloseRedis();
+                inName = inputName;
+                outName = outputName;
+                reportSleep = sleep;
+                RedisHelper = new RedisHelper(url);
+                isRunInterface = true; 
+            }
         }
         #endregion
     }

@@ -1,9 +1,11 @@
-﻿using EMU.Util;
+﻿using EMU.Parameter;
+using EMU.Util;
 using GW.Function.FileFunction;
 using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using System.Text;
+using System.Windows.Forms;
+using static EMU.Util.LogManager;
 
 namespace Project
 {
@@ -27,10 +29,10 @@ namespace Project
             tb_redis_output.Text = FileSystem.ReadIniFile("Redis", "OutPut", "", Project.PathParameter1);
             tb_redis_internal.Text = FileSystem.ReadIniFile("Redis", "Internal", "100", Project.PathParameter1);
 
-            tb_redis_url.TextChanged += Tb_redis_url_TextChanged;
-            tb_redis_input.TextChanged += Tb_redis_input_TextChanged;
-            tb_redis_output.TextChanged += Tb_redis_output_TextChanged;
-            tb_redis_internal.TextChanged += Tb_redis_internal_TextChanged;
+            tb_redis_url.KeyDown += Tb_redis_url_KeyDown;
+            tb_redis_input.KeyDown += Tb_redis_input_KeyDown;
+            tb_redis_output.KeyDown += Tb_redis_output_KeyDown;
+            tb_redis_internal.KeyDown += Tb_redis_internal_KeyDown;
 
             LogManager.AddLogEvent += LogManager_AddLogEvent;
 
@@ -42,7 +44,10 @@ namespace Project
                 if (eventArgs != null)
                 {
                     sb.Clear();
-                    
+                    GetVariable(Project.inParName1, sb, eventArgs);
+                    GetVariable(Project.inParName2, sb, eventArgs);
+                    GetVariable(Project.inParName3, sb, eventArgs);
+                    GetVariable(Project.inParName4, sb, eventArgs);
                     BeginInvoke(new Action(() =>
                     {
                         tb_redis.Text = sb.ToString();
@@ -65,6 +70,7 @@ namespace Project
                     }
                     tb_redis_report.Text += arg1 + "\r\n";
                     tb_redis_report.SelectionStart = tb_redis_report.Text.Length - 1;
+                    tb_redis_report.ScrollToCaret();
                 }));
             }
             else if (arg2 == EMU.Parameter.LogType.GeneralLog)
@@ -79,28 +85,46 @@ namespace Project
                     }
                     tb_redis_result.Text += arg1 + "\r\n";
                     tb_redis_result.SelectionStart = tb_redis_result.Text.Length - 1;
+                    tb_redis_result.ScrollToCaret();
                 }));
             }
         }
 
-        private void Tb_redis_url_TextChanged(object sender, EventArgs e)
+        private void Tb_redis_url_KeyDown(object sender, KeyEventArgs e)
         {
-            SaveOperation("Url", tb_redis_url.Text);
+            if (e.KeyCode == Keys.Enter)
+            {
+                SaveOperation("Url", tb_redis_url.Text);
+            }
         }
 
-        private void Tb_redis_input_TextChanged(object sender, EventArgs e)
+        private void Tb_redis_input_KeyDown(object sender, KeyEventArgs e)
         {
-            SaveOperation("Input", tb_redis_input.Text);
+            if (e.KeyCode == Keys.Enter)
+            {
+                SaveOperation("Input", tb_redis_input.Text);
+            }
         }
 
-        private void Tb_redis_output_TextChanged(object sender, EventArgs e)
+        private void Tb_redis_output_KeyDown(object sender, KeyEventArgs e)
         {
-            SaveOperation("OutPut", tb_redis_output.Text);
+            if (e.KeyCode == Keys.Enter)
+            {
+                SaveOperation("OutPut", tb_redis_output.Text);
+            }
         }
 
-        private void Tb_redis_internal_TextChanged(object sender, EventArgs e)
+        private void Tb_redis_internal_KeyDown(object sender, KeyEventArgs e)
         {
-            SaveOperation("Internal", tb_redis_internal.Text);
+            if (e.KeyCode == Keys.Enter)
+            {
+                SaveOperation("Internal", tb_redis_internal.Text);
+            }
+        }
+
+        private void GetVariable(string name, StringBuilder sb, ThreadEventArgs eventArgs)
+        {
+            sb.AppendLine(name + ": " + eventArgs.GetVariableValue(name, "")?.ToString());
         }
 
         private void SaveOperation(string key, string value)
@@ -108,11 +132,11 @@ namespace Project
             try
             {
                 Project.RunInterface(tb_redis_url.Text, tb_redis_input.Text, tb_redis_output.Text, int.Parse(tb_redis_internal.Text));
-                FileSystem.WriteIniFile("Redis", key, value, Project.PathName1);
+                FileSystem.WriteIniFile("Redis", key, value, Project.PathParameter1);
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                AddLog(e.Message, LogType.ErrorLog);
             }
         }
     }

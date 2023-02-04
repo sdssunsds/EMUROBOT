@@ -108,6 +108,7 @@ namespace EMU.Util
     }
     public class ThreadEventArgs
     {
+        private object variableLock = new object();
         public bool IsRunThread { get; internal set; } = false;
         public bool IsBackThread { get; internal set; } = true;
         /// <summary>
@@ -121,14 +122,38 @@ namespace EMU.Util
         /// </summary>
         public void AddVariable(string name, object value)
         {
-            if (VariableList.ContainsKey(name))
+            lock (variableLock)
             {
-                VariableList[name] = value;
+                if (variableList.ContainsKey(name))
+                {
+                    variableList[name] = value;
+                }
+                else
+                {
+                    variableList.Add(name, value);
+                } 
             }
-            else
+        }
+        /// <summary>
+        /// 根据变量名获取变量值
+        /// </summary>
+        /// <param name="name">变量名</param>
+        /// <param name="defaultValue">没有时的默认值</param>
+        /// <returns>返回变量值</returns>
+        public object GetVariableValue(string name, object defaultValue)
+        {
+            lock (variableLock)
             {
-                VariableList.Add(name, value);
+                if (variableList.ContainsKey(name))
+                {
+                    return variableList[name];
+                }
+                else
+                {
+                    variableList.Add(name, defaultValue);
+                } 
             }
+            return defaultValue;
         }
     }
 }

@@ -37,6 +37,7 @@ namespace Project
                 }
                 textBox1.Text += arg1;
                 textBox1.SelectionStart = textBox1.Text.Length - 1;
+                textBox1.ScrollToCaret();
             }));
         }
 

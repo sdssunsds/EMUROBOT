@@ -94,18 +94,9 @@ namespace EMU.UI
             root.Checked = args.IsRunThread;
             tv.Nodes.Add(root);
 
-            for (int i = 0; i < args.VariableList.Count; i++)
+            foreach (KeyValuePair<string, object> item in args.VariableList)
             {
-                string name = "";
-                if (i < args.VariableNames.Count)
-                {
-                    name = args.VariableNames[i];
-                }
-                else
-                {
-                    name = "未知";
-                }
-                InitTreeNode(name, args.VariableList[i], root);
+                InitTreeNode(item.Key, item.Value, root);
             }
         }
 

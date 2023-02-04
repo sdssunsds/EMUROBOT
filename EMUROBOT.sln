@@ -65,6 +65,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AStarAlgorithm", "AStarAlgo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapLib", "MapLib\MapLib.csproj", "{8997C196-BC5E-4D8C-9460-29FEE410FB8C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlgorithmControl", "AlgorithmControl\AlgorithmControl.csproj", "{662ADE97-2F73-4939-8CDE-57908C58F6A8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -179,6 +181,10 @@ Global
 		{8997C196-BC5E-4D8C-9460-29FEE410FB8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8997C196-BC5E-4D8C-9460-29FEE410FB8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8997C196-BC5E-4D8C-9460-29FEE410FB8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{662ADE97-2F73-4939-8CDE-57908C58F6A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{662ADE97-2F73-4939-8CDE-57908C58F6A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{662ADE97-2F73-4939-8CDE-57908C58F6A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{662ADE97-2F73-4939-8CDE-57908C58F6A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
