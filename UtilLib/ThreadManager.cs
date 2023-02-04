@@ -43,13 +43,14 @@ namespace EMU.Util
                             {
                                 args = new ThreadEventArgs();
                                 backEventArgs.Add(j, args);
-                                EventArgsAddingAction(args);
+                                EventArgsAddingAction?.Invoke(args);
                                 eventArgs.Add(args);
                             }
+                            int index = j;
                             Task.Run(() =>
                             {
                                 args.IsRunThread = true;
-                                backActions[j](i, args);
+                                backActions[index](i, args);
                                 args.IsRunThread = false;
                             });
                         }
@@ -76,12 +77,12 @@ namespace EMU.Util
             {
                 ThreadEventArgs args = new ThreadEventArgs();
                 args.IsBackThread = false;
-                EventArgsAddingAction(args);
+                EventArgsAddingAction?.Invoke(args);
                 eventArgs.Add(args);
                 args.IsRunThread = true;
                 action(args);
                 args.IsRunThread = false;
-                EventArgsRemovingAction(args);
+                EventArgsRemovingAction?.Invoke(args);
                 eventArgs.Remove(args);
             });
         }
@@ -113,28 +114,20 @@ namespace EMU.Util
         /// 线程名称
         /// </summary>
         public string ThreadName { get; set; } = "thread_0";
-        private List<object> variableList = new List<object>();
-        private List<string> variableNames = new List<string>();
-        public List<object> VariableList { get { return variableList; } }
-        public List<string> VariableNames { get { return variableNames; } }
+        private Dictionary<string, object> variableList = new Dictionary<string, object>();
+        public Dictionary<string, object> VariableList { get { return variableList; } }
         /// <summary>
         /// 添加跟踪的变量
         /// </summary>
-        public void AddVariable(params object[] variables)
+        public void AddVariable(string name, object value)
         {
-            if (variables != null)
+            if (VariableList.ContainsKey(name))
             {
-                variableList.AddRange(variables);
+                VariableList[name] = value;
             }
-        }
-        /// <summary>
-        /// 添加跟踪的变量名
-        /// </summary>
-        public void AddVariableName(params string[] names)
-        {
-            if (names != null)
+            else
             {
-                variableNames.AddRange(names);
+                VariableList.Add(name, value);
             }
         }
     }

@@ -119,7 +119,26 @@
     <Compile Include="AGV\UserControl\TestControl.Designer.cs">
       <DependentUpon>TestControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="AlgorithmInterface.cs" />
+    <Compile Include="AlgorithmInterface\UserControl\AlgorithmPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AlgorithmInterface\UserControl\AlgorithmPage.Designer.cs">
+      <DependentUpon>AlgorithmPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Global.cs" />
+    <Compile Include="AlgorithmInterface\UserControl\MainPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AlgorithmInterface\UserControl\MainPage.Designer.cs">
+      <DependentUpon>MainPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AlgorithmInterface\UserControl\LogPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AlgorithmInterface\UserControl\LogPage.Designer.cs">
+      <DependentUpon>LogPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="ServerClass\Extent.cs" />
     <Compile Include="UI\Form\PictureForm.cs">
       <SubType>Form</SubType>
@@ -372,6 +391,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AGV\UserControl\TestControl.resx">
       <DependentUpon>TestControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AlgorithmInterface\UserControl\AlgorithmPage.resx">
+      <DependentUpon>AlgorithmPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AlgorithmInterface\UserControl\LogPage.resx">
+      <DependentUpon>LogPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AlgorithmInterface\UserControl\MainPage.resx">
+      <DependentUpon>MainPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Form\PictureForm.resx">
       <DependentUpon>PictureForm.cs</DependentUpon>

@@ -82,8 +82,7 @@ namespace Basler
                     EMU.Util.ThreadManager.TaskRun((EMU.Util.ThreadEventArgs threadEventArgs) =>
                     {
                         threadEventArgs.ThreadName = "Basler.CameraControl.SetLineImage_0";
-                        threadEventArgs.AddVariable(index);
-                        threadEventArgs.AddVariableName("index");
+                        threadEventArgs.AddVariable("index", index);
                         Roll(index);
                     }); 
                 }
