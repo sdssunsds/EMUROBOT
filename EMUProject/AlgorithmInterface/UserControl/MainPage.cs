@@ -90,12 +90,22 @@ namespace Project
             }
         }
 
+        private void tb_redis_url_Leave(object sender, EventArgs e)
+        {
+            SaveOperation("Url", tb_redis_url.Text);
+        }
+
         private void Tb_redis_url_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
                 SaveOperation("Url", tb_redis_url.Text);
             }
+        }
+
+        private void tb_redis_input_Leave(object sender, EventArgs e)
+        {
+            SaveOperation("Input", tb_redis_input.Text);
         }
 
         private void Tb_redis_input_KeyDown(object sender, KeyEventArgs e)
@@ -106,12 +116,22 @@ namespace Project
             }
         }
 
+        private void tb_redis_output_Leave(object sender, EventArgs e)
+        {
+            SaveOperation("OutPut", tb_redis_output.Text);
+        }
+
         private void Tb_redis_output_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
                 SaveOperation("OutPut", tb_redis_output.Text);
             }
+        }
+
+        private void tb_redis_internal_Leave(object sender, EventArgs e)
+        {
+            SaveOperation("Internal", tb_redis_internal.Text);
         }
 
         private void Tb_redis_internal_KeyDown(object sender, KeyEventArgs e)

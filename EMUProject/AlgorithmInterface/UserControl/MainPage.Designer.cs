@@ -38,15 +38,15 @@ namespace Project
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.tb_redis_report = new System.Windows.Forms.TextBox();
+            this.tb_redis = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.tb_redis_internal = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.tb_redis_result = new System.Windows.Forms.TextBox();
-            this.tb_redis = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -75,6 +75,7 @@ namespace Project
             this.tb_redis_output.Name = "tb_redis_output";
             this.tb_redis_output.Size = new System.Drawing.Size(252, 21);
             this.tb_redis_output.TabIndex = 5;
+            this.tb_redis_output.Leave += new System.EventHandler(this.tb_redis_output_Leave);
             // 
             // tb_redis_input
             // 
@@ -82,6 +83,7 @@ namespace Project
             this.tb_redis_input.Name = "tb_redis_input";
             this.tb_redis_input.Size = new System.Drawing.Size(252, 21);
             this.tb_redis_input.TabIndex = 4;
+            this.tb_redis_input.Leave += new System.EventHandler(this.tb_redis_input_Leave);
             // 
             // label3
             // 
@@ -109,6 +111,7 @@ namespace Project
             this.tb_redis_url.Name = "tb_redis_url";
             this.tb_redis_url.Size = new System.Drawing.Size(629, 21);
             this.tb_redis_url.TabIndex = 1;
+            this.tb_redis_url.Leave += new System.EventHandler(this.tb_redis_url_Leave);
             // 
             // label1
             // 
@@ -143,6 +146,17 @@ namespace Project
             this.tb_redis_report.Size = new System.Drawing.Size(214, 286);
             this.tb_redis_report.TabIndex = 4;
             // 
+            // tb_redis
+            // 
+            this.tb_redis.Dock = System.Windows.Forms.DockStyle.Right;
+            this.tb_redis.Location = new System.Drawing.Point(217, 76);
+            this.tb_redis.Multiline = true;
+            this.tb_redis.Name = "tb_redis";
+            this.tb_redis.ReadOnly = true;
+            this.tb_redis.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tb_redis.Size = new System.Drawing.Size(182, 286);
+            this.tb_redis.TabIndex = 6;
+            // 
             // panel1
             // 
             this.panel1.Controls.Add(this.label7);
@@ -155,6 +169,15 @@ namespace Project
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(396, 59);
             this.panel1.TabIndex = 5;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(212, 40);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(53, 12);
+            this.label7.TabIndex = 8;
+            this.label7.Text = "请求过程";
             // 
             // label6
             // 
@@ -182,6 +205,7 @@ namespace Project
             this.tb_redis_internal.TabIndex = 5;
             this.tb_redis_internal.Text = "100";
             this.tb_redis_internal.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tb_redis_internal.Leave += new System.EventHandler(this.tb_redis_internal_Leave);
             // 
             // label4
             // 
@@ -213,26 +237,6 @@ namespace Project
             this.tb_redis_result.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.tb_redis_result.Size = new System.Drawing.Size(294, 345);
             this.tb_redis_result.TabIndex = 5;
-            // 
-            // tb_redis
-            // 
-            this.tb_redis.Dock = System.Windows.Forms.DockStyle.Right;
-            this.tb_redis.Location = new System.Drawing.Point(217, 76);
-            this.tb_redis.Multiline = true;
-            this.tb_redis.Name = "tb_redis";
-            this.tb_redis.ReadOnly = true;
-            this.tb_redis.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tb_redis.Size = new System.Drawing.Size(182, 286);
-            this.tb_redis.TabIndex = 6;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(212, 40);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(53, 12);
-            this.label7.TabIndex = 8;
-            this.label7.Text = "请求过程";
             // 
             // MainPage
             // 
