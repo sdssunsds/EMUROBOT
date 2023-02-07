@@ -17,7 +17,7 @@ namespace Project.AGV
 
         private void TestAGVForm_Shown(object sender, EventArgs e)
         {
-            testControl1.SocketRecvMessage = logForm.AddLog;
+            testControl1.AddLog = logForm.AddLog;
             Task.Run(() =>
             {
                 while (true)
@@ -30,7 +30,7 @@ namespace Project.AGV
 
         private void btn_open_log_Click(object sender, EventArgs e)
         {
-            logForm.ShowDialog(this);
+            logForm.Show(this);
         }
     }
 }

@@ -4,6 +4,7 @@ using EMU.Util;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -31,7 +32,7 @@ namespace Project.AGV
         private Dictionary<string, int> agvOutTimeDict = null;
         private Dictionary<string, StringBuilder> messageDict = null;
 
-        public Action<string> SocketRecvMessage { get; set; }
+        public Action<string> AddLog { get; set; }
 
         public TestControl()
         {
@@ -101,12 +102,22 @@ namespace Project.AGV
             {
                 Graphics mapGraphics = Graphics.FromImage(bitmap);
                 mapGraphics.DrawImage(map, new Point(0, 0));
-                Brush brush = new SolidBrush(Color.Gold);
-                Pen pen = new Pen(Color.Gold);
+                Brush brush = new SolidBrush(Color.DarkOrange);
+                Pen pen = new Pen(Color.DarkOrange);
                 foreach (PointLocation location in locations)
                 {
                     Size size = TextRenderer.MeasureText(location.Name, this.Font);
-                    mapGraphics.DrawString(location.Name, this.Font, brush, location.Point.X - size.Width / 2, location.Point.Y - 15);
+                    using (Bitmap strMap = new Bitmap(size.Width, size.Height))
+                    {
+                        using (Graphics strGraphics = Graphics.FromImage(strMap))
+                        {
+                            strGraphics.DrawString(location.Name, this.Font, brush, 0, 0);
+                        }
+#if mapFlip
+                        strMap.RotateFlip(RotateFlipType.RotateNoneFlipY);
+#endif
+                        mapGraphics.DrawImage(strMap, location.Point.X - size.Width / 2, location.Point.Y + 5); 
+                    }
                     mapGraphics.FillRectangle(brush, location.Point.X - 1, location.Point.Y - 1, 3, 3);
                     double d = Extend.GetAngle(location.Turn);
                     mapGraphics.DrawLine(pen, location.Point, Extend.GetRadianLineEnd(Extend.GetRadian(d), 4, location.Point));
@@ -120,6 +131,9 @@ namespace Project.AGV
                     double d = Extend.GetAngle(item.弧度);
                     mapGraphics.DrawLine(pen, origin, Extend.GetRadianLineEnd(Extend.GetRadian(d), 9, origin));
                 }
+#if mapFlip
+                bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
+#endif
             }
             catch (Exception e)
             {
@@ -276,6 +290,10 @@ namespace Project.AGV
                 int x = (int)(e.X / mapZoom);
                 int y = (int)(e.Y / mapZoom);
                 SetAgvPointForm pointForm = new SetAgvPointForm();
+#if mapFlip
+                pointForm.Flip = true;
+                y = mapHeight - y;
+#endif
                 if (pointForm.ShowDialog(this) != DialogResult.OK)
                 {
                     return;
@@ -291,17 +309,7 @@ namespace Project.AGV
                     Point = new Point(x, y)
                 };
                 locations.Add(location);
-
-                GroupBox group = new GroupBox() { Text = location.Name, Size = new Size(200, 40), Tag = location };
-                Button[] buttons =
-                {
-                    new Button(){ Text = "运动到点", Size = new Size(100,25), Location = new Point(3, 11), Tag = location },
-                    new Button(){ Text = "删除点", Size = new Size(80, 25), Location = new Point(110, 11), Tag = location }
-                };
-                buttons[0].Click += Move_Location_Click;
-                buttons[1].Click += Delete_Location_Click;
-                group.Controls.AddRange(buttons);
-                flp.Controls.Add(group);
+                AddLocationInfo(location);
             }
         }
 
@@ -354,6 +362,36 @@ namespace Project.AGV
             ZoomMap();
         }
 
+        private void 保存点位数据ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (StreamWriter sw = new StreamWriter(Application.StartupPath + "\\locations.json"))
+                {
+                    sw.Write(JsonManager.ObjectToJson(locations));
+                }
+                MessageBox.Show("保存成功");
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("保存失败");
+            }
+        }
+
+        private void 加载点位数据ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            flp.Controls.Clear();
+            using (StreamReader sr = new StreamReader(Application.StartupPath + "\\locations.json"))
+            {
+                locations?.Clear();
+                locations = JsonManager.JsonToObject<List<PointLocation>>(sr.ReadToEnd());
+            }
+            foreach (PointLocation item in locations)
+            {
+                AddLocationInfo(item);
+            }
+        }
+
         private void 加载地图ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -362,7 +400,9 @@ namespace Project.AGV
             {
                 string path = openFileDialog.FileName;
                 map = Extend.PGM2BitMap(path);
+#if mapFlip
                 map.RotateFlip(RotateFlipType.RotateNoneFlipY);
+#endif
                 mapWidth = map.Width;
                 mapHeight = map.Height;
                 pb_map.Size = new Size(mapWidth, mapHeight);
@@ -412,7 +452,6 @@ namespace Project.AGV
 
         private void SocketRecvMessageEvent(Socket socket, string msg)
         {
-            SocketRecvMessage?.Invoke(msg);
             string ip = socket.RemoteEndPoint.ToString();
             AddSocket(ip);
             if (messageDict.ContainsKey(ip))
@@ -494,6 +533,7 @@ namespace Project.AGV
                 try
                 {
                     socket.SendAsync(client, "<start/" + cmd + ":" + par + "/end>");
+                    AddLog?.Invoke("<start/" + cmd + ":" + par + "/end>");
                 }
                 catch (Exception e)
                 {
@@ -504,6 +544,20 @@ namespace Project.AGV
             {
                 MessageBox.Show("发送失败");
             }
+        }
+
+        private void AddLocationInfo(PointLocation location)
+        {
+            GroupBox group = new GroupBox() { Text = location.Name, Size = new Size(200, 40), Tag = location };
+            Button[] buttons =
+            {
+                    new Button(){ Text = "运动到点", Size = new Size(100,25), Location = new Point(3, 11), Tag = location },
+                    new Button(){ Text = "删除点", Size = new Size(80, 25), Location = new Point(110, 11), Tag = location }
+                };
+            buttons[0].Click += Move_Location_Click;
+            buttons[1].Click += Delete_Location_Click;
+            group.Controls.AddRange(buttons);
+            flp.Controls.Add(group);
         }
 
         private void AddSocket(string ip)

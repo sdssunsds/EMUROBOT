@@ -64,6 +64,9 @@ namespace Project.AGV
             this.btn_close_server = new System.Windows.Forms.Button();
             this.pb_map = new System.Windows.Forms.PictureBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.保存点位数据ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.加载点位数据ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_car)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
@@ -73,6 +76,7 @@ namespace Project.AGV
             this.groupBox1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pb_map)).BeginInit();
+            this.contextMenuStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox2
@@ -166,6 +170,7 @@ namespace Project.AGV
             // flp
             // 
             this.flp.AutoScroll = true;
+            this.flp.ContextMenuStrip = this.contextMenuStrip2;
             this.flp.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flp.Location = new System.Drawing.Point(2, 16);
             this.flp.Margin = new System.Windows.Forms.Padding(2);
@@ -395,7 +400,7 @@ namespace Project.AGV
             this.tb_ip.Name = "tb_ip";
             this.tb_ip.Size = new System.Drawing.Size(84, 21);
             this.tb_ip.TabIndex = 1;
-            this.tb_ip.Text = "192.168.100.42";
+            this.tb_ip.Text = "192.168.100.106";
             this.tb_ip.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label2
@@ -478,6 +483,28 @@ namespace Project.AGV
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "地图";
             // 
+            // contextMenuStrip2
+            // 
+            this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.保存点位数据ToolStripMenuItem,
+            this.加载点位数据ToolStripMenuItem});
+            this.contextMenuStrip2.Name = "contextMenuStrip2";
+            this.contextMenuStrip2.Size = new System.Drawing.Size(181, 70);
+            // 
+            // 保存点位数据ToolStripMenuItem
+            // 
+            this.保存点位数据ToolStripMenuItem.Name = "保存点位数据ToolStripMenuItem";
+            this.保存点位数据ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.保存点位数据ToolStripMenuItem.Text = "保存点位数据";
+            this.保存点位数据ToolStripMenuItem.Click += new System.EventHandler(this.保存点位数据ToolStripMenuItem_Click);
+            // 
+            // 加载点位数据ToolStripMenuItem
+            // 
+            this.加载点位数据ToolStripMenuItem.Name = "加载点位数据ToolStripMenuItem";
+            this.加载点位数据ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.加载点位数据ToolStripMenuItem.Text = "加载点位数据";
+            this.加载点位数据ToolStripMenuItem.Click += new System.EventHandler(this.加载点位数据ToolStripMenuItem_Click);
+            // 
             // TestControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -500,6 +527,7 @@ namespace Project.AGV
             this.flowLayoutPanel2.ResumeLayout(false);
             this.flowLayoutPanel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pb_map)).EndInit();
+            this.contextMenuStrip2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -539,5 +567,8 @@ namespace Project.AGV
         private System.Windows.Forms.Button btn_cancel_move;
         private System.Windows.Forms.PictureBox pb_map;
         private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
+        private System.Windows.Forms.ToolStripMenuItem 保存点位数据ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 加载点位数据ToolStripMenuItem;
     }
 }

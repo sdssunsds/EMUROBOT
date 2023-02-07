@@ -7,6 +7,7 @@ namespace Project.AGV
 {
     public partial class SetAgvPointForm : Form
     {
+        public bool Flip { get; set; } = false;
         public string NameValue { get; set; }
         public float TurnValue { get; set; }
 
@@ -48,6 +49,10 @@ namespace Project.AGV
             g.DrawEllipse(pen, 0, 0, 44, 44);
             Point origin = new Point(23, 23);
             g.DrawLine(pen, origin, Extend.GetRadianLineEnd(Extend.GetRadian(trackBar1.Value), 23, origin));
+            if (Flip)
+            {
+                bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY); 
+            }
             pictureBox1.Image = bitmap;
         }
     }
