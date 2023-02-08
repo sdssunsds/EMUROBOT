@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EMU.Util;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -18,7 +19,7 @@ namespace Project.AGV
         private void TestAGVForm_Shown(object sender, EventArgs e)
         {
             testControl1.AddLog = logForm.AddLog;
-            Task.Run(() =>
+            ThreadManager.TaskRun((ThreadEventArgs args) =>
             {
                 while (true)
                 {

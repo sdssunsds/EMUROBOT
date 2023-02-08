@@ -107,6 +107,12 @@
     <Compile Include="AGV\Form\MapManagerForm.Designer.cs">
       <DependentUpon>MapManagerForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="AGV\Form\RunAgvLocationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AGV\Form\RunAgvLocationForm.Designer.cs">
+      <DependentUpon>RunAgvLocationForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="AGV\UserControl\TestAGVControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -385,6 +391,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AGV\Form\LogForm.resx">
       <DependentUpon>LogForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AGV\Form\RunAgvLocationForm.resx">
+      <DependentUpon>RunAgvLocationForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AGV\UserControl\TestAGVControl.resx">
       <DependentUpon>TestAGVControl.cs</DependentUpon>

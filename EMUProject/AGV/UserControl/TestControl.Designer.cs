@@ -39,6 +39,11 @@ namespace Project.AGV
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.flp = new System.Windows.Forms.FlowLayoutPanel();
+            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.保存点位数据ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.加载点位数据ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.批量执行点位ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.btn_cancel_move = new System.Windows.Forms.Button();
             this.btn_close = new System.Windows.Forms.Button();
@@ -64,19 +69,24 @@ namespace Project.AGV
             this.btn_close_server = new System.Windows.Forms.Button();
             this.pb_map = new System.Windows.Forms.PictureBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.保存点位数据ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.加载点位数据ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.配置批量点位ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.执行一轮ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.重复执行ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.自动导航ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.导航一次ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.重复导航ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.配置导航ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_car)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox5.SuspendLayout();
+            this.contextMenuStrip2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pb_map)).BeginInit();
-            this.contextMenuStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox2
@@ -108,8 +118,8 @@ namespace Project.AGV
             this.dgv_car.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgv_car.Size = new System.Drawing.Size(713, 377);
             this.dgv_car.TabIndex = 0;
-            this.dgv_car.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_car_CellContentClick);
             this.dgv_car.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgv_car_DataError);
+            this.dgv_car.SelectionChanged += new System.EventHandler(this.dgv_car_SelectionChanged);
             // 
             // contextMenuStrip1
             // 
@@ -117,9 +127,11 @@ namespace Project.AGV
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.加载地图ToolStripMenuItem,
             this.清空点位ToolStripMenuItem,
-            this.还原缩放ToolStripMenuItem});
+            this.还原缩放ToolStripMenuItem,
+            this.toolStripMenuItem2,
+            this.自动导航ToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(125, 70);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 120);
             // 
             // 加载地图ToolStripMenuItem
             // 
@@ -177,6 +189,45 @@ namespace Project.AGV
             this.flp.Name = "flp";
             this.flp.Size = new System.Drawing.Size(271, 62);
             this.flp.TabIndex = 0;
+            // 
+            // contextMenuStrip2
+            // 
+            this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.保存点位数据ToolStripMenuItem,
+            this.加载点位数据ToolStripMenuItem,
+            this.toolStripMenuItem1,
+            this.批量执行点位ToolStripMenuItem,
+            this.配置批量点位ToolStripMenuItem});
+            this.contextMenuStrip2.Name = "contextMenuStrip2";
+            this.contextMenuStrip2.Size = new System.Drawing.Size(149, 98);
+            // 
+            // 保存点位数据ToolStripMenuItem
+            // 
+            this.保存点位数据ToolStripMenuItem.Name = "保存点位数据ToolStripMenuItem";
+            this.保存点位数据ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.保存点位数据ToolStripMenuItem.Text = "保存点位数据";
+            this.保存点位数据ToolStripMenuItem.Click += new System.EventHandler(this.保存点位数据ToolStripMenuItem_Click);
+            // 
+            // 加载点位数据ToolStripMenuItem
+            // 
+            this.加载点位数据ToolStripMenuItem.Name = "加载点位数据ToolStripMenuItem";
+            this.加载点位数据ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.加载点位数据ToolStripMenuItem.Text = "加载点位数据";
+            this.加载点位数据ToolStripMenuItem.Click += new System.EventHandler(this.加载点位数据ToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(177, 6);
+            // 
+            // 批量执行点位ToolStripMenuItem
+            // 
+            this.批量执行点位ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.执行一轮ToolStripMenuItem,
+            this.重复执行ToolStripMenuItem});
+            this.批量执行点位ToolStripMenuItem.Name = "批量执行点位ToolStripMenuItem";
+            this.批量执行点位ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.批量执行点位ToolStripMenuItem.Text = "批量执行点位";
             // 
             // groupBox3
             // 
@@ -483,27 +534,62 @@ namespace Project.AGV
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "地图";
             // 
-            // contextMenuStrip2
+            // 配置批量点位ToolStripMenuItem
             // 
-            this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.保存点位数据ToolStripMenuItem,
-            this.加载点位数据ToolStripMenuItem});
-            this.contextMenuStrip2.Name = "contextMenuStrip2";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(181, 70);
+            this.配置批量点位ToolStripMenuItem.Name = "配置批量点位ToolStripMenuItem";
+            this.配置批量点位ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.配置批量点位ToolStripMenuItem.Text = "配置批量点位";
+            this.配置批量点位ToolStripMenuItem.Click += new System.EventHandler(this.配置批量点位ToolStripMenuItem_Click);
             // 
-            // 保存点位数据ToolStripMenuItem
+            // 执行一轮ToolStripMenuItem
             // 
-            this.保存点位数据ToolStripMenuItem.Name = "保存点位数据ToolStripMenuItem";
-            this.保存点位数据ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.保存点位数据ToolStripMenuItem.Text = "保存点位数据";
-            this.保存点位数据ToolStripMenuItem.Click += new System.EventHandler(this.保存点位数据ToolStripMenuItem_Click);
+            this.执行一轮ToolStripMenuItem.Name = "执行一轮ToolStripMenuItem";
+            this.执行一轮ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.执行一轮ToolStripMenuItem.Text = "执行一轮";
+            this.执行一轮ToolStripMenuItem.Click += new System.EventHandler(this.执行一轮ToolStripMenuItem_Click);
             // 
-            // 加载点位数据ToolStripMenuItem
+            // 重复执行ToolStripMenuItem
             // 
-            this.加载点位数据ToolStripMenuItem.Name = "加载点位数据ToolStripMenuItem";
-            this.加载点位数据ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.加载点位数据ToolStripMenuItem.Text = "加载点位数据";
-            this.加载点位数据ToolStripMenuItem.Click += new System.EventHandler(this.加载点位数据ToolStripMenuItem_Click);
+            this.重复执行ToolStripMenuItem.Name = "重复执行ToolStripMenuItem";
+            this.重复执行ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.重复执行ToolStripMenuItem.Text = "重复执行";
+            this.重复执行ToolStripMenuItem.Click += new System.EventHandler(this.重复执行ToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(177, 6);
+            // 
+            // 自动导航ToolStripMenuItem
+            // 
+            this.自动导航ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.导航一次ToolStripMenuItem,
+            this.重复导航ToolStripMenuItem,
+            this.配置导航ToolStripMenuItem});
+            this.自动导航ToolStripMenuItem.Name = "自动导航ToolStripMenuItem";
+            this.自动导航ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.自动导航ToolStripMenuItem.Text = "自动导航";
+            // 
+            // 导航一次ToolStripMenuItem
+            // 
+            this.导航一次ToolStripMenuItem.Name = "导航一次ToolStripMenuItem";
+            this.导航一次ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.导航一次ToolStripMenuItem.Text = "导航一次";
+            this.导航一次ToolStripMenuItem.Click += new System.EventHandler(this.执行一轮ToolStripMenuItem_Click);
+            // 
+            // 重复导航ToolStripMenuItem
+            // 
+            this.重复导航ToolStripMenuItem.Name = "重复导航ToolStripMenuItem";
+            this.重复导航ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.重复导航ToolStripMenuItem.Text = "重复导航";
+            this.重复导航ToolStripMenuItem.Click += new System.EventHandler(this.重复执行ToolStripMenuItem_Click);
+            // 
+            // 配置导航ToolStripMenuItem
+            // 
+            this.配置导航ToolStripMenuItem.Name = "配置导航ToolStripMenuItem";
+            this.配置导航ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.配置导航ToolStripMenuItem.Text = "配置导航";
+            this.配置导航ToolStripMenuItem.Click += new System.EventHandler(this.配置批量点位ToolStripMenuItem_Click);
             // 
             // TestControl
             // 
@@ -521,13 +607,13 @@ namespace Project.AGV
             this.contextMenuStrip1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.groupBox5.ResumeLayout(false);
+            this.contextMenuStrip2.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.flowLayoutPanel2.ResumeLayout(false);
             this.flowLayoutPanel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pb_map)).EndInit();
-            this.contextMenuStrip2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -570,5 +656,15 @@ namespace Project.AGV
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
         private System.Windows.Forms.ToolStripMenuItem 保存点位数据ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 加载点位数据ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem 批量执行点位ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 配置批量点位ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 执行一轮ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 重复执行ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem 自动导航ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 导航一次ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 重复导航ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 配置导航ToolStripMenuItem;
     }
 }

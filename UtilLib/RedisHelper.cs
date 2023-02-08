@@ -1,5 +1,4 @@
 ﻿using ServiceStack.Redis;
-using System;
 
 namespace EMU.Util
 {

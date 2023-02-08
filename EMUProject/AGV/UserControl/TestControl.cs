@@ -29,6 +29,7 @@ namespace Project.AGV
         private TcpServiceSocket socket = null;
         private List<AGVModel> models = null;
         private List<PointLocation> locations = null;
+        private List<SortPointLocation> sortLocations = null;
         private Dictionary<string, int> agvOutTimeDict = null;
         private Dictionary<string, StringBuilder> messageDict = null;
 
@@ -43,7 +44,7 @@ namespace Project.AGV
             agvOutTimeDict = new Dictionary<string, int>();
             messageDict = new Dictionary<string, StringBuilder>();
 
-            Task.Run(() =>
+            ThreadManager.TaskRun((ThreadEventArgs args) =>
             {
                 List<AGVModel> removeList = new List<AGVModel>();
                 while (true)
@@ -90,7 +91,7 @@ namespace Project.AGV
                 }
             });
         }
-
+        
         public void RefreshMap()
         {
             if (map == null)
@@ -238,14 +239,17 @@ namespace Project.AGV
             SocketSend(Cmd.hardware_close);
         }
 
-        private void dgv_car_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            selected = e.RowIndex;
-        }
-
         private void dgv_car_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
 
+        }
+
+        private void dgv_car_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dgv_car.SelectedRows.Count > 0)
+            {
+                selected = dgv_car.SelectedRows[0].Index;
+            }
         }
 
         private void tb_speed_TextChanged(object sender, EventArgs e)
@@ -392,6 +396,25 @@ namespace Project.AGV
             }
         }
 
+        private void 执行一轮ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RunSortLocations(false);
+        }
+
+        private void 重复执行ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RunSortLocations(true);
+        }
+
+        private void 配置批量点位ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RunAgvLocationForm runAgvLocationForm = new RunAgvLocationForm();
+            runAgvLocationForm.Locations = locations;
+            runAgvLocationForm.SortLocations = sortLocations;
+            runAgvLocationForm.ShowDialog(this);
+            sortLocations = runAgvLocationForm.SortLocations;
+        }
+
         private void 加载地图ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -527,6 +550,11 @@ namespace Project.AGV
                     i--;
                 }
             }
+            SocketSend(cmd, selected, par);
+        }
+
+        private void SocketSend(Cmd cmd, int selected, string par)
+        {
             Socket client = socket.clientSockets.Find(s => s.Connected && s.RemoteEndPoint.ToString() == models[selected].IP);
             if (client != null && client.Connected)
             {
@@ -537,12 +565,12 @@ namespace Project.AGV
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(e.Message);
+                    AddLog?.Invoke(e.Message);
                 }
             }
             else
             {
-                MessageBox.Show("发送失败");
+                AddLog?.Invoke("发送失败");
             }
         }
 
@@ -597,6 +625,41 @@ namespace Project.AGV
             catch (Exception) { }
         }
 
+        private void RunSortLocations(bool isRepeat)
+        {
+            if (sortLocations != null)
+            {
+                int index = selected;
+                AGVModel model = models[index];
+                ThreadManager.TaskRun((ThreadEventArgs args) =>
+                {
+                    do
+                    {
+                        foreach (SortPointLocation item in sortLocations)
+                        {
+                            SocketSend(Cmd.move_point, index, $"{item.Point.X},{item.Point.Y},{item.Turn}");
+                            Thread.Sleep(500);
+                            while (model.导航状态 == "导航中")
+                            {
+                                Thread.Sleep(50);
+                            }
+                            if (model.导航状态 == "导航异常" || model.导航状态 == "取消导航")
+                            {
+                                return;
+                            }
+                            AddLog?.Invoke("等待 " + item.Internal + " 毫秒开始下一个导航");
+                            Thread.Sleep(item.Internal);
+                            AddLog?.Invoke("完成 " + item.Name + " 点");
+                        } 
+                    } while (isRepeat);
+                });
+            }
+            else
+            {
+                MessageBox.Show("未配置批量执行的点位数据");
+            }
+        }
+
         private void ZoomMap()
         {
             if (map != null)
@@ -610,58 +673,58 @@ namespace Project.AGV
                 pb_map.Refresh(); 
             }
         }
+    }
 
-        private class AGVModel
-        {
-            public string 编号 { get; set; }
-            public string IP { get; set; }
-            public int 行驶速度 { get; set; }
-            public float 转向速度 { get; set; }
-            public int X { get; set; }
-            public int Y { get; set; }
-            public float 弧度 { get; set; }
-            public string 导航状态 { get; set; }
-            public string 报警 { get; set; }
-            public string 机器人状态 { get; set; }
-            public int 电量 { get; set; }
-            public float 电压 { get; set; }
-        }
+    public class AGVModel
+    {
+        public string 编号 { get; set; }
+        public string IP { get; set; }
+        public int 行驶速度 { get; set; }
+        public float 转向速度 { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+        public float 弧度 { get; set; }
+        public string 导航状态 { get; set; }
+        public string 报警 { get; set; }
+        public string 机器人状态 { get; set; }
+        public int 电量 { get; set; }
+        public float 电压 { get; set; }
+    }
 
-        private class PointLocation
-        {
-            public string Name { get; set; }
-            public float Turn { get; set; }
-            public Point Point { get; set; }
-        }
+    public class PointLocation
+    {
+        public string Name { get; set; }
+        public float Turn { get; set; }
+        public Point Point { get; set; }
+    }
 
-        private enum Alarm
-        {
-            无报警 = 0
-        }
+    public enum Alarm
+    {
+        无报警 = 0
+    }
 
-        private enum Cmd
-        {
-            forward,
-            backoff,
-            turnleft,
-            turnright,
-            carstop,
-            set_x_speed,
-            set_w_speed,
-            shutdown,
-            hardware_close,
-            move_point,
-            cancel_move
-        }
+    public enum Cmd
+    {
+        forward,
+        backoff,
+        turnleft,
+        turnright,
+        carstop,
+        set_x_speed,
+        set_w_speed,
+        shutdown,
+        hardware_close,
+        move_point,
+        cancel_move
+    }
 
-        private enum Navigation
-        {
-            未导航 = 0, 导航中, 导航完成, 导航异常, 取消导航
-        }
+    public enum Navigation
+    {
+        未导航 = 0, 导航中, 导航完成, 导航异常, 取消导航
+    }
 
-        private enum Status
-        {
-            待机 = 0, 前进, 后退, 左转, 右转, 停车, 导航
-        }
+    public enum Status
+    {
+        待机 = 0, 前进, 后退, 左转, 右转, 停车, 导航
     }
 }
