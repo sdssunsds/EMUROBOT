@@ -36,6 +36,11 @@ namespace Project.AGV
             this.加载地图ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.清空点位ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.还原缩放ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.自动导航ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.导航一次ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.重复导航ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.配置导航ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.flp = new System.Windows.Forms.FlowLayoutPanel();
@@ -44,6 +49,9 @@ namespace Project.AGV
             this.加载点位数据ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.批量执行点位ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.执行一轮ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.重复执行ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.配置批量点位ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.btn_cancel_move = new System.Windows.Forms.Button();
             this.btn_close = new System.Windows.Forms.Button();
@@ -69,14 +77,7 @@ namespace Project.AGV
             this.btn_close_server = new System.Windows.Forms.Button();
             this.pb_map = new System.Windows.Forms.PictureBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.配置批量点位ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.执行一轮ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.重复执行ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
-            this.自动导航ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.导航一次ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.重复导航ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.配置导航ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.记录当前AGV位置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_car)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
@@ -129,30 +130,67 @@ namespace Project.AGV
             this.清空点位ToolStripMenuItem,
             this.还原缩放ToolStripMenuItem,
             this.toolStripMenuItem2,
+            this.记录当前AGV位置ToolStripMenuItem,
             this.自动导航ToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 120);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 142);
             // 
             // 加载地图ToolStripMenuItem
             // 
             this.加载地图ToolStripMenuItem.Name = "加载地图ToolStripMenuItem";
-            this.加载地图ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.加载地图ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.加载地图ToolStripMenuItem.Text = "加载地图";
             this.加载地图ToolStripMenuItem.Click += new System.EventHandler(this.加载地图ToolStripMenuItem_Click);
             // 
             // 清空点位ToolStripMenuItem
             // 
             this.清空点位ToolStripMenuItem.Name = "清空点位ToolStripMenuItem";
-            this.清空点位ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.清空点位ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.清空点位ToolStripMenuItem.Text = "清空点位";
             this.清空点位ToolStripMenuItem.Click += new System.EventHandler(this.清空点位ToolStripMenuItem_Click);
             // 
             // 还原缩放ToolStripMenuItem
             // 
             this.还原缩放ToolStripMenuItem.Name = "还原缩放ToolStripMenuItem";
-            this.还原缩放ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.还原缩放ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.还原缩放ToolStripMenuItem.Text = "还原缩放";
             this.还原缩放ToolStripMenuItem.Click += new System.EventHandler(this.还原缩放ToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(177, 6);
+            // 
+            // 自动导航ToolStripMenuItem
+            // 
+            this.自动导航ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.导航一次ToolStripMenuItem,
+            this.重复导航ToolStripMenuItem,
+            this.配置导航ToolStripMenuItem});
+            this.自动导航ToolStripMenuItem.Name = "自动导航ToolStripMenuItem";
+            this.自动导航ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.自动导航ToolStripMenuItem.Text = "自动导航";
+            // 
+            // 导航一次ToolStripMenuItem
+            // 
+            this.导航一次ToolStripMenuItem.Name = "导航一次ToolStripMenuItem";
+            this.导航一次ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.导航一次ToolStripMenuItem.Text = "导航一次";
+            this.导航一次ToolStripMenuItem.Click += new System.EventHandler(this.执行一轮ToolStripMenuItem_Click);
+            // 
+            // 重复导航ToolStripMenuItem
+            // 
+            this.重复导航ToolStripMenuItem.Name = "重复导航ToolStripMenuItem";
+            this.重复导航ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.重复导航ToolStripMenuItem.Text = "重复导航";
+            this.重复导航ToolStripMenuItem.Click += new System.EventHandler(this.重复执行ToolStripMenuItem_Click);
+            // 
+            // 配置导航ToolStripMenuItem
+            // 
+            this.配置导航ToolStripMenuItem.Name = "配置导航ToolStripMenuItem";
+            this.配置导航ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.配置导航ToolStripMenuItem.Text = "配置导航";
+            this.配置导航ToolStripMenuItem.Click += new System.EventHandler(this.配置批量点位ToolStripMenuItem_Click);
             // 
             // panel1
             // 
@@ -204,21 +242,21 @@ namespace Project.AGV
             // 保存点位数据ToolStripMenuItem
             // 
             this.保存点位数据ToolStripMenuItem.Name = "保存点位数据ToolStripMenuItem";
-            this.保存点位数据ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.保存点位数据ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.保存点位数据ToolStripMenuItem.Text = "保存点位数据";
             this.保存点位数据ToolStripMenuItem.Click += new System.EventHandler(this.保存点位数据ToolStripMenuItem_Click);
             // 
             // 加载点位数据ToolStripMenuItem
             // 
             this.加载点位数据ToolStripMenuItem.Name = "加载点位数据ToolStripMenuItem";
-            this.加载点位数据ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.加载点位数据ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.加载点位数据ToolStripMenuItem.Text = "加载点位数据";
             this.加载点位数据ToolStripMenuItem.Click += new System.EventHandler(this.加载点位数据ToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(145, 6);
             // 
             // 批量执行点位ToolStripMenuItem
             // 
@@ -226,8 +264,29 @@ namespace Project.AGV
             this.执行一轮ToolStripMenuItem,
             this.重复执行ToolStripMenuItem});
             this.批量执行点位ToolStripMenuItem.Name = "批量执行点位ToolStripMenuItem";
-            this.批量执行点位ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.批量执行点位ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.批量执行点位ToolStripMenuItem.Text = "批量执行点位";
+            // 
+            // 执行一轮ToolStripMenuItem
+            // 
+            this.执行一轮ToolStripMenuItem.Name = "执行一轮ToolStripMenuItem";
+            this.执行一轮ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.执行一轮ToolStripMenuItem.Text = "执行一轮";
+            this.执行一轮ToolStripMenuItem.Click += new System.EventHandler(this.执行一轮ToolStripMenuItem_Click);
+            // 
+            // 重复执行ToolStripMenuItem
+            // 
+            this.重复执行ToolStripMenuItem.Name = "重复执行ToolStripMenuItem";
+            this.重复执行ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.重复执行ToolStripMenuItem.Text = "重复执行";
+            this.重复执行ToolStripMenuItem.Click += new System.EventHandler(this.重复执行ToolStripMenuItem_Click);
+            // 
+            // 配置批量点位ToolStripMenuItem
+            // 
+            this.配置批量点位ToolStripMenuItem.Name = "配置批量点位ToolStripMenuItem";
+            this.配置批量点位ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.配置批量点位ToolStripMenuItem.Text = "配置批量点位";
+            this.配置批量点位ToolStripMenuItem.Click += new System.EventHandler(this.配置批量点位ToolStripMenuItem_Click);
             // 
             // groupBox3
             // 
@@ -534,62 +593,12 @@ namespace Project.AGV
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "地图";
             // 
-            // 配置批量点位ToolStripMenuItem
+            // 记录当前AGV位置ToolStripMenuItem
             // 
-            this.配置批量点位ToolStripMenuItem.Name = "配置批量点位ToolStripMenuItem";
-            this.配置批量点位ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.配置批量点位ToolStripMenuItem.Text = "配置批量点位";
-            this.配置批量点位ToolStripMenuItem.Click += new System.EventHandler(this.配置批量点位ToolStripMenuItem_Click);
-            // 
-            // 执行一轮ToolStripMenuItem
-            // 
-            this.执行一轮ToolStripMenuItem.Name = "执行一轮ToolStripMenuItem";
-            this.执行一轮ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.执行一轮ToolStripMenuItem.Text = "执行一轮";
-            this.执行一轮ToolStripMenuItem.Click += new System.EventHandler(this.执行一轮ToolStripMenuItem_Click);
-            // 
-            // 重复执行ToolStripMenuItem
-            // 
-            this.重复执行ToolStripMenuItem.Name = "重复执行ToolStripMenuItem";
-            this.重复执行ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.重复执行ToolStripMenuItem.Text = "重复执行";
-            this.重复执行ToolStripMenuItem.Click += new System.EventHandler(this.重复执行ToolStripMenuItem_Click);
-            // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(177, 6);
-            // 
-            // 自动导航ToolStripMenuItem
-            // 
-            this.自动导航ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.导航一次ToolStripMenuItem,
-            this.重复导航ToolStripMenuItem,
-            this.配置导航ToolStripMenuItem});
-            this.自动导航ToolStripMenuItem.Name = "自动导航ToolStripMenuItem";
-            this.自动导航ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.自动导航ToolStripMenuItem.Text = "自动导航";
-            // 
-            // 导航一次ToolStripMenuItem
-            // 
-            this.导航一次ToolStripMenuItem.Name = "导航一次ToolStripMenuItem";
-            this.导航一次ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.导航一次ToolStripMenuItem.Text = "导航一次";
-            this.导航一次ToolStripMenuItem.Click += new System.EventHandler(this.执行一轮ToolStripMenuItem_Click);
-            // 
-            // 重复导航ToolStripMenuItem
-            // 
-            this.重复导航ToolStripMenuItem.Name = "重复导航ToolStripMenuItem";
-            this.重复导航ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.重复导航ToolStripMenuItem.Text = "重复导航";
-            this.重复导航ToolStripMenuItem.Click += new System.EventHandler(this.重复执行ToolStripMenuItem_Click);
-            // 
-            // 配置导航ToolStripMenuItem
-            // 
-            this.配置导航ToolStripMenuItem.Name = "配置导航ToolStripMenuItem";
-            this.配置导航ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.配置导航ToolStripMenuItem.Text = "配置导航";
-            this.配置导航ToolStripMenuItem.Click += new System.EventHandler(this.配置批量点位ToolStripMenuItem_Click);
+            this.记录当前AGV位置ToolStripMenuItem.Name = "记录当前AGV位置ToolStripMenuItem";
+            this.记录当前AGV位置ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.记录当前AGV位置ToolStripMenuItem.Text = "记录当前AGV位置";
+            this.记录当前AGV位置ToolStripMenuItem.Click += new System.EventHandler(this.记录当前AGV位置ToolStripMenuItem_Click);
             // 
             // TestControl
             // 
@@ -666,5 +675,6 @@ namespace Project.AGV
         private System.Windows.Forms.ToolStripMenuItem 导航一次ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 重复导航ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 配置导航ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 记录当前AGV位置ToolStripMenuItem;
     }
 }

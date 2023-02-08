@@ -18,6 +18,8 @@ namespace Project.AGV
 
         private void SetAgvPointForm_Load(object sender, EventArgs e)
         {
+            textBox1.Text = NameValue;
+            trackBar1.Value = (int)Extend.GetAngle(TurnValue);
             DrawTurn();
         }
 

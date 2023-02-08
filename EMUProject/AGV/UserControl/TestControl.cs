@@ -293,27 +293,7 @@ namespace Project.AGV
             {
                 int x = (int)(e.X / mapZoom);
                 int y = (int)(e.Y / mapZoom);
-                SetAgvPointForm pointForm = new SetAgvPointForm();
-#if mapFlip
-                pointForm.Flip = true;
-                y = mapHeight - y;
-#endif
-                if (pointForm.ShowDialog(this) != DialogResult.OK)
-                {
-                    return;
-                }
-                if (string.IsNullOrEmpty(pointForm.NameValue))
-                {
-                    return;
-                }
-                PointLocation location = new PointLocation()
-                {
-                    Name = pointForm.NameValue,
-                    Turn = pointForm.TurnValue,
-                    Point = new Point(x, y)
-                };
-                locations.Add(location);
-                AddLocationInfo(location);
+                ShowWriteLocation(x, y, 0f, "");
             }
         }
 
@@ -372,7 +352,11 @@ namespace Project.AGV
             {
                 using (StreamWriter sw = new StreamWriter(Application.StartupPath + "\\locations.json"))
                 {
-                    sw.Write(JsonManager.ObjectToJson(locations));
+                    sw.WriteLine(JsonManager.ObjectToJson(locations));
+                    if (sortLocations != null)
+                    {
+                        sw.WriteLine(JsonManager.ObjectToJson(sortLocations)); 
+                    }
                 }
                 MessageBox.Show("保存成功");
             }
@@ -385,14 +369,30 @@ namespace Project.AGV
         private void 加载点位数据ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             flp.Controls.Clear();
-            using (StreamReader sr = new StreamReader(Application.StartupPath + "\\locations.json"))
+            if (File.Exists(Application.StartupPath + "\\locations.json"))
             {
-                locations?.Clear();
-                locations = JsonManager.JsonToObject<List<PointLocation>>(sr.ReadToEnd());
+                using (StreamReader sr = new StreamReader(Application.StartupPath + "\\locations.json"))
+                {
+                    locations?.Clear();
+                    locations = JsonManager.JsonToObject<List<PointLocation>>(sr.ReadLine());
+                    string json = sr.ReadLine();
+                    if (!string.IsNullOrEmpty(json))
+                    {
+                        sortLocations = JsonManager.JsonToObject<List<SortPointLocation>>(json);
+                    }
+                } 
             }
             foreach (PointLocation item in locations)
             {
                 AddLocationInfo(item);
+            }
+        }
+
+        private void 记录当前AGV位置ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (selected >= 0 && selected < models.Count)
+            {
+                ShowWriteLocation(models[selected].X, models[selected].Y, models[selected].弧度, ""); 
             }
         }
 
@@ -450,13 +450,13 @@ namespace Project.AGV
         private void Move_Location_Click(object sender, EventArgs e)
         {
             PointLocation location = (sender as Button).Tag as PointLocation;
-            float x = (float)(location.Point.X - 1000) / 20;
-#if mapFlip
-            float y = (float)(location.Point.Y - 1000) / 20;
-#else
-            float y = (float)(1983 - location.Point.Y - 1000) / 20;
-#endif
-            SocketSend(Cmd.move_point, x, y, location.Turn);
+            MoveLocation(location);
+        }
+
+        private void Update_Location_Click(object sender, EventArgs e)
+        {
+            PointLocation location = (sender as Button).Tag as PointLocation;
+            ShowWriteLocation(location.Point.X, location.Point.Y, location.Turn, location.Name);
         }
 
         private void Delete_Location_Click(object sender, EventArgs e)
@@ -576,14 +576,16 @@ namespace Project.AGV
 
         private void AddLocationInfo(PointLocation location)
         {
-            GroupBox group = new GroupBox() { Text = location.Name, Size = new Size(200, 40), Tag = location };
+            GroupBox group = new GroupBox() { Text = location.Name, Size = new Size(280, 40), Tag = location };
             Button[] buttons =
             {
-                    new Button(){ Text = "运动到点", Size = new Size(100,25), Location = new Point(3, 11), Tag = location },
-                    new Button(){ Text = "删除点", Size = new Size(80, 25), Location = new Point(110, 11), Tag = location }
+                    new Button(){ Text = "运动到点", Size = new Size(100,25), Location = new Point(5, 11), Tag = location },
+                    new Button(){ Text = "修改点", Size = new Size(80,25), Location = new Point(110, 11), Tag = location },
+                    new Button(){ Text = "删除点", Size = new Size(80, 25), Location = new Point(195, 11), Tag = location }
                 };
             buttons[0].Click += Move_Location_Click;
-            buttons[1].Click += Delete_Location_Click;
+            buttons[1].Click += Update_Location_Click;
+            buttons[2].Click += Delete_Location_Click;
             group.Controls.AddRange(buttons);
             flp.Controls.Add(group);
         }
@@ -625,6 +627,17 @@ namespace Project.AGV
             catch (Exception) { }
         }
 
+        private void MoveLocation(PointLocation location)
+        {
+            float x = (float)(location.Point.X - 1000) / 20;
+#if mapFlip
+            float y = (float)(location.Point.Y - 1000) / 20;
+#else
+            float y = (float)(1983 - location.Point.Y - 1000) / 20;
+#endif
+            SocketSend(Cmd.move_point, x, y, location.Turn);
+        }
+
         private void RunSortLocations(bool isRepeat)
         {
             if (sortLocations != null)
@@ -637,8 +650,11 @@ namespace Project.AGV
                     {
                         foreach (SortPointLocation item in sortLocations)
                         {
-                            SocketSend(Cmd.move_point, index, $"{item.Point.X},{item.Point.Y},{item.Turn}");
-                            Thread.Sleep(500);
+                            MoveLocation(item);
+                            while (model.导航状态 != "导航中")
+                            {
+                                Thread.Sleep(50);
+                            }
                             while (model.导航状态 == "导航中")
                             {
                                 Thread.Sleep(50);
@@ -657,6 +673,42 @@ namespace Project.AGV
             else
             {
                 MessageBox.Show("未配置批量执行的点位数据");
+            }
+        }
+
+        private void ShowWriteLocation(int x, int y, float turn, string name)
+        {
+            SetAgvPointForm pointForm = new SetAgvPointForm();
+#if mapFlip
+            pointForm.Flip = true;
+            y = mapHeight - y;
+#endif
+            pointForm.NameValue = name;
+            pointForm.TurnValue = turn;
+            if (pointForm.ShowDialog(this) != DialogResult.OK)
+            {
+                return;
+            }
+            if (string.IsNullOrEmpty(pointForm.NameValue))
+            {
+                return;
+            }
+            PointLocation location = locations.Find(l => l.Point.X == x && l.Point.Y == y);
+            if (location == null)
+            {
+                location = new PointLocation()
+                {
+                    Name = pointForm.NameValue,
+                    Turn = pointForm.TurnValue,
+                    Point = new Point(x, y)
+                };
+                locations.Add(location);
+                AddLocationInfo(location);
+            }
+            else
+            {
+                location.Name = pointForm.NameValue;
+                location.Turn = pointForm.TurnValue;
             }
         }
 
