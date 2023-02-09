@@ -382,3 +382,4 @@ MigrationBackup/
 /DLL/cudnn64_8.dll
 /DLL/cudnn.lib
 /DLL/CppLibDll.h
+/.svn

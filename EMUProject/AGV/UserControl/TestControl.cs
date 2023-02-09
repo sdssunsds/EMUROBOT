@@ -1,13 +1,14 @@
 ﻿#define mapFlip  // 地图翻转
 
-using EMU.Interface;
 using EMU.Util;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Project.AGV
@@ -31,8 +32,6 @@ namespace Project.AGV
         private List<SortPointLocation> sortLocations = null;
         private Dictionary<string, int> agvOutTimeDict = null;
         private Dictionary<string, StringBuilder> messageDict = null;
-
-        public IProject Project { get; set; }
 
         public Action<string> AddLog { get; set; }
 
@@ -349,16 +348,22 @@ namespace Project.AGV
 
         private void 保存点位数据ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (locations.Count == 0)
+            {
+                MessageBox.Show("没有可以保存的位置信息");
+                return;
+            }
             try
             {
-                if (Project.dataBase.SaveTs<PointLocation>(locations, sortLocations))
+                using (StreamWriter sw = new StreamWriter(Application.StartupPath + "\\locations.json"))
                 {
-                    MessageBox.Show("保存成功");
+                    sw.WriteLine(JsonManager.ObjectToJson(locations));
+                    if (sortLocations != null)
+                    {
+                        sw.WriteLine(JsonManager.ObjectToJson(sortLocations)); 
+                    }
                 }
-                else
-                {
-                    MessageBox.Show("保存失败");
-                }
+                MessageBox.Show("保存成功");
             }
             catch (Exception)
             {
@@ -369,11 +374,18 @@ namespace Project.AGV
         private void 加载点位数据ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             flp.Controls.Clear();
-            locations = Project.dataBase.GetTs<PointLocation>();
-            sortLocations = Project.dataBase.GetTs<SortPointLocation>();
-            if (locations == null)
+            if (File.Exists(Application.StartupPath + "\\locations.json"))
             {
-                locations = new List<PointLocation>();
+                using (StreamReader sr = new StreamReader(Application.StartupPath + "\\locations.json"))
+                {
+                    locations?.Clear();
+                    locations = JsonManager.JsonToObject<List<PointLocation>>(sr.ReadLine());
+                    string json = sr.ReadLine();
+                    if (!string.IsNullOrEmpty(json))
+                    {
+                        sortLocations = JsonManager.JsonToObject<List<SortPointLocation>>(json);
+                    }
+                } 
             }
             foreach (PointLocation item in locations)
             {
