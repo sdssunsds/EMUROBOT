@@ -27,6 +27,10 @@ namespace EMU.UI
                 {
                     new Lib.ServerInit().Setup(value, null);
                 }
+                else if (value is AGVServer)
+                {
+                    new Lib.AGVInit().Setup(value, null);
+                }
             }
         }
 

@@ -1,7 +1,7 @@
-﻿using EMU.Util;
+﻿using EMU.Interface;
+using EMU.Util;
 using System;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Project.AGV
@@ -9,6 +9,12 @@ namespace Project.AGV
     public partial class TestAGVForm : Form
     {
         private LogForm logForm;
+
+        public IProject Project
+        {
+            get { return testControl1.Project; }
+            set { testControl1.Project = value; }
+        }
 
         public TestAGVForm()
         {

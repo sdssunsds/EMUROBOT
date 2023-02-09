@@ -95,7 +95,7 @@ namespace Project
                     } };
                     addMenu[0].Click += new EventHandler((object sender, EventArgs e) =>
                     {
-                        new TestAGVForm() { Text = addMenu[0].Text }.Show();
+                        new TestAGVForm() { Text = addMenu[0].Text, Project = this }.Show();
                     });
                     addMenu[1].Click += new EventHandler((object sender, EventArgs e) =>
                     {
