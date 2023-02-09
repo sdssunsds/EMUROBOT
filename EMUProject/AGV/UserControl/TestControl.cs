@@ -1,14 +1,13 @@
 ﻿#define mapFlip  // 地图翻转
 
+using EMU.Interface;
 using EMU.Util;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Project.AGV
@@ -32,6 +31,8 @@ namespace Project.AGV
         private List<SortPointLocation> sortLocations = null;
         private Dictionary<string, int> agvOutTimeDict = null;
         private Dictionary<string, StringBuilder> messageDict = null;
+
+        public IProject Project { get; set; }
 
         public Action<string> AddLog { get; set; }
 
@@ -84,6 +85,7 @@ namespace Project.AGV
                             foreach (AGVModel item in removeList)
                             {
                                 models.Remove(item);
+                                item.IsLink = false;
                             }
                             BindingAgvModels();
                         })).Start();
@@ -293,6 +295,9 @@ namespace Project.AGV
             {
                 int x = (int)(e.X / mapZoom);
                 int y = (int)(e.Y / mapZoom);
+#if mapFlip
+                y = mapHeight - y;
+#endif
                 ShowWriteLocation(x, y, 0f, "");
             }
         }
@@ -355,15 +360,14 @@ namespace Project.AGV
             }
             try
             {
-                using (StreamWriter sw = new StreamWriter(Application.StartupPath + "\\locations.json"))
+                if (Project.dataBase.SaveTs<PointLocation>(locations, sortLocations))
                 {
-                    sw.WriteLine(JsonManager.ObjectToJson(locations));
-                    if (sortLocations != null)
-                    {
-                        sw.WriteLine(JsonManager.ObjectToJson(sortLocations)); 
-                    }
+                    MessageBox.Show("保存成功");
                 }
-                MessageBox.Show("保存成功");
+                else
+                {
+                    MessageBox.Show("保存失败");
+                }
             }
             catch (Exception)
             {
@@ -374,18 +378,11 @@ namespace Project.AGV
         private void 加载点位数据ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             flp.Controls.Clear();
-            if (File.Exists(Application.StartupPath + "\\locations.json"))
+            locations = Project.dataBase.GetTs<PointLocation>();
+            sortLocations = Project.dataBase.GetTs<SortPointLocation>();
+            if (locations == null)
             {
-                using (StreamReader sr = new StreamReader(Application.StartupPath + "\\locations.json"))
-                {
-                    locations?.Clear();
-                    locations = JsonManager.JsonToObject<List<PointLocation>>(sr.ReadLine());
-                    string json = sr.ReadLine();
-                    if (!string.IsNullOrEmpty(json))
-                    {
-                        sortLocations = JsonManager.JsonToObject<List<SortPointLocation>>(json);
-                    }
-                } 
+                locations = new List<PointLocation>();
             }
             foreach (PointLocation item in locations)
             {
@@ -500,12 +497,14 @@ namespace Project.AGV
                         model.行驶速度 = (int)(float.Parse(datas[1]) * 1000);
                         model.转向速度 = float.Parse(datas[2]);
                         model.弧度 = float.Parse(datas[5]);
-                        int x = (int)(float.Parse(datas[3]) * 20) + 1000;
+                        model.OriginalLocation.X = float.Parse(datas[3]);
+                        model.OriginalLocation.Y = float.Parse(datas[4]);
+                        int x = (int)(model.OriginalLocation.X * 20) + 1000;
                         int y =
 #if mapFlip
-                            (int)(float.Parse(datas[4]) * 20) + 1000;
+                            (int)(model.OriginalLocation.Y * 20) + 1000;
 #else
-                            ((int)(float.Parse(datas[4]) * 20) + 1000);
+                            ((int)(model.OriginalLocation.Y * 20) + 1000);
 #endif
                         bool refreshLocation = !(model.Y == y && model.X < x) ||
                             (Extend.GetRadian(45) > model.弧度 && Extend.GetRadian(315) < model.弧度);
@@ -587,7 +586,7 @@ namespace Project.AGV
                     new Button(){ Text = "运动到点", Size = new Size(100,25), Location = new Point(5, 11), Tag = location },
                     new Button(){ Text = "修改点", Size = new Size(80,25), Location = new Point(110, 11), Tag = location },
                     new Button(){ Text = "删除点", Size = new Size(80, 25), Location = new Point(195, 11), Tag = location }
-                };
+            };
             buttons[0].Click += Move_Location_Click;
             buttons[1].Click += Update_Location_Click;
             buttons[2].Click += Delete_Location_Click;
@@ -606,7 +605,8 @@ namespace Project.AGV
                 messageDict.Add(ip, new StringBuilder());
                 models.Add(new AGVModel()
                 {
-                    IP = ip
+                    IP = ip,
+                    IsLink = true
                 });
                 BindingAgvModels();
             }
@@ -621,9 +621,11 @@ namespace Project.AGV
                     if (dgv_car.DataSource == null)
                     {
                         dgv_car.DataSource = models;
+                        dgv_car.Columns[dgv_car.Columns.Count - 1].Visible = false;
+                        dgv_car.Columns[dgv_car.Columns.Count - 2].Visible = false;
                     }
                     dgv_car.Refresh();
-                    if (selected < models.Count)
+                    if (selected < dgv_car.Rows.Count)
                     {
                         dgv_car.Rows[selected].Cells[0].Selected = true;
                     }
@@ -655,22 +657,42 @@ namespace Project.AGV
                     {
                         foreach (SortPointLocation item in sortLocations)
                         {
+                            AddLog?.Invoke("前往" + item.Name + "点");
+                            DateTime start = DateTime.Now;
                             MoveLocation(item);
                             while (model.导航状态 != "导航中")
                             {
+                                if (!model.IsLink)
+                                {
+                                    MessageBox.Show("AGV丢失[" + model.IP + "]");
+                                    return;
+                                }
                                 Thread.Sleep(50);
                             }
                             while (model.导航状态 == "导航中")
                             {
+                                if (!model.IsLink)
+                                {
+                                    MessageBox.Show("AGV丢失[" + model.IP + "]");
+                                    return;
+                                }
                                 Thread.Sleep(50);
                             }
                             if (model.导航状态 == "导航异常" || model.导航状态 == "取消导航")
                             {
+                                if (!model.IsLink)
+                                {
+                                    MessageBox.Show("AGV丢失[" + model.IP + "]");
+                                    return;
+                                }
                                 return;
                             }
+                            DateTime end = DateTime.Now;
+                            AddLog?.Invoke("完成 " + item.Name + " 点，用时：" + (end - start).TotalSeconds + "秒");
+                            double mistake = Math.Sqrt(Math.Pow(model.OriginalLocation.X - (item.Point.X - 1000) / 20f, 2) + Math.Pow(model.OriginalLocation.Y - (item.Point.Y - 1000) / 20f, 2));
+                            AddLog?.Invoke("误差：" + mistake + "米");
                             AddLog?.Invoke("等待 " + item.Internal + " 毫秒开始下一个导航");
                             Thread.Sleep(item.Internal);
-                            AddLog?.Invoke("完成 " + item.Name + " 点");
                         } 
                     } while (isRepeat);
                 });
@@ -686,7 +708,6 @@ namespace Project.AGV
             SetAgvPointForm pointForm = new SetAgvPointForm();
 #if mapFlip
             pointForm.Flip = true;
-            y = mapHeight - y;
 #endif
             pointForm.NameValue = name;
             pointForm.TurnValue = turn;
@@ -712,6 +733,13 @@ namespace Project.AGV
             }
             else
             {
+                foreach (Control item in flp.Controls)
+                {
+                    if (item is GroupBox && (item.Tag as PointLocation).Name == location.Name)
+                    {
+                        item.Text = pointForm.NameValue;
+                    }
+                }
                 location.Name = pointForm.NameValue;
                 location.Turn = pointForm.TurnValue;
             }
@@ -746,6 +774,19 @@ namespace Project.AGV
         public string 机器人状态 { get; set; }
         public int 电量 { get; set; }
         public float 电压 { get; set; }
+
+        public bool IsLink { get; set; }
+        public OriginalLocation OriginalLocation { get; set; }
+        public AGVModel()
+        {
+            OriginalLocation = new OriginalLocation();
+        }
+    }
+
+    public class OriginalLocation
+    {
+        public float X { get; set; }
+        public float Y { get; set; }
     }
 
     public class PointLocation

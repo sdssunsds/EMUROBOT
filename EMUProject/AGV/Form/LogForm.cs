@@ -22,6 +22,8 @@ namespace Project.AGV
                     Invoke(new Action(() =>
                     {
                         textBox1.Text += time + "  " + log + "\r\n";
+                        textBox1.SelectionStart = textBox1.Text.Length - 1;
+                        textBox1.ScrollToCaret();
                     }));
                 }
                 catch (Exception) { }
