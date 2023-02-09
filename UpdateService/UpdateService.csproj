@@ -54,8 +54,8 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="IrisSkin2">
-      <HintPath>..\DLL\IrisSkin2.dll</HintPath>
+    <Reference Include="IrisSkin4">
+      <HintPath>..\DLL\IrisSkin4.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
