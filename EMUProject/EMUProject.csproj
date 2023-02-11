@@ -62,6 +62,18 @@
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="OpenCvSharp">
+      <HintPath>..\DLL\OpenCvSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenCvSharp.Blob">
+      <HintPath>..\DLL\OpenCvSharp.Blob.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenCvSharp.Extensions">
+      <HintPath>..\DLL\OpenCvSharp.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenCvSharp.UserInterface">
+      <HintPath>..\DLL\OpenCvSharp.UserInterface.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -126,6 +138,8 @@
       <DependentUpon>TestControl.cs</DependentUpon>
     </Compile>
     <Compile Include="AlgorithmInterface.cs" />
+    <Compile Include="AlgorithmInterface\RedisBusiness.cs" />
+    <Compile Include="AlgorithmInterface\RedisResult.cs" />
     <Compile Include="AlgorithmInterface\UserControl\AlgorithmPage.cs">
       <SubType>UserControl</SubType>
     </Compile>

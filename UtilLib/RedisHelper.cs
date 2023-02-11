@@ -1,4 +1,5 @@
 ﻿using ServiceStack.Redis;
+using System.Collections.Generic;
 
 namespace EMU.Util
 {
@@ -22,6 +23,10 @@ namespace EMU.Util
         public void DeleteValue(string key)
         {
             redis.Del(key);
+        }
+        public List<string> GetKeys()
+        {
+            return redis.GetAllKeys();
         }
         public T GetValue<T>(string key)
         {

@@ -34,7 +34,7 @@ namespace Project
             tb_redis_output.KeyDown += Tb_redis_output_KeyDown;
             tb_redis_internal.KeyDown += Tb_redis_internal_KeyDown;
 
-            LogManager.AddLogEvent += LogManager_AddLogEvent;
+            AddLogEvent += LogManager_AddLogEvent;
 
             Project.RunInterface(tb_redis_url.Text, tb_redis_input.Text, tb_redis_output.Text, int.Parse(tb_redis_internal.Text));
             ThreadManager.BackTask((int startIndex, ThreadEventArgs threadEventArgs) =>
@@ -47,7 +47,22 @@ namespace Project
                     GetVariable(Project.inParName1, sb, eventArgs);
                     GetVariable(Project.inParName2, sb, eventArgs);
                     GetVariable(Project.inParName3, sb, eventArgs);
-                    GetVariable(Project.inParName4, sb, eventArgs);
+                    object o = eventArgs.GetVariableValue(Project.inParObject, null);
+                    if (o != null)
+                    {
+                        RedisBusiness[] businesses = JsonManager.JsonToObject<RedisBusiness[]>(o.ToString());
+                        StringBuilder coordinatesBuilder = new StringBuilder();
+                        StringBuilder typeBuilder = new StringBuilder();
+                        foreach (RedisBusiness business in businesses)
+                        {
+                            coordinatesBuilder.AppendLine(business.coordinates);
+                            typeBuilder.AppendLine(business.type);
+                        }
+                        string coordinates = coordinatesBuilder.ToString();
+                        string type = typeBuilder.ToString();
+                        sb.AppendLine("坐标集合: " + coordinates);
+                        sb.AppendLine("坐标类型: " + type);
+                    }
                     BeginInvoke(new Action(() =>
                     {
                         tb_redis.Text = sb.ToString();
@@ -56,9 +71,9 @@ namespace Project
             });
         }
 
-        private void LogManager_AddLogEvent(string arg1, EMU.Parameter.LogType arg2)
+        private void LogManager_AddLogEvent(string arg1, LogType arg2)
         {
-            if (arg2 == EMU.Parameter.LogType.ProcessLog)
+            if (arg2 == LogType.ProcessLog)
             {
                 reportCount++;
                 BeginInvoke(new Action(() =>
@@ -73,7 +88,7 @@ namespace Project
                     tb_redis_report.ScrollToCaret();
                 }));
             }
-            else if (arg2 == EMU.Parameter.LogType.GeneralLog)
+            else if (arg2 == LogType.GeneralLog)
             {
                 resultCount++;
                 BeginInvoke(new Action(() =>

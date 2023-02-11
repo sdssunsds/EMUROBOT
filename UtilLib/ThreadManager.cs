@@ -56,7 +56,7 @@ namespace EMU.Util
                         }
                     }
                     i++;
-                    if (i > 10000)
+                    if (i > 100000000)
                     {
                         i = 0;
                     }
@@ -120,7 +120,7 @@ namespace EMU.Util
         /// <summary>
         /// 添加跟踪的变量
         /// </summary>
-        public void AddVariable(string name, object value)
+        public void SetVariableValue(string name, object value)
         {
             lock (variableLock)
             {
