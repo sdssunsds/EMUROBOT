@@ -30,6 +30,8 @@ namespace Project
         public IRobotControl robot { get; set; } = RobotModCtrlHelper.Instance;
         public IService upload { get; set; } = UploadImages.Instance;
         public IHomePage homePage { get; set; }
+        public string ChineseTitle { get; set; }
+        public string EnglishTitle { get; set; }
         public string PathParameter1
         { 
             get { return EMU.Business.Properties.Settings.Default.ImgSavePath; }

@@ -18,6 +18,8 @@ namespace EMU.Interface
         IRobotControl robot { get; set; }
         IService upload { get; set; }
         IHomePage homePage { get; set; }
+        string ChineseTitle { get; set; }
+        string EnglishTitle { get; set; }
         string PathParameter1 { get; set; }
         string PathParameter2 { get; set; }
         string PathParameter3 { get; set; }

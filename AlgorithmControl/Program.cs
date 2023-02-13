@@ -78,6 +78,12 @@ namespace AlgorithmControl
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                try
+                {
+                    Bitmap bitmap = GW.Function.ComputerFunction.Computer.GetScreenImgByteArray();
+                    bitmap.Save(bakPath + taskID + ".png");
+                }
+                catch (Exception) { }
             }
         }
         static void AddLog(string log)

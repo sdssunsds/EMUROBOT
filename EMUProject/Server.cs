@@ -25,6 +25,8 @@ namespace Project
         public IRobotControl robot { get; set; } = new RobotTask();
         public IService upload { get; set; }
         public IHomePage homePage { get; set; }
+        public string ChineseTitle { get; set; }
+        public string EnglishTitle { get; set; }
         public string PathParameter1
         {
             get { return UploadImageServer.Properties.Settings.Default.UploadPath; }

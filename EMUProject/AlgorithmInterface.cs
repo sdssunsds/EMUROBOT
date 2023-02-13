@@ -26,6 +26,8 @@ namespace Project
         public IRobotControl robot { get; set; }
         public IService upload { get; set; }
         public IHomePage homePage { get; set; }
+        public string ChineseTitle { get; set; } = "算法接口服务";
+        public string EnglishTitle { get; set; } = "Algorithm Interface";
         public string PathParameter1 { get; set; } = Application.StartupPath + "\\opration.ini";
         public string PathParameter2 { get; set; }
         public string PathParameter3 { get; set; }

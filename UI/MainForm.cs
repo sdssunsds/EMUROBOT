@@ -49,6 +49,14 @@ namespace EMU.UI
             }
             Global.MainColor = label1.BackColor = label2.BackColor = pictureBox1.BackColor = Properties.Settings.Default.Color;
             Global.ForeColor = ForeColor = label1.ForeColor = label2.ForeColor = Properties.Settings.Default.FontColor;
+            if (!string.IsNullOrEmpty(Project.ChineseTitle))
+            {
+                label1.Text = Project.ChineseTitle; 
+            }
+            if (!string.IsNullOrEmpty(Project.EnglishTitle))
+            {
+                label2.Text = Project.EnglishTitle; 
+            }
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e)

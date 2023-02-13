@@ -23,6 +23,8 @@ namespace Project
         public IRobotControl robot { get; set; }
         public IService upload { get; set; }
         public IHomePage homePage { get; set; }
+        public string ChineseTitle { get; set; } = "多功能导航车控制系统";
+        public string EnglishTitle { get; set; } = "AGV Controler";
         public string PathParameter1 { get; set; }
         public string PathParameter2 { get; set; }
         public string PathParameter3 { get; set; }
