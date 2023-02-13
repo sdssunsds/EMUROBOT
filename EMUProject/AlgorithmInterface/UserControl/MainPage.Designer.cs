@@ -47,6 +47,7 @@ namespace Project
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.tb_redis_result = new System.Windows.Forms.TextBox();
+            this.btn_link = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -55,6 +56,7 @@ namespace Project
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.btn_link);
             this.groupBox1.Controls.Add(this.tb_redis_output);
             this.groupBox1.Controls.Add(this.tb_redis_input);
             this.groupBox1.Controls.Add(this.label3);
@@ -64,13 +66,14 @@ namespace Project
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(702, 76);
+            this.groupBox1.Size = new System.Drawing.Size(1091, 76);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Redis接口";
             // 
             // tb_redis_output
             // 
+            this.tb_redis_output.Enabled = false;
             this.tb_redis_output.Location = new System.Drawing.Point(394, 44);
             this.tb_redis_output.Name = "tb_redis_output";
             this.tb_redis_output.Size = new System.Drawing.Size(252, 21);
@@ -79,6 +82,7 @@ namespace Project
             // 
             // tb_redis_input
             // 
+            this.tb_redis_input.Enabled = false;
             this.tb_redis_input.Location = new System.Drawing.Point(67, 44);
             this.tb_redis_input.Name = "tb_redis_input";
             this.tb_redis_input.Size = new System.Drawing.Size(252, 21);
@@ -125,10 +129,10 @@ namespace Project
             this.groupBox2.Controls.Add(this.tb_redis_report);
             this.groupBox2.Controls.Add(this.tb_redis);
             this.groupBox2.Controls.Add(this.panel1);
-            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Left;
+            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox2.Location = new System.Drawing.Point(0, 76);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(402, 365);
+            this.groupBox2.Size = new System.Drawing.Size(541, 365);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Redis接口定时输入";
@@ -141,13 +145,13 @@ namespace Project
             this.tb_redis_report.Name = "tb_redis_report";
             this.tb_redis_report.ReadOnly = true;
             this.tb_redis_report.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tb_redis_report.Size = new System.Drawing.Size(214, 286);
+            this.tb_redis_report.Size = new System.Drawing.Size(353, 286);
             this.tb_redis_report.TabIndex = 4;
             // 
             // tb_redis
             // 
             this.tb_redis.Dock = System.Windows.Forms.DockStyle.Right;
-            this.tb_redis.Location = new System.Drawing.Point(217, 76);
+            this.tb_redis.Location = new System.Drawing.Point(356, 76);
             this.tb_redis.Multiline = true;
             this.tb_redis.Name = "tb_redis";
             this.tb_redis.ReadOnly = true;
@@ -165,17 +169,18 @@ namespace Project
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(3, 17);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(396, 59);
+            this.panel1.Size = new System.Drawing.Size(535, 59);
             this.panel1.TabIndex = 5;
             // 
             // label7
             // 
+            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(212, 40);
+            this.label7.Location = new System.Drawing.Point(351, 40);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(53, 12);
             this.label7.TabIndex = 8;
-            this.label7.Text = "请求过程";
+            this.label7.Text = "过程监控";
             // 
             // label6
             // 
@@ -217,10 +222,10 @@ namespace Project
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.tb_redis_result);
-            this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox3.Location = new System.Drawing.Point(402, 76);
+            this.groupBox3.Dock = System.Windows.Forms.DockStyle.Right;
+            this.groupBox3.Location = new System.Drawing.Point(541, 76);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(300, 365);
+            this.groupBox3.Size = new System.Drawing.Size(550, 365);
             this.groupBox3.TabIndex = 2;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "返回给Redis的数据";
@@ -233,18 +238,28 @@ namespace Project
             this.tb_redis_result.Name = "tb_redis_result";
             this.tb_redis_result.ReadOnly = true;
             this.tb_redis_result.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tb_redis_result.Size = new System.Drawing.Size(294, 345);
+            this.tb_redis_result.Size = new System.Drawing.Size(544, 345);
             this.tb_redis_result.TabIndex = 5;
+            // 
+            // btn_link
+            // 
+            this.btn_link.Location = new System.Drawing.Point(671, 17);
+            this.btn_link.Name = "btn_link";
+            this.btn_link.Size = new System.Drawing.Size(85, 48);
+            this.btn_link.TabIndex = 6;
+            this.btn_link.Text = "连接Redis";
+            this.btn_link.UseVisualStyleBackColor = true;
+            this.btn_link.Click += new System.EventHandler(this.btn_link_Click);
             // 
             // MainPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox1);
             this.Name = "MainPage";
-            this.Size = new System.Drawing.Size(702, 441);
+            this.Size = new System.Drawing.Size(1091, 441);
             this.Load += new System.EventHandler(this.MainPage_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -278,5 +293,6 @@ namespace Project
         private System.Windows.Forms.TextBox tb_redis_result;
         private System.Windows.Forms.TextBox tb_redis;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Button btn_link;
     }
 }

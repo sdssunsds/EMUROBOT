@@ -13,7 +13,11 @@ namespace Project
     {
         private int reportCount = 0;
         private int resultCount = 0;
+        private string urlKey = "Url", inputKey = "Input", outputKey = "OutPut", internalKey = "Internal";
         private StringBuilder sb = new StringBuilder();
+        private Dictionary<string, string> pairs;
+
+        public static string Pwd = "";
 
         public AlgorithmInterface Project { get; set; }
 
@@ -24,19 +28,23 @@ namespace Project
 
         private void MainPage_Load(object sender, EventArgs e)
         {
-            tb_redis_url.Text = FileSystem.ReadIniFile("Redis", "Url", "", Project.PathParameter1);
-            tb_redis_input.Text = FileSystem.ReadIniFile("Redis", "Input", "", Project.PathParameter1);
-            tb_redis_output.Text = FileSystem.ReadIniFile("Redis", "OutPut", "", Project.PathParameter1);
-            tb_redis_internal.Text = FileSystem.ReadIniFile("Redis", "Internal", "100", Project.PathParameter1);
+            tb_redis_url.Text = FileSystem.ReadIniFile("Redis", urlKey, "", Project.PathParameter1);
+            tb_redis_input.Text = FileSystem.ReadIniFile("Redis", inputKey, "", Project.PathParameter1);
+            tb_redis_output.Text = FileSystem.ReadIniFile("Redis", outputKey, "", Project.PathParameter1);
+            tb_redis_internal.Text = FileSystem.ReadIniFile("Redis", internalKey, "100", Project.PathParameter1);
+            Pwd = FileSystem.ReadIniFile("Redis", "Password", "", Project.PathParameter1);
+
+            pairs = new Dictionary<string, string>()
+            {
+                { urlKey, tb_redis_url.Text },{ inputKey, tb_redis_input.Text },{ outputKey, tb_redis_output.Text },{ internalKey, tb_redis_internal.Text }
+            };
 
             tb_redis_url.KeyDown += Tb_redis_url_KeyDown;
             tb_redis_input.KeyDown += Tb_redis_input_KeyDown;
             tb_redis_output.KeyDown += Tb_redis_output_KeyDown;
             tb_redis_internal.KeyDown += Tb_redis_internal_KeyDown;
-
             AddLogEvent += LogManager_AddLogEvent;
 
-            Project.RunInterface(tb_redis_url.Text, tb_redis_input.Text, tb_redis_output.Text, int.Parse(tb_redis_internal.Text));
             ThreadManager.BackTask((int startIndex, ThreadEventArgs threadEventArgs) =>
             {
                 List<ThreadEventArgs> list = ThreadManager.GetThreadEventArgs();
@@ -53,10 +61,13 @@ namespace Project
                         RedisBusiness[] businesses = JsonManager.JsonToObject<RedisBusiness[]>(o.ToString());
                         StringBuilder coordinatesBuilder = new StringBuilder();
                         StringBuilder typeBuilder = new StringBuilder();
-                        foreach (RedisBusiness business in businesses)
+                        if (businesses != null)
                         {
-                            coordinatesBuilder.AppendLine(business.coordinates);
-                            typeBuilder.AppendLine(business.type);
+                            foreach (RedisBusiness business in businesses)
+                            {
+                                coordinatesBuilder.AppendLine(business.coordinates);
+                                typeBuilder.AppendLine(business.type);
+                            } 
                         }
                         string coordinates = coordinatesBuilder.ToString();
                         string type = typeBuilder.ToString();
@@ -107,54 +118,59 @@ namespace Project
 
         private void tb_redis_url_Leave(object sender, EventArgs e)
         {
-            SaveOperation("Url", tb_redis_url.Text);
+            SaveOperation(urlKey, tb_redis_url.Text);
         }
 
         private void Tb_redis_url_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                SaveOperation("Url", tb_redis_url.Text);
+                SaveOperation(urlKey, tb_redis_url.Text);
             }
         }
 
         private void tb_redis_input_Leave(object sender, EventArgs e)
         {
-            SaveOperation("Input", tb_redis_input.Text);
+            SaveOperation(inputKey, tb_redis_input.Text);
         }
 
         private void Tb_redis_input_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                SaveOperation("Input", tb_redis_input.Text);
+                SaveOperation(inputKey, tb_redis_input.Text);
             }
         }
 
         private void tb_redis_output_Leave(object sender, EventArgs e)
         {
-            SaveOperation("OutPut", tb_redis_output.Text);
+            SaveOperation(outputKey, tb_redis_output.Text);
         }
 
         private void Tb_redis_output_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                SaveOperation("OutPut", tb_redis_output.Text);
+                SaveOperation(outputKey, tb_redis_output.Text);
             }
         }
 
         private void tb_redis_internal_Leave(object sender, EventArgs e)
         {
-            SaveOperation("Internal", tb_redis_internal.Text);
+            SaveOperation(internalKey, tb_redis_internal.Text);
         }
 
         private void Tb_redis_internal_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                SaveOperation("Internal", tb_redis_internal.Text);
+                SaveOperation(internalKey, tb_redis_internal.Text);
             }
+        }
+
+        private void btn_link_Click(object sender, EventArgs e)
+        {
+            Project.RunInterface(tb_redis_url.Text, tb_redis_input.Text, tb_redis_output.Text, int.Parse(tb_redis_internal.Text), Pwd);
         }
 
         private void GetVariable(string name, StringBuilder sb, ThreadEventArgs eventArgs)
@@ -166,7 +182,22 @@ namespace Project
         {
             try
             {
-                Project.RunInterface(tb_redis_url.Text, tb_redis_input.Text, tb_redis_output.Text, int.Parse(tb_redis_internal.Text));
+                if (pairs.ContainsKey(key))
+                {
+                    if (pairs[key] == value)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        pairs[key] = value;
+                    }
+                }
+                else
+                {
+                    pairs.Add(key, value);
+                }
+                Pwd = "";
                 FileSystem.WriteIniFile("Redis", key, value, Project.PathParameter1);
             }
             catch (Exception e)

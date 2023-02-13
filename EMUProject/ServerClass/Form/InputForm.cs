@@ -17,6 +17,14 @@ namespace Project.ServerClass
             textBox1.Text = Value;
         }
 
+        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                button1_Click(null, null);
+            }
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             Value = textBox1.Text;

@@ -5,82 +5,91 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using System.Text;
 using static EMU.Util.LogManager;
+using System.Threading;
 
 namespace Project
 {
     public partial class AlgorithmPage : UserControl
     {
+        private const int algorithmMax = 1;
+        private object runLock = new object();
         private int logCount = 0;
+        private string resultDir = "";
+        private List<string> runIdArray = null;
 
         public AlgorithmInterface Project { get; set; }
 
         public AlgorithmPage()
         {
             InitializeComponent();
+            runIdArray = new List<string>();
+        }
+
+        public void RunAlgorithm(string type, string json, string url_now, string url_up, string id)
+        {
+            lock (runLock)
+            {
+                while (runIdArray.Count >= algorithmMax)
+                {
+                    Thread.Sleep(50);
+                }
+                runIdArray.Add(id);
+            }
+            if (!string.IsNullOrEmpty(url_now) && !string.IsNullOrEmpty(json) && !string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(id))
+            {
+                json = json.Replace("coordinates:", "\"coordinates\":\"");
+                json = json.Replace(",type:", "\",\"type\":\"");
+                json = json.Replace("}]", "\"}]");
+                AddLog("任务编号：" + id, LogType.OtherLog);
+                AddLog("识别类型：" + type, LogType.OtherLog);
+                AddLog("坐标Json：" + json, LogType.OtherLog);
+                AddLog("本次图片：" + url_now, LogType.OtherLog);
+                AddLog("上次图片：" + url_up, LogType.OtherLog);
+                string resultFile = resultDir + "\\" + id + ".json";
+                if (File.Exists(resultFile))
+                {
+                    AddLog("删除结果文件", LogType.OtherLog);
+                    File.Delete(resultFile);
+                }
+                SetAlgorithmPars(url_now, json, type, id);
+                AddLog("启动算法", LogType.OtherLog);
+                Process da = new Process();
+                da.StartInfo.FileName = Application.StartupPath + "\\AlgorithmControl.exe";
+                da.StartInfo.Arguments = string.Format("{0} {1} {2} {3}", url_now, json.Replace("\"", "&&"), type, id);
+                da.Start();
+                da.WaitForExit();
+                AddLog("算法执行完毕", LogType.OtherLog);
+                json = "";
+                if (File.Exists(resultFile))
+                {
+                    using (StreamReader sr = new StreamReader(resultFile))
+                    {
+                        json = sr.ReadToEnd();
+                    }
+                }
+                if (!string.IsNullOrEmpty(json))
+                {
+                    AddLog("算法结果：" + json, LogType.OtherLog);
+                    Project.ResultBack(id, json);
+                }
+            }
+
+            lock (runLock)
+            {
+                runIdArray.Remove(id); 
+            }
         }
 
         private void AlgorithmPage_Load(object sender, EventArgs e)
         {
-            AddLogEvent += LogManager_AddLogEvent;
-            ThreadManager.BackTask((int startIndex, ThreadEventArgs threadEventArgs) =>
+            resultDir = Application.StartupPath + "\\bak_result\\";
+            if (!Directory.Exists(resultDir))
             {
-                List<ThreadEventArgs> list = ThreadManager.GetThreadEventArgs();
-                ThreadEventArgs eventArgs = list.Find(t => t.ThreadName == Project.RedisThreadName);
-                if ((bool)eventArgs.GetVariableValue(Project.algorithmRunStart, false))
-                {
-                    eventArgs.SetVariableValue(Project.algorithmRunStart, false);
-                }
-                else
-                {
-                    return;
-                }
-                if (eventArgs != null)
-                {
-                    string json = eventArgs.GetVariableValue(Project.inParObject, "").ToString();
-                    string url_now = eventArgs.GetVariableValue(Project.inParName2, "").ToString();
-                    string url_up = eventArgs.GetVariableValue(Project.inParName3, "").ToString();
-                    string type = eventArgs.GetVariableValue(Project.inParName1, "").ToString();
-                    string id = eventArgs.GetVariableValue(Project.taskID, "").ToString();
-                    AddLog("识别类型：" + type, LogType.OtherLog);
-                    AddLog("坐标Json：" + json, LogType.OtherLog);
-                    AddLog("本次图片url：" + url_now, LogType.OtherLog);
-                    AddLog("上次图片url：" + url_up, LogType.OtherLog);
-
-                    if (!string.IsNullOrEmpty(url_now) && !string.IsNullOrEmpty(json) && !string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(id))
-                    {
-                        string resultFile = Application.StartupPath + "\\AlgorithmResult.json";
-                        if (File.Exists(resultFile))
-                        {
-                            AddLog("删除结果文件", LogType.OtherLog);
-                            File.Delete(resultFile);
-                        }
-                        AddLog("启动算法", LogType.OtherLog);
-                        Process da = new Process();
-                        da.StartInfo.FileName = Application.StartupPath + "\\AlgorithmControl.exe";
-                        da.StartInfo.Arguments = string.Format("{0} {1} {2} {3}", url_now, json.Replace("\"", "&&"), type, id);
-                        da.Start();
-                        da.WaitForExit();
-                        AddLog("算法执行完毕", LogType.OtherLog);
-                        json = "";
-                        if (File.Exists(resultFile))
-                        {
-                            using (StreamReader sr = new StreamReader(resultFile))
-                            {
-                                json = sr.ReadToEnd();
-                            } 
-                        }
-                        if (!string.IsNullOrEmpty(json))
-                        {
-                            AddLog("算法结果：" + json, LogType.OtherLog);
-                            eventArgs.SetVariableValue(Project.outParName, json);
-                        }
-                        eventArgs.SetVariableValue(Project.algorithmComplete, true);
-                        eventArgs.SetVariableValue(Project.algorithmRunStart, false);
-                        AddLog("完成状态回写", LogType.OtherLog);
-                    }
-                }
-            });
+                Directory.CreateDirectory(resultDir);
+            }
+            AddLogEvent += LogManager_AddLogEvent;
         }
 
         private void LogManager_AddLogEvent(string arg1, LogType arg2)
@@ -98,6 +107,32 @@ namespace Project
                     textBox1.Text += arg1 + "\r\n";
                     textBox1.SelectionStart = textBox1.Text.Length - 1;
                     textBox1.ScrollToCaret();
+                }));
+            }
+        }
+
+        private void SetAlgorithmPars(params string[] pars)
+        {
+            if (pars != null && !IsDisposed)
+            {
+                BeginInvoke(new Action(() =>
+                {
+                    for (int i = 0; i < pars.Length; i++)
+                    {
+                        if (i < flowLayoutPanel1.Controls.Count)
+                        {
+                            flowLayoutPanel1.Controls[i].Text = pars[i];
+                            flowLayoutPanel1.Controls[i].Size = TextRenderer.MeasureText(pars[i], flowLayoutPanel1.Controls[i].Font);
+                        }
+                        else
+                        {
+                            Label lb = new Label();
+                            lb.Text = pars[i];
+                            lb.AutoSize = false;
+                            lb.Size = TextRenderer.MeasureText(lb.Text, lb.Font);
+                            flowLayoutPanel1.Controls.Add(lb);
+                        }
+                    }
                 }));
             }
         }
