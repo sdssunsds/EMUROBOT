@@ -34,7 +34,7 @@ namespace Project.ServerClass
         private string enginePath;
         private string projectID;
         private ServiceHost host = null;
-        private byte[] logByte = new byte[1024];
+        private string log = "";
         private List<BackDataModel> backList = null;
 
         public int AlgorithmProgress
@@ -46,10 +46,10 @@ namespace Project.ServerClass
         {
             get { return projectID; }
         }
-        public byte[] logBytes
+        public string Log
         {
-            get { return logByte; }
-            set { logByte = value; }
+            get { return log; }
+            set { log = value; }
         }
 
         public event AcceptClient AcceptClient;
@@ -142,7 +142,8 @@ namespace Project.ServerClass
                     {
                         AlgorithmSetting[] algorithmSettings = ServerGlobal.GetAlgorithmSetting();
                         imgObj = Algorithm.ExportObjectFactorycutimg();
-                        puzzleInitComplete = Algorithm.CallOnInitcutimg(imgObj, ref logByte[0], enginePath) == 0;
+                        byte b = 0;
+                        puzzleInitComplete = Algorithm.CallOnInitcutimg(imgObj, ref b, enginePath) == 0;
                         if (algObj == IntPtr.Zero)
                         {
                             algObj = Algorithm.ExportObjectFactory();
@@ -151,7 +152,7 @@ namespace Project.ServerClass
                                 Algorithm.GetModelConfig(algObj, item.FuncName, item.NMS_THRESH, item.CONF_THRESH,
                                     item.INPUT_H_v6, item.INPUT_W_v6, item.EngineName, item.ClassName);
                             }
-                            puzzleInitComplete = puzzleInitComplete && Algorithm.CallOnInit(algObj, ref logByte[0]) == 0;
+                            puzzleInitComplete = puzzleInitComplete && Algorithm.CallOnInit(algObj, log) == 0;
                         }
                     }
                     #endregion
@@ -271,7 +272,8 @@ namespace Project.ServerClass
                                     #endregion
                                     #region 算法：执行拼图与切图算法
                                     AlgorithmProgressMax = 8;
-                                    IntPtr result = Algorithm.Callcutimg(imgObj, inputrect, inputList.ToArray(), inputList.Count, height, height.Length, ref imgLen, ref progressIndex, ref logByte[0]);
+                                    byte b = 0;
+                                    IntPtr result = Algorithm.Callcutimg(imgObj, inputrect, inputList.ToArray(), inputList.Count, height, height.Length, ref imgLen, ref progressIndex, ref b);
                                     #endregion
                                     #region 读取算法结果用的内存信息
                                     int length = Marshal.SizeOf(typeof(input_struct));
@@ -339,7 +341,7 @@ namespace Project.ServerClass
                                             List<input_task> tmpList = inputList.FindAll(t => t.imgNO == i + 1);
                                             List<model_struct> model_Structs = ServerGlobal.DataBase.GetTs<model_struct>(null, train, i);
                                             int arrayLen = model_Structs.Count;
-                                            IntPtr _result = Algorithm.NewCallgetres(algObj, files[i], tmpList.ToArray(), tmpList.Count, model_Structs.ToArray(), arrayLen, ref resultLen, ref tmp, ref logByte[0]);
+                                            IntPtr _result = Algorithm.NewCallgetres(algObj, null, 0, 0, null, 0, 0, null, 0, model_Structs.ToArray(), arrayLen, ref resultLen);
                                             int _length = Marshal.SizeOf(typeof(box_info));
                                             long _len = _result.ToInt64();
                                             for (int j = 0; j < resultLen; j++)
@@ -723,7 +725,8 @@ namespace Project.ServerClass
                 string onlyID = input_Struct.only_str.ToString('\0');
                 List<model_struct> model_Structs = GetModelStructs(onlyID, train);
                 int arrayLen = model_Structs.Count;
-                IntPtr _result = Algorithm.Callgetres(algObj, input_Struct, model_Structs.ToArray(), arrayLen, ref resultLen, ref tmp, ref logByte[0]);
+                byte b = 0;
+                IntPtr _result = Algorithm.Callgetres(algObj, input_Struct, model_Structs.ToArray(), arrayLen, ref resultLen, ref tmp, ref b);
                 int _length = Marshal.SizeOf(typeof(box_info));
                 long _len = _result.ToInt64();
                 for (int j = 0; j < resultLen; j++)

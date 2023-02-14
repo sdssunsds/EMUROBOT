@@ -18,6 +18,43 @@ namespace AlgorithmLib
             }
             return s;
         }
+        public static string ChangeCode(this int code)
+        {
+            AlgorithmStateEnum algorithm = (AlgorithmStateEnum)code;
+            switch (algorithm)
+            {
+                case AlgorithmStateEnum.无法检测:
+                    return "";
+                case AlgorithmStateEnum.正常:
+                    return "0200";
+                case AlgorithmStateEnum.异常:
+                    return "";
+                case AlgorithmStateEnum.螺丝丢失:
+                    return "0205";
+                case AlgorithmStateEnum.螺丝松动:
+                    return "0201";
+                case AlgorithmStateEnum.铁丝断裂:
+                    return "0301";
+                case AlgorithmStateEnum.划痕:
+                    return "0103";
+                case AlgorithmStateEnum.异物:
+                    return "0107";
+                case AlgorithmStateEnum.油位异常:
+                    return "0801";
+                case AlgorithmStateEnum.油液浑浊:
+                    return "";
+                case AlgorithmStateEnum.漏油:
+                    return "0106";
+                case AlgorithmStateEnum.丢失:
+                    return "0112";
+                case AlgorithmStateEnum.车头中缝过大:
+                    return "";
+                case AlgorithmStateEnum.管接头松脱:
+                    return "";
+                default:
+                    return "";
+            }
+        }
         public static char[] ToCharArray(this string value, int length)
         {
             char[] cs = new char[length];
@@ -207,14 +244,19 @@ namespace AlgorithmLib
     }
     public enum AlgorithmStateEnum
     {
+        无法检测 = -1,
         正常 = 0,
         异常 = 1,
         螺丝丢失 = 2,
         螺丝松动 = 3,
-        螺丝断裂 = 4,
+        铁丝断裂 = 4,
         划痕 = 5,
         异物 = 6,
         油位异常 = 7,
-        油液浑浊 = 8
+        油液浑浊 = 8,
+        漏油 = 9,
+        丢失 = 10,
+        车头中缝过大 = 11,
+        管接头松脱 = 12
     }
 }

@@ -87,8 +87,7 @@ namespace Project
             ThreadManager.BackTask((int i, ThreadEventArgs threadEventArgs) =>
             {
                 AppServer app = appServer as AppServer;
-                byte[] logByte = app.logBytes;
-                string log = System.Text.Encoding.Default.GetString(logByte, 0, logByte.Length).Replace("\0", "");
+                string log = app.Log;
                 log.AddLog(EMU.Parameter.LogType.TestLog);
                 if (app.AlgorithmProjectID != null && ServerGlobal.ProgressProjectDict.ContainsKey(app.AlgorithmProjectID))
                 {

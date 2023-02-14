@@ -1,4 +1,5 @@
-﻿using EMU.Util;
+﻿using AlgorithmLib;
+using EMU.Util;
 using Project;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -17,18 +19,17 @@ namespace AlgorithmControl
         static string taskID = "";
         static void Main(string[] args)
         {
-            taskID = args[args.Length - 1];
+            taskID = args[0];
             string bakPath = Application.StartupPath + "\\bak_img\\";
             try
             {
-                AddLog("下载图片：" + args[0]);
-#if true
-                Bitmap bitmap = GW.Function.ImageFunction.Manage.ImageManage.Download(args[0]);
-#else
-                Bitmap bitmap = new Bitmap(100, 100);
-                Graphics g = Graphics.FromImage(bitmap);
-                g.Clear(Color.White);
-#endif
+                AddLog("下载图片：" + args[2]);
+                Bitmap bitmap = GW.Function.ImageFunction.Manage.ImageManage.Download(args[2]);
+                //Bitmap bitmap = (Bitmap)Image.FromFile(Application.StartupPath + "\\1.jpg");
+                //AddLog("下载图片：" + args[3]);
+                //Bitmap upBitmap = GW.Function.ImageFunction.Manage.ImageManage.Download(args[3]);
+                int width = bitmap.Width;
+                int height = bitmap.Height;
                 AddLog("缓存完成：" + args[0]);
                 if (!Directory.Exists(bakPath))
                 {
@@ -37,8 +38,7 @@ namespace AlgorithmControl
                 byte[] imgBytes = Image2Byte(bitmap);
                 AddLog("Bitmap转换byte数组完成");
                 StringBuilder sb = new StringBuilder();
-                int length = args.Length - 2;
-                for (int i = 1; i < length; i++)
+                for (int i = 4; i < args.Length; i++)
                 {
                     sb.Append(args[i]);
                 }
@@ -47,50 +47,72 @@ namespace AlgorithmControl
                 AddLog("转换Json：" + json);
                 RedisBusiness[] businesses = JsonManager.JsonToObject<RedisBusiness[]>(json);
                 AddLog("Json转换完成");
-                AddLog("识别类型：" + args[args.Length - 2]);
+                AddLog("识别类型：" + args[1]);
                 Task.Run(() =>
                 {
                     bitmap.Save(bakPath + taskID + ".jpg");
                     AddLog("图片备份完成");
+                    bitmap.Dispose();
                 });
-                // 调用算法
-                List<RedisResult> results = new List<RedisResult>();
-                #region 伪结果
-                int ma = 0;
-                if (taskID == "002")
+                IntPtr ptr = Algorithm.ExportObjectFactory();
+                AddLog("算法初始化成功");
+                int r = Algorithm.CallOnInit(ptr, null);
+                AddLog("Call: " + r);
+                if (r == 0)
                 {
-                    ma = 11;
-                }
-                for (int i = 0; i < 2; i++)
-                {
-                    results.Add(new RedisResult()
+                    Dictionary<int, List<Rectangle>> valueDict = new Dictionary<int, List<Rectangle>>();
+                    foreach (RedisBusiness item in businesses)
                     {
-                        jclx = "020" + i,
-                        result = new List<Rectangle>()
-                    {
-                        new Rectangle(i * 20 + ma, i * 20, 10, i + 10),
-                        new Rectangle(i * 40 + ma, i * 40, 30, 30)
+                        string[] ts = args[1].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                        AddLog("获取任务ID: " + JsonManager.ObjectToJson(ts));
+                        List<int> inputTask = new List<int>();
+                        for (int i = 0; i < ts.Length; i++)
+                        {
+                            try
+                            {
+                                inputTask.Add(int.Parse(ts[i]));
+                            }
+                            catch (Exception) { }
+                        }
+                        int len = 0;
+                        AddLog($"调用图像算法，并传参: {imgBytes.Length}, {width}, {height}, {JsonManager.ObjectToJson(inputTask)}, {inputTask.Count}, {JsonManager.ObjectToJson(item.TaskList)}, {item.TaskList.Count}");
+                        IntPtr _result = Algorithm.NewCallgetres(ptr, imgBytes, width, height, null, 0, 0, inputTask.ToArray(), inputTask.Count, item.TaskList.ToArray(), item.TaskList.Count, ref len);
+                        int _length = Marshal.SizeOf(typeof(box_info));
+                        long _len = _result.ToInt64();
+                        for (int j = 0; j < len; j++)
+                        {
+                            box_info value = Marshal.PtrToStructure<box_info>((IntPtr)((long)(_len + j * _length)));
+                            AddLog("装载box_info: " + JsonManager.ObjectToJson(value));
+                            if (!valueDict.ContainsKey(value.state_enum))
+                            {
+                                valueDict.Add(value.state_enum, new List<Rectangle>());
+                            }
+                            valueDict[value.state_enum].Add(new Rectangle(value.x, value.y, value.w, value.h));
+                        }
                     }
-                    });
-                }
-                #endregion
-                json = JsonManager.ObjectToJson(results);
-                AddLog("算法结果：" + json);
-                string resultFile = Application.StartupPath + "\\bak_result\\" + taskID + ".json";
-                using (StreamWriter sw = new StreamWriter(resultFile))
-                {
-                    sw.Write(json);
+
+                    List<RedisResult> results = new List<RedisResult>();
+                    foreach (KeyValuePair<int, List<Rectangle>> item in valueDict)
+                    {
+                        RedisResult result = new RedisResult()
+                        {
+                            jclx = item.Key.ChangeCode(),
+                            result = item.Value
+                        };
+                        results.Add(result);
+                    }
+                    json = JsonManager.ObjectToJson(results);
+                    AddLog("算法结果：" + json);
+                    string resultFile = Application.StartupPath + "\\bak_result\\" + taskID + ".json";
+                    using (StreamWriter sw = new StreamWriter(resultFile))
+                    {
+                        sw.Write(json);
+                    }
                 }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                try
-                {
-                    Bitmap bitmap = GW.Function.ComputerFunction.Computer.GetScreenImgByteArray();
-                    bitmap.Save(bakPath + taskID + ".png");
-                }
-                catch (Exception) { }
             }
         }
         static void AddLog(string log)

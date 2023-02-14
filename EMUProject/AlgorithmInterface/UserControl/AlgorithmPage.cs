@@ -1,7 +1,9 @@
 ﻿using EMU.Parameter;
+using GW.Function.ComputerFunction;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
@@ -44,9 +46,12 @@ namespace Project
                 eventArgs.SetVariableValue("原始版Json", json);
                 json = json.Replace("coordinates:", "\"coordinates\":\"");
                 json = json.Replace(",type:", "\",\"type\":\"");
-                json = json.Replace("}]", "\"}]");
+                if (json.IndexOf("\"}]") < 0)
+                {
+                    json = json.Replace("}]", "\"}]"); 
+                }
                 eventArgs.SetVariableValue("修正后Json", json);
-                json = json.Replace("\"", "&&");
+                json = json.Replace(" ", "").Replace("\"", "&&");
                 eventArgs.SetVariableValue("传输用Json", json);
                 AddLog("任务编号：" + id, LogType.OtherLog);
                 AddLog("识别类型：" + type, LogType.OtherLog);
@@ -59,13 +64,40 @@ namespace Project
                     AddLog("删除结果文件", LogType.OtherLog);
                     File.Delete(resultFile);
                 }
-                SetAlgorithmPars(url_now, json, type, id);
+                SetAlgorithmPars(url_now, url_up, json, type, id);
                 AddLog("启动算法", LogType.OtherLog);
+                bool monitor = true;
+                Thread thread = new Thread(new ThreadStart(() =>
+                {
+                    int i = 0;
+                    string path = Application.StartupPath + "\\bak_img\\" + id + "\\";
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+                    while (monitor)
+                    {
+                        try
+                        {
+                            Bitmap bitmap = Computer.GetScreenImgByteArray();
+                            bitmap.Save(path + i + ".jpg");
+                            i++;
+                        }
+                        catch (Exception) { }
+                        Thread.Sleep(100);
+                    }
+                }));
                 Process da = new Process();
                 da.StartInfo.FileName = Application.StartupPath + "\\AlgorithmControl.exe";
-                da.StartInfo.Arguments = string.Format("{0} {1} {2} {3}", url_now, json, type, id);
+                da.StartInfo.Arguments = string.Format("{0} {1} {2} {3} {4}", id, type, url_now, url_up, json);
                 da.Start();
+                thread.Start();
                 da.WaitForExit();
+                monitor = false;
+                if (thread.IsAlive)
+                {
+                    thread.Abort();
+                }
                 AddLog("算法执行完毕", LogType.OtherLog);
                 json = "";
                 if (File.Exists(resultFile))
