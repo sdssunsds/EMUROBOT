@@ -19,7 +19,7 @@ namespace Project
 
         public static string Pwd = "";
 
-        public AlgorithmInterface Project { get; set; }
+        public IAlgorithmInterface Project { get; set; }
 
         public MainPage()
         {
@@ -47,6 +47,7 @@ namespace Project
 
             ThreadManager.BackTask((int startIndex, ThreadEventArgs threadEventArgs) =>
             {
+                threadEventArgs.ThreadName = "过程监控后台线程";
                 List<ThreadEventArgs> list = ThreadManager.GetThreadEventArgs();
                 ThreadEventArgs eventArgs = list.Find(t => t.ThreadName == Project.RedisThreadName);
                 if (eventArgs != null)
@@ -58,7 +59,9 @@ namespace Project
                     object o = eventArgs.GetVariableValue(Project.inParObject, null);
                     if (o != null)
                     {
+                        threadEventArgs.SetVariableValue("获得的Json数据", o);
                         RedisBusiness[] businesses = JsonManager.JsonToObject<RedisBusiness[]>(o.ToString());
+                        threadEventArgs.SetVariableValue("Redis业务集合", businesses);
                         StringBuilder coordinatesBuilder = new StringBuilder();
                         StringBuilder typeBuilder = new StringBuilder();
                         if (businesses != null)

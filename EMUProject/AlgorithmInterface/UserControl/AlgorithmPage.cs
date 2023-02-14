@@ -1,13 +1,11 @@
 ﻿using EMU.Parameter;
-using EMU.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Windows.Forms;
-using System.Text;
-using static EMU.Util.LogManager;
 using System.Threading;
+using System.Windows.Forms;
+using static EMU.Util.LogManager;
 
 namespace Project
 {
@@ -19,7 +17,7 @@ namespace Project
         private string resultDir = "";
         private List<string> runIdArray = null;
 
-        public AlgorithmInterface Project { get; set; }
+        public IAlgorithmInterface Project { get; set; }
 
         public AlgorithmPage()
         {
@@ -27,7 +25,7 @@ namespace Project
             runIdArray = new List<string>();
         }
 
-        public void RunAlgorithm(string type, string json, string url_now, string url_up, string id)
+        public void RunAlgorithm(string type, string json, string url_now, string url_up, string id, EMU.Util.ThreadEventArgs eventArgs)
         {
             lock (runLock)
             {
@@ -39,9 +37,17 @@ namespace Project
             }
             if (!string.IsNullOrEmpty(url_now) && !string.IsNullOrEmpty(json) && !string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(id))
             {
+                eventArgs.SetVariableValue("任务编号", id);
+                eventArgs.SetVariableValue("识别类型", type);
+                eventArgs.SetVariableValue("本次图片", url_now);
+                eventArgs.SetVariableValue("上次图片", url_up);
+                eventArgs.SetVariableValue("原始版Json", json);
                 json = json.Replace("coordinates:", "\"coordinates\":\"");
                 json = json.Replace(",type:", "\",\"type\":\"");
                 json = json.Replace("}]", "\"}]");
+                eventArgs.SetVariableValue("修正后Json", json);
+                json = json.Replace("\"", "&&");
+                eventArgs.SetVariableValue("传输用Json", json);
                 AddLog("任务编号：" + id, LogType.OtherLog);
                 AddLog("识别类型：" + type, LogType.OtherLog);
                 AddLog("坐标Json：" + json, LogType.OtherLog);
@@ -57,7 +63,7 @@ namespace Project
                 AddLog("启动算法", LogType.OtherLog);
                 Process da = new Process();
                 da.StartInfo.FileName = Application.StartupPath + "\\AlgorithmControl.exe";
-                da.StartInfo.Arguments = string.Format("{0} {1} {2} {3}", url_now, json.Replace("\"", "&&"), type, id);
+                da.StartInfo.Arguments = string.Format("{0} {1} {2} {3}", url_now, json, type, id);
                 da.Start();
                 da.WaitForExit();
                 AddLog("算法执行完毕", LogType.OtherLog);

@@ -159,6 +159,7 @@
     <Compile Include="AlgorithmInterface\UserControl\LogPage.Designer.cs">
       <DependentUpon>LogPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="AlgorithmInterface\IAlgorithmInterface.cs" />
     <Compile Include="ServerClass\Extent.cs" />
     <Compile Include="UI\Form\PictureForm.cs">
       <SubType>Form</SubType>

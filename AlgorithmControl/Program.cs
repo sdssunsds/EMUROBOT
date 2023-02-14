@@ -3,8 +3,11 @@ using Project;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AlgorithmControl
@@ -31,9 +34,8 @@ namespace AlgorithmControl
                 {
                     Directory.CreateDirectory(bakPath);
                 }
-                bitmap.Save(bakPath + taskID + ".jpg");
-                OpenCvSharp.Mat mat = OpenCvSharp.Extensions.BitmapConverter.ToMat(bitmap);
-                AddLog("Bitmap转换Mat完成");
+                byte[] imgBytes = Image2Byte(bitmap);
+                AddLog("Bitmap转换byte数组完成");
                 StringBuilder sb = new StringBuilder();
                 int length = args.Length - 2;
                 for (int i = 1; i < length; i++)
@@ -46,6 +48,11 @@ namespace AlgorithmControl
                 RedisBusiness[] businesses = JsonManager.JsonToObject<RedisBusiness[]>(json);
                 AddLog("Json转换完成");
                 AddLog("识别类型：" + args[args.Length - 2]);
+                Task.Run(() =>
+                {
+                    bitmap.Save(bakPath + taskID + ".jpg");
+                    AddLog("图片备份完成");
+                });
                 // 调用算法
                 List<RedisResult> results = new List<RedisResult>();
                 #region 伪结果
@@ -98,6 +105,23 @@ namespace AlgorithmControl
             {
                 sw.WriteLine(DateTime.Now.ToString("HH:mm:ss") + "\t" + log);
             }
+        }
+
+        static byte[] Image2Byte(Bitmap bitmap)
+        {
+            Rectangle rectangle = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
+            BitmapData data = bitmap.LockBits(rectangle, ImageLockMode.ReadOnly, bitmap.PixelFormat);
+            int rowCount = data.Width * Image.GetPixelFormatSize(bitmap.PixelFormat) / 8;
+            long length = bitmap.Height * (long)rowCount;
+            byte[] bytes = new byte[length];
+            IntPtr ptr = data.Scan0; 
+            for (int i = 0; i < bitmap.Height; i++)
+            {
+                Marshal.Copy(ptr, bytes, i * rowCount, rowCount);
+                ptr += data.Stride;
+            }
+            bitmap.UnlockBits(data);
+            return bytes;
         }
     }
 }

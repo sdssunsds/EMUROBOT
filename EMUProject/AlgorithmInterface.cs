@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using UploadImageServer;
@@ -15,7 +14,7 @@ using static EMU.Util.LogManager;
 
 namespace Project
 {
-    public class AlgorithmInterface : IProject
+    public class AlgorithmInterface : IAlgorithmInterface
     {
         public IAppServer appServer { get; set; }
         public ICameraControl[] cameras { get; set; }
@@ -87,6 +86,14 @@ namespace Project
                 else if (item.Name == "设置ToolStripMenuItem")
                 {
                     item.DropDownItems.RemoveByKey("toolStripMenuItem1");
+                }
+                else if (item.Name == "帮助ToolStripMenuItem")
+                {
+                    ToolStripItem strip = item.DropDownItems.Add("DEBUG");
+                    strip.Click += (object sender, EventArgs e) =>
+                    {
+                        new ThreadManagerForm().Show();
+                    };
                 }
             }
         }
@@ -192,12 +199,12 @@ namespace Project
             { "out", 0 }
         };
 
-        public string RedisThreadName = "Redis请求线程";
-        public string inParName1 = "识别类型";
-        public string inParName2 = "本次图片";
-        public string inParName3 = "上次图片";
-        public string inParObject = "业务对象";
-        public string outParName = "结果Json";
+        public string RedisThreadName { get; set; } = "Redis请求线程";
+        public string inParName1 { get; set; } = "识别类型";
+        public string inParName2 { get; set; } = "本次图片";
+        public string inParName3 { get; set; } = "上次图片";
+        public string inParObject { get; set; } = "业务对象";
+        public string outParName { get; set; } = "结果Json";
         #endregion
 
         #region 接口专用方法
@@ -261,7 +268,8 @@ namespace Project
                                                 }
                                                 ThreadManager.TaskRun((ThreadEventArgs tmp) =>
                                                 {
-                                                    algorithmPage.RunAlgorithm(args[0], args[1], args[2], args[3], task_id);
+                                                    tmp.ThreadName = "算法执行线程";
+                                                    algorithmPage.RunAlgorithm(args[0], args[1], args[2], args[3], task_id, tmp);
                                                 });
                                             }
                                         }
@@ -277,7 +285,6 @@ namespace Project
                             {
                                 RedisHelper.ChangeDB(redisDB[outName]);
                             }
-
                         }
                         catch (Exception e)
                         {

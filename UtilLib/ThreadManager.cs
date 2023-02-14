@@ -16,8 +16,8 @@ namespace EMU.Util
         private static List<ThreadEventArgs> eventArgs;
         private static Dictionary<int, ThreadEventArgs> backEventArgs;
         private static Dictionary<int, ThreadFunction> runActions;
-        public static Action<ThreadEventArgs> EventArgsAddingAction { get; set; }
-        public static Action<ThreadEventArgs> EventArgsRemovingAction { get; set; }
+        internal static Action<ThreadEventArgs> EventArgsAddingAction { get; set; }
+        internal static Action<ThreadEventArgs> EventArgsRemovingAction { get; set; }
         static ThreadManager()
         {
             backActions = new List<BackThreadFunction>();
@@ -109,6 +109,7 @@ namespace EMU.Util
     public class ThreadEventArgs
     {
         private object variableLock = new object();
+        internal Action<string, object, ThreadEventArgs> SetValueChange { get; set; }
         public bool IsRunThread { get; internal set; } = false;
         public bool IsBackThread { get; internal set; } = true;
         /// <summary>
@@ -131,7 +132,8 @@ namespace EMU.Util
                 else
                 {
                     variableList.Add(name, value);
-                } 
+                }
+                SetValueChange?.Invoke(name, value, this);
             }
         }
         /// <summary>
