@@ -75,6 +75,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="接口协议.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AlgorithmLib\AlgorithmLib.csproj">

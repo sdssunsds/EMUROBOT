@@ -1,7 +1,6 @@
 ﻿using EMU.Parameter;
 using GW.Function.ComputerFunction;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -16,27 +15,18 @@ namespace Project
         private const int algorithmMax = 1;
         private object runLock = new object();
         private int logCount = 0;
+        private int exeCount = 0;
         private string resultDir = "";
-        private List<string> runIdArray = null;
 
         public IAlgorithmInterface Project { get; set; }
 
         public AlgorithmPage()
         {
             InitializeComponent();
-            runIdArray = new List<string>();
         }
 
         public void RunAlgorithm(string type, string json, string url_now, string url_up, string id, EMU.Util.ThreadEventArgs eventArgs)
         {
-            lock (runLock)
-            {
-                while (runIdArray.Count >= algorithmMax)
-                {
-                    Thread.Sleep(50);
-                }
-                runIdArray.Add(id);
-            }
             if (!string.IsNullOrEmpty(url_now) && !string.IsNullOrEmpty(json) && !string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(id))
             {
                 eventArgs.SetVariableValue("任务编号", id);
@@ -44,12 +34,7 @@ namespace Project
                 eventArgs.SetVariableValue("本次图片", url_now);
                 eventArgs.SetVariableValue("上次图片", url_up);
                 eventArgs.SetVariableValue("原始版Json", json);
-                json = json.Replace("coordinates:", "\"coordinates\":\"");
-                json = json.Replace(",type:", "\",\"type\":\"");
-                if (json.IndexOf("\"}]") < 0)
-                {
-                    json = json.Replace("}]", "\"}]"); 
-                }
+                json = Project.JsonErrorChange(json);
                 eventArgs.SetVariableValue("修正后Json", json);
                 json = json.Replace(" ", "").Replace("\"", "&&");
                 eventArgs.SetVariableValue("传输用Json", json);
@@ -67,6 +52,7 @@ namespace Project
                 SetAlgorithmPars(url_now, url_up, json, type, id);
                 AddLog("启动算法", LogType.OtherLog);
                 bool monitor = true;
+                Process da = new Process();
                 Thread thread = new Thread(new ThreadStart(() =>
                 {
                     int i = 0;
@@ -77,6 +63,11 @@ namespace Project
                     }
                     while (monitor)
                     {
+                        if (i >= 60)
+                        {
+                            da.Kill();
+                            break;
+                        }
                         try
                         {
                             Bitmap bitmap = Computer.GetScreenImgByteArray();
@@ -84,16 +75,24 @@ namespace Project
                             i++;
                         }
                         catch (Exception) { }
-                        Thread.Sleep(100);
+                        Thread.Sleep(500);
                     }
                 }));
-                Process da = new Process();
                 da.StartInfo.FileName = Application.StartupPath + "\\AlgorithmControl.exe";
                 da.StartInfo.Arguments = string.Format("{0} {1} {2} {3} {4}", id, type, url_now, url_up, json);
+                lock (runLock)
+                {
+                    while (exeCount >= algorithmMax)
+                    {
+                        Thread.Sleep(50);
+                    }
+                    exeCount++;
+                }
                 da.Start();
                 thread.Start();
                 da.WaitForExit();
                 monitor = false;
+                exeCount--;
                 if (thread.IsAlive)
                 {
                     thread.Abort();
@@ -112,11 +111,6 @@ namespace Project
                     AddLog("算法结果：" + json, LogType.OtherLog);
                     Project.ResultBack(id, json);
                 }
-            }
-
-            lock (runLock)
-            {
-                runIdArray.Remove(id); 
             }
         }
 

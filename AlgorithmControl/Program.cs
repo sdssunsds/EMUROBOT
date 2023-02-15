@@ -1,4 +1,7 @@
-﻿using AlgorithmLib;
+﻿#define noAlgorithm
+#define download2img
+
+using AlgorithmLib;
 using EMU.Util;
 using Project;
 using System;
@@ -8,7 +11,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -24,18 +26,25 @@ namespace AlgorithmControl
             try
             {
                 AddLog("下载图片：" + args[2]);
-                Bitmap bitmap = GW.Function.ImageFunction.Manage.ImageManage.Download(args[2]);
-                //Bitmap bitmap = (Bitmap)Image.FromFile(Application.StartupPath + "\\1.jpg");
-                //AddLog("下载图片：" + args[3]);
-                //Bitmap upBitmap = GW.Function.ImageFunction.Manage.ImageManage.Download(args[3]);
-                int width = bitmap.Width;
-                int height = bitmap.Height;
+                Bitmap bitmap1 = GW.Function.ImageFunction.Manage.ImageManage.Download(args[2]);
+#if download2img
+                Bitmap bitmap2 = GW.Function.ImageFunction.Manage.ImageManage.Download(args[3]);
+#endif
+                int width1 = bitmap1.Width;
+                int height1 = bitmap1.Height;
+#if download2img
+                int width2 = bitmap2.Width;
+                int height2 = bitmap2.Height;
+#endif
                 AddLog("缓存完成：" + args[0]);
                 if (!Directory.Exists(bakPath))
                 {
                     Directory.CreateDirectory(bakPath);
                 }
-                byte[] imgBytes = Image2Byte(bitmap);
+                byte[] imgBytes1 = Image2Byte(bitmap1);
+#if download2img
+                byte[] imgBytes2 = Image2Byte(bitmap2);
+#endif
                 AddLog("Bitmap转换byte数组完成");
                 StringBuilder sb = new StringBuilder();
                 for (int i = 4; i < args.Length; i++)
@@ -50,16 +59,43 @@ namespace AlgorithmControl
                 AddLog("识别类型：" + args[1]);
                 Task.Run(() =>
                 {
-                    bitmap.Save(bakPath + taskID + ".jpg");
+                    bitmap1.Save(bakPath + taskID + ".jpg");
+#if download2img
+                    bitmap2.Save(bakPath + taskID + "_up.jpg");
+#endif
                     AddLog("图片备份完成");
-                    bitmap.Dispose();
+                    bitmap1.Dispose();
                 });
+#if noAlgorithm
+                int r = 0;
+#else
                 IntPtr ptr = Algorithm.ExportObjectFactory();
                 AddLog("算法初始化成功");
                 int r = Algorithm.CallOnInit(ptr, null);
                 AddLog("Call: " + r);
+#endif
                 if (r == 0)
                 {
+#if noAlgorithm
+                    AddLog("装载伪结果");
+                    Dictionary<int, List<Rectangle>> valueDict = new Dictionary<int, List<Rectangle>>();
+                    Random random = new Random();
+                    int length = random.Next(50, 100);
+                    for (int i = 0; i < length; i++)
+                    {
+                        int code = random.Next(0, 13);
+                        if (!valueDict.ContainsKey(code))
+                        {
+                            valueDict.Add(code, new List<Rectangle>());
+                        }
+                        int x = random.Next(0, i * 10);
+                        int y = random.Next(0, i * 10);
+                        int w = random.Next(5, 15);
+                        int h = random.Next(5, 15);
+                        valueDict[code].Add(new Rectangle(x, y, w, h));
+                    }
+                    AddLog("伪结果装载完成，共计" + length);
+#else
                     Dictionary<int, List<Rectangle>> valueDict = new Dictionary<int, List<Rectangle>>();
                     foreach (RedisBusiness item in businesses)
                     {
@@ -75,8 +111,13 @@ namespace AlgorithmControl
                             catch (Exception) { }
                         }
                         int len = 0;
-                        AddLog($"调用图像算法，并传参: {imgBytes.Length}, {width}, {height}, {JsonManager.ObjectToJson(inputTask)}, {inputTask.Count}, {JsonManager.ObjectToJson(item.TaskList)}, {item.TaskList.Count}");
-                        IntPtr _result = Algorithm.NewCallgetres(ptr, imgBytes, width, height, null, 0, 0, inputTask.ToArray(), inputTask.Count, item.TaskList.ToArray(), item.TaskList.Count, ref len);
+#if download2img
+                        AddLog($"调用图像算法，并传参: {imgBytes1.Length}, {width1}, {height1}, {imgBytes2.Length}, {width2}, {height2}, {JsonManager.ObjectToJson(inputTask)}, {inputTask.Count}, {JsonManager.ObjectToJson(item.TaskList)}, {item.TaskList.Count}");
+                        IntPtr _result = Algorithm.NewCallgetres(ptr, imgBytes1, width1, height1, imgBytes2, width2, height2, inputTask.ToArray(), inputTask.Count, item.TaskList.ToArray(), item.TaskList.Count, ref len);
+#else
+                        AddLog($"调用图像算法，并传参: {imgBytes.Length}, {width1}, {height1}, {JsonManager.ObjectToJson(inputTask)}, {inputTask.Count}, {JsonManager.ObjectToJson(item.TaskList)}, {item.TaskList.Count}");
+                        IntPtr _result = Algorithm.NewCallgetres(ptr, imgBytes1, width1, height1, null, 0, 0, inputTask.ToArray(), inputTask.Count, item.TaskList.ToArray(), item.TaskList.Count, ref len);
+#endif
                         int _length = Marshal.SizeOf(typeof(box_info));
                         long _len = _result.ToInt64();
                         for (int j = 0; j < len; j++)
@@ -90,6 +131,7 @@ namespace AlgorithmControl
                             valueDict[value.state_enum].Add(new Rectangle(value.x, value.y, value.w, value.h));
                         }
                     }
+#endif
 
                     List<RedisResult> results = new List<RedisResult>();
                     foreach (KeyValuePair<int, List<Rectangle>> item in valueDict)

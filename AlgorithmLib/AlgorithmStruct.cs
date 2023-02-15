@@ -28,7 +28,7 @@ namespace AlgorithmLib
                 case AlgorithmStateEnum.正常:
                     return "0200";
                 case AlgorithmStateEnum.异常:
-                    return "";
+                    return "0115";
                 case AlgorithmStateEnum.螺丝丢失:
                     return "0205";
                 case AlgorithmStateEnum.螺丝松动:
@@ -42,15 +42,15 @@ namespace AlgorithmLib
                 case AlgorithmStateEnum.油位异常:
                     return "0801";
                 case AlgorithmStateEnum.油液浑浊:
-                    return "";
+                    return "4201";
                 case AlgorithmStateEnum.漏油:
                     return "0106";
                 case AlgorithmStateEnum.丢失:
                     return "0112";
                 case AlgorithmStateEnum.车头中缝过大:
-                    return "";
+                    return "0113";
                 case AlgorithmStateEnum.管接头松脱:
-                    return "";
+                    return "0114";
                 default:
                     return "";
             }

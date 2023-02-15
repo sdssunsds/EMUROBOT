@@ -60,7 +60,7 @@ namespace Project
                     if (o != null)
                     {
                         threadEventArgs.SetVariableValue("获得的Json数据", o);
-                        RedisBusiness[] businesses = JsonManager.JsonToObject<RedisBusiness[]>(o.ToString());
+                        RedisBusiness[] businesses = JsonManager.JsonToObject<RedisBusiness[]>(Project.JsonErrorChange(o.ToString()));
                         threadEventArgs.SetVariableValue("Redis业务集合", businesses);
                         StringBuilder coordinatesBuilder = new StringBuilder();
                         StringBuilder typeBuilder = new StringBuilder();

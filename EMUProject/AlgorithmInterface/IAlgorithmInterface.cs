@@ -10,6 +10,7 @@ namespace Project
         string inParName3 { get; set; }
         string inParObject { get; set; }
         string outParName { get; set; }
+        string JsonErrorChange(string json);
         void ResultBack(string id, string json);
         void RunInterface(string url, string inputName, string outputName, int sleep, string pwd);
     }
