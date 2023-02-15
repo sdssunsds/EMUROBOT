@@ -1,4 +1,4 @@
-﻿#define test
+﻿//#define test
 
 using EMU.Interface;
 using EMU.Parameter;

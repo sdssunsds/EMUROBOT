@@ -1,5 +1,5 @@
-﻿#define noAlgorithm
-#define download2img
+﻿//#define noAlgorithm
+//#define download2img
 
 using AlgorithmLib;
 using EMU.Util;
@@ -115,7 +115,7 @@ namespace AlgorithmControl
                         AddLog($"调用图像算法，并传参: {imgBytes1.Length}, {width1}, {height1}, {imgBytes2.Length}, {width2}, {height2}, {JsonManager.ObjectToJson(inputTask)}, {inputTask.Count}, {JsonManager.ObjectToJson(item.TaskList)}, {item.TaskList.Count}");
                         IntPtr _result = Algorithm.NewCallgetres(ptr, imgBytes1, width1, height1, imgBytes2, width2, height2, inputTask.ToArray(), inputTask.Count, item.TaskList.ToArray(), item.TaskList.Count, ref len);
 #else
-                        AddLog($"调用图像算法，并传参: {imgBytes.Length}, {width1}, {height1}, {JsonManager.ObjectToJson(inputTask)}, {inputTask.Count}, {JsonManager.ObjectToJson(item.TaskList)}, {item.TaskList.Count}");
+                        AddLog($"调用图像算法，并传参: {imgBytes1.Length}, {width1}, {height1}, {JsonManager.ObjectToJson(inputTask)}, {inputTask.Count}, {JsonManager.ObjectToJson(item.TaskList)}, {item.TaskList.Count}");
                         IntPtr _result = Algorithm.NewCallgetres(ptr, imgBytes1, width1, height1, null, 0, 0, inputTask.ToArray(), inputTask.Count, item.TaskList.ToArray(), item.TaskList.Count, ref len);
 #endif
                         int _length = Marshal.SizeOf(typeof(box_info));
