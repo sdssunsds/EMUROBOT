@@ -418,5 +418,17 @@ namespace Project.Properties {
                 this["业务服务地址"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("300")]
+        public int AlgorithmOutTime {
+            get {
+                return ((int)(this["AlgorithmOutTime"]));
+            }
+            set {
+                this["AlgorithmOutTime"] = value;
+            }
+        }
     }
 }

@@ -197,6 +197,7 @@ namespace Project
         private string inName, outName;
         private RedisHelper RedisHelper = null;
         private AlgorithmPage algorithmPage = null;
+        private List<string> redisKeys = new List<string>();
         private Dictionary<string, long> redisDB = new Dictionary<string, long>()
         {
             { "in", 0 },
@@ -238,8 +239,9 @@ namespace Project
                             {
                                 foreach (string key in keys)
                                 {
-                                    if (!string.IsNullOrEmpty(key) && key.IndexOf(redis_key_handle) == 0)
+                                    if (!string.IsNullOrEmpty(key) && key.IndexOf(redis_key_handle) == 0 && redisKeys.IndexOf(key) < 0)
                                     {
+                                        redisKeys.Add(key);
                                         AddLog("读取Redis key：" + key, LogType.ProcessLog);
                                         string task_id = key.Replace(redis_key_handle, "");
                                         string value = RedisHelper.Get(key);
@@ -281,7 +283,6 @@ namespace Project
                                         {
                                             sw.WriteLine(value);
                                         }
-                                        RedisHelper.DeleteValue(key);
                                     }
                                 }
                             }
@@ -312,8 +313,8 @@ namespace Project
 
         public void ResultBack(string id, string json)
         {
-            //json = json.Replace("\"", "");
             string rKey = redis_key_result + id;
+            string tKey = redis_key_handle + id;
             AddLog("回写Redis key：" + rKey, LogType.GeneralLog);
             AddLog("回写Redis val：" + json, LogType.GeneralLog);
             try
@@ -323,6 +324,13 @@ namespace Project
             catch (Exception e)
             {
                 AddLog(e.Message, LogType.ErrorLog);
+                redisKeys.Remove(tKey);
+            }
+            finally
+            {
+                RedisHelper.DeleteValue(tKey);
+                redisKeys.Remove(tKey);
+                AddLog("删除Redis key：" + tKey, LogType.GeneralLog);
             }
         }
 

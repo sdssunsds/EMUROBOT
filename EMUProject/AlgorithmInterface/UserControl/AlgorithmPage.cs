@@ -61,9 +61,10 @@ namespace Project
                     {
                         Directory.CreateDirectory(path);
                     }
+                    int outTime = Properties.Settings.Default.AlgorithmOutTime * 2;
                     while (monitor)
                     {
-                        if (i >= 60)
+                        if (i >= outTime)
                         {
                             da.Kill();
                             break;

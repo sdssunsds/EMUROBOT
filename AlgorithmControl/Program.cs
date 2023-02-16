@@ -21,6 +21,40 @@ namespace AlgorithmControl
         static string taskID = "";
         static void Main(string[] args)
         {
+            if (args == null || args.Length == 0)
+            {
+                Action<string[]> deleteFile = (string[] bakFiles) =>
+                {
+                    if (bakFiles != null)
+                    {
+                        foreach (string item in bakFiles)
+                        {
+                            File.Delete(item);
+                            Console.WriteLine("删除文件：" + item);
+                        }
+                    }
+                };
+                Action<string> deleteDir = (string path) => { };
+                deleteDir = (string path) =>
+                {
+                    deleteFile(Directory.GetFiles(path));
+                    string[] dirs = Directory.GetDirectories(path);
+                    if (dirs != null)
+                    {
+                        foreach (string item in dirs)
+                        {
+                            deleteDir(item);
+                            Directory.Delete(item);
+                            Console.WriteLine("删除文件夹：" + item);
+                        }
+                    }
+                };
+                deleteFile(Directory.GetFiles(Application.StartupPath + "\\bak_redis"));
+                deleteFile(Directory.GetFiles(Application.StartupPath + "\\bak_result"));
+                deleteDir(Application.StartupPath + "\\bak_img");
+                deleteDir(Application.StartupPath + "\\log");
+                return;
+            }
             taskID = args[0];
             string bakPath = Application.StartupPath + "\\bak_img\\";
             try
@@ -97,39 +131,55 @@ namespace AlgorithmControl
                     AddLog("伪结果装载完成，共计" + length);
 #else
                     Dictionary<int, List<Rectangle>> valueDict = new Dictionary<int, List<Rectangle>>();
-                    foreach (RedisBusiness item in businesses)
+                    int logI = 0;
+                    try
                     {
-                        string[] ts = args[1].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                        AddLog("获取任务ID: " + JsonManager.ObjectToJson(ts));
-                        List<int> inputTask = new List<int>();
-                        for (int i = 0; i < ts.Length; i++)
+                        foreach (RedisBusiness item in businesses)
                         {
-                            try
+                            logI = 1;
+                            string[] ts = args[1].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                            AddLog("获取任务ID: " + JsonManager.ObjectToJson(ts));
+                            List<int> inputTask = new List<int>();
+                            for (int i = 0; i < ts.Length; i++)
                             {
-                                inputTask.Add(int.Parse(ts[i]));
+                                try
+                                {
+                                    logI = 2;
+                                    inputTask.Add(int.Parse(ts[i]));
+                                }
+                                catch (Exception) { }
                             }
-                            catch (Exception) { }
-                        }
-                        int len = 0;
+                            int len = 0;
+                            logI = 3;
 #if download2img
-                        AddLog($"调用图像算法，并传参: {imgBytes1.Length}, {width1}, {height1}, {imgBytes2.Length}, {width2}, {height2}, {JsonManager.ObjectToJson(inputTask)}, {inputTask.Count}, {JsonManager.ObjectToJson(item.TaskList)}, {item.TaskList.Count}");
-                        IntPtr _result = Algorithm.NewCallgetres(ptr, imgBytes1, width1, height1, imgBytes2, width2, height2, inputTask.ToArray(), inputTask.Count, item.TaskList.ToArray(), item.TaskList.Count, ref len);
+                            AddLog($"调用图像算法，并传参: {imgBytes1.Length}, {width1}, {height1}, {imgBytes2.Length}, {width2}, {height2}, {JsonManager.ObjectToJson(inputTask)}, {inputTask.Count}, {JsonManager.ObjectToJson(item.TaskList)}, {item.TaskList.Count}");
+                            IntPtr _result = Algorithm.NewCallgetres(ptr, imgBytes1, width1, height1, imgBytes2, width2, height2, inputTask.ToArray(), inputTask.Count, item.TaskList.ToArray(), item.TaskList.Count, ref len);
 #else
-                        AddLog($"调用图像算法，并传参: {imgBytes1.Length}, {width1}, {height1}, {JsonManager.ObjectToJson(inputTask)}, {inputTask.Count}, {JsonManager.ObjectToJson(item.TaskList)}, {item.TaskList.Count}");
-                        IntPtr _result = Algorithm.NewCallgetres(ptr, imgBytes1, width1, height1, null, 0, 0, inputTask.ToArray(), inputTask.Count, item.TaskList.ToArray(), item.TaskList.Count, ref len);
+                            AddLog($"调用图像算法，并传参: {imgBytes1.Length}, {width1}, {height1}, {JsonManager.ObjectToJson(inputTask)}, {inputTask.Count}, {JsonManager.ObjectToJson(item.TaskList)}, {item.TaskList.Count}");
+                            IntPtr _result = Algorithm.NewCallgetres(ptr, imgBytes1, width1, height1, null, 0, 0, inputTask.ToArray(), inputTask.Count, item.TaskList.ToArray(), item.TaskList.Count, ref len);
 #endif
-                        int _length = Marshal.SizeOf(typeof(box_info));
-                        long _len = _result.ToInt64();
-                        for (int j = 0; j < len; j++)
-                        {
-                            box_info value = Marshal.PtrToStructure<box_info>((IntPtr)((long)(_len + j * _length)));
-                            AddLog("装载box_info: " + JsonManager.ObjectToJson(value));
-                            if (!valueDict.ContainsKey(value.state_enum))
+                            logI = 4;
+                            int _length = Marshal.SizeOf(typeof(box_info));
+                            logI = 5;
+                            long _len = _result.ToInt64();
+                            for (int j = 0; j < len; j++)
                             {
-                                valueDict.Add(value.state_enum, new List<Rectangle>());
+                                logI = 6;
+                                box_info value = Marshal.PtrToStructure<box_info>((IntPtr)((long)(_len + j * _length)));
+                                AddLog("装载box_info: " + JsonManager.ObjectToJson(value));
+                                logI = 7;
+                                if (!valueDict.ContainsKey(value.state_enum))
+                                {
+                                    valueDict.Add(value.state_enum, new List<Rectangle>());
+                                }
+                                logI = 8;
+                                valueDict[value.state_enum].Add(new Rectangle(value.x, value.y, value.w, value.h));
                             }
-                            valueDict[value.state_enum].Add(new Rectangle(value.x, value.y, value.w, value.h));
                         }
+                    }
+                    catch (Exception e)
+                    {
+                        AddLog("[" + logI + "]" + e.Message);
                     }
 #endif
 
