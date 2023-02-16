@@ -1,4 +1,4 @@
-﻿using ServiceStack.Redis;
+﻿using StackExchange.Redis;
 using System.Collections.Generic;
 
 namespace EMU.Util
@@ -7,18 +7,12 @@ namespace EMU.Util
     {
         private bool isLink = false;
         private object redisLock = new object();
-        private RedisClient redis;
+        private ConnectionMultiplexer redis;
+        private IDatabase database;
         public RedisHelper(string url, string pwd)
         {
-            string[] uri = url.Split(':');
-            if (string.IsNullOrEmpty(pwd))
-            {
-                redis = new RedisClient(uri[0], int.Parse(uri[1]));
-            }
-            else
-            {
-                redis = new RedisClient(uri[0], int.Parse(uri[1]), pwd); 
-            }
+            redis = ConnectionMultiplexer.Connect(url + ",password=" + pwd);
+            database = redis.GetDatabase();
             isLink = true;
         }
         public void ChangeDB(long index)
@@ -27,7 +21,7 @@ namespace EMU.Util
             {
                 lock (redisLock)
                 {
-                    redis.ChangeDb(index);
+                    redis.GetDatabase((int)index);
                 } 
             }
         }
@@ -43,43 +37,50 @@ namespace EMU.Util
             {
                 lock (redisLock)
                 {
-                    redis.Del(key);
+                    database.KeyDelete(key);
                 } 
             }
         }
-        public List<string> GetKeys()
+        public List<string> GetKeys(string key)
         {
             if (isLink)
             {
                 lock (redisLock)
                 {
-                    return redis.GetAllKeys();
+                    var server = redis.GetServer(redis.GetEndPoints()[0]);
+                    var keys = server.Keys(0, key + "*");
+                    if (keys != null)
+                    {
+                        List<string> vs = new List<string>();
+                        foreach (var item in keys)
+                        {
+                            vs.Add((string)item);
+                        }
+                        return vs;
+                    }
                 } 
             }
             return new List<string>();
         }
-        public T GetValue<T>(string key)
+        public string Get(string key)
         {
             if (isLink)
             {
                 lock (redisLock)
                 {
-                    if (redis.ContainsKey(key))
-                    {
-                        return redis.Get<T>(key);
-                    }
+                    return database.StringGet(key);
                 }
             }
-            return default(T);
+            return "";
         }
-        public void SetValue<T>(string key, T value)
+        public void Set(string key, string value)
         {
             if (isLink)
             {
                 lock (redisLock)
                 {
-                    redis.Set<T>(key, value);
-                } 
+                    database.StringSet(key, value);
+                }
             }
         }
     }
