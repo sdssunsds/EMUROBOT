@@ -1,6 +1,8 @@
-﻿using EMU.Parameter;
-using GW.Function.ComputerFunction;
+﻿using AlgorithmLib;
+using EMU.Parameter;
+using EMU.Util;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -16,16 +18,23 @@ namespace Project
         private object runLock = new object();
         private int logCount = 0;
         private int exeCount = 0;
+        private string algorithmParPath = Application.StartupPath + "\\algorithm.pars";
+        private string bakPath = Application.StartupPath + "\\bak_img\\";
         private string resultDir = "";
+        private string resultPath = Application.StartupPath + "\\algorithm.back";
 
         public IAlgorithmInterface Project { get; set; }
 
         public AlgorithmPage()
         {
             InitializeComponent();
+            if (!Directory.Exists(bakPath))
+            {
+                Directory.CreateDirectory(bakPath);
+            }
         }
 
-        public void RunAlgorithm(string type, string json, string url_now, string url_up, string id, EMU.Util.ThreadEventArgs eventArgs)
+        public void RunAlgorithm(string type, string json, string url_now, string url_up, string id, ThreadEventArgs eventArgs)
         {
             if (!string.IsNullOrEmpty(url_now) && !string.IsNullOrEmpty(json) && !string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(id))
             {
@@ -36,13 +45,28 @@ namespace Project
                 eventArgs.SetVariableValue("原始版Json", json);
                 json = Project.JsonErrorChange(json);
                 eventArgs.SetVariableValue("修正后Json", json);
-                json = json.Replace(" ", "").Replace("\"", "&&");
-                eventArgs.SetVariableValue("传输用Json", json);
                 AddLog("任务编号：" + id, LogType.OtherLog);
                 AddLog("识别类型：" + type, LogType.OtherLog);
                 AddLog("坐标Json：" + json, LogType.OtherLog);
                 AddLog("本次图片：" + url_now, LogType.OtherLog);
                 AddLog("上次图片：" + url_up, LogType.OtherLog);
+                AddLog("下载图片：" + url_now, LogType.OtherLog);
+                AddLog("转换Json", LogType.OtherLog);
+                RedisBusiness[] businesses = JsonManager.JsonToObject<RedisBusiness[]>(json);
+                AddLog("Json转换完成", LogType.OtherLog);
+                Bitmap bitmap1 = GW.Function.ImageFunction.Manage.ImageManage.Download(url_now);
+                bitmap1.Save(bakPath + id + ".jpg");
+                Size size1 = bitmap1.Size;
+                AddLog("缓存完成：" + url_now, LogType.OtherLog);
+                AddLog("下载图片：" + url_up, LogType.OtherLog);
+                Bitmap bitmap2 = GW.Function.ImageFunction.Manage.ImageManage.Download(url_up);
+                bitmap2.Save(bakPath + id + "_up.jpg");
+                Size size2 = bitmap2.Size;
+                AddLog("缓存完成：" + url_up, LogType.OtherLog);
+                bitmap1.Dispose();
+                bitmap2.Dispose();
+                bitmap1 = null;
+                bitmap2 = null;
                 string resultFile = resultDir + "\\" + id + ".json";
                 if (File.Exists(resultFile))
                 {
@@ -52,35 +76,27 @@ namespace Project
                 SetAlgorithmPars(url_now, url_up, json, type, id);
                 AddLog("启动算法", LogType.OtherLog);
                 bool monitor = true;
-                Process da = new Process();
                 Thread thread = new Thread(new ThreadStart(() =>
                 {
                     int i = 0;
-                    string path = Application.StartupPath + "\\bak_img\\" + id + "\\";
-                    if (!Directory.Exists(path))
-                    {
-                        Directory.CreateDirectory(path);
-                    }
                     int outTime = Properties.Settings.Default.AlgorithmOutTime * 2;
-                    while (monitor)
+                    while (true)
                     {
                         if (i >= outTime)
                         {
-                            da.Kill();
+                            AddLog("算法超时", LogType.OtherLog);
                             break;
                         }
-                        try
+                        else if (File.Exists(resultPath))
                         {
-                            Bitmap bitmap = Computer.GetScreenImgByteArray();
-                            bitmap.Save(path + i + ".jpg");
-                            i++;
+                            AddLog("读取的算法结果文件", LogType.OtherLog);
+                            Thread.Sleep(100);
+                            break;
                         }
-                        catch (Exception) { }
                         Thread.Sleep(500);
                     }
+                    monitor = false;
                 }));
-                da.StartInfo.FileName = Application.StartupPath + "\\AlgorithmControl.exe";
-                da.StartInfo.Arguments = string.Format("{0} {1} {2} {3} {4}", id, type, url_now, url_up, json);
                 lock (runLock)
                 {
                     while (exeCount >= algorithmMax)
@@ -89,23 +105,78 @@ namespace Project
                     }
                     exeCount++;
                 }
-                da.Start();
+                using (StreamWriter sw = new StreamWriter(algorithmParPath))
+                {
+                    sw.WriteLine(id);
+                    sw.WriteLine(type);
+                    sw.WriteLine(bakPath + id + ".jpg");
+                    sw.WriteLine(bakPath + id + "_up.jpg");
+                    sw.WriteLine(size1.Width);
+                    sw.WriteLine(size1.Height);
+                    sw.WriteLine(size2.Width);
+                    sw.WriteLine(size2.Height);
+                    if (businesses != null && businesses.Length > 0)
+                    {
+                        List<model_struct> ms = new List<model_struct>();
+                        foreach (RedisBusiness business in businesses)
+                        {
+                            ms.AddRange(business.TaskList);
+                        }
+                        sw.WriteLine(JsonManager.ObjectToJson(ms));
+                    }
+                    else
+                    {
+                        sw.WriteLine("null");
+                    }
+                }
+                if (File.Exists(resultPath))
+                {
+                    File.Delete(resultPath);
+                }
                 thread.Start();
-                da.WaitForExit();
-                monitor = false;
+                while (monitor)
+                {
+                    Thread.Sleep(50);
+                }
                 exeCount--;
                 if (thread.IsAlive)
                 {
                     thread.Abort();
                 }
-                AddLog("算法执行完毕", LogType.OtherLog);
-                json = "";
-                if (File.Exists(resultFile))
+                if (!File.Exists(resultPath))
                 {
-                    using (StreamReader sr = new StreamReader(resultFile))
+                    return;
+                }
+
+                json = "";
+                box_info[] boxes = null;
+                using (StreamReader sr = new StreamReader(resultPath))
+                {
+                    boxes = JsonManager.JsonToObject<box_info[]>(sr.ReadToEnd());
+                }
+                List<RedisResult> list = new List<RedisResult>();
+                string code = "";
+                foreach (box_info box in boxes)
+                {
+                    code = box.state_enum.ChangeCode();
+                    RedisResult result = list.Find(r => r.jclx == code);
+                    if (result == null)
                     {
-                        json = sr.ReadToEnd();
+                        result = new RedisResult()
+                        {
+                            jclx = code,
+                            result = new List<Rectangle>()
+                        };
+                        list.Add(result);
                     }
+                    result.result.Add(new Rectangle(box.x, box.y, box.w, box.h));
+                }
+                json = JsonManager.ObjectToJson(list);
+
+                AddLog("算法执行完毕", LogType.OtherLog);
+                using (StreamWriter sw = new StreamWriter(resultFile))
+                {
+                    sw.WriteLine(json);
                 }
                 if (!string.IsNullOrEmpty(json))
                 {
@@ -123,6 +194,7 @@ namespace Project
                 Directory.CreateDirectory(resultDir);
             }
             AddLogEvent += LogManager_AddLogEvent;
+            Process.Start(Application.StartupPath + "\\AlgorithmControl.exe");
         }
 
         private void LogManager_AddLogEvent(string arg1, LogType arg2)
@@ -130,6 +202,7 @@ namespace Project
             if (arg2 == LogType.OtherLog)
             {
                 logCount++;
+                string s = arg1 + "\r\n";
                 BeginInvoke(new Action(() =>
                 {
                     if (logCount >= 5000)
@@ -137,7 +210,7 @@ namespace Project
                         logCount = 0;
                         textBox1.Text = "";
                     }
-                    textBox1.Text += arg1 + "\r\n";
+                    textBox1.Text += s;
                     textBox1.SelectionStart = textBox1.Text.Length - 1;
                     textBox1.ScrollToCaret();
                 }));

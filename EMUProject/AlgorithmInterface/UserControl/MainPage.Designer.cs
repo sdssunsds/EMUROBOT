@@ -30,6 +30,7 @@ namespace Project
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btn_link = new System.Windows.Forms.Button();
             this.tb_redis_output = new System.Windows.Forms.TextBox();
             this.tb_redis_input = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -38,16 +39,13 @@ namespace Project
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.tb_redis_report = new System.Windows.Forms.TextBox();
-            this.tb_redis = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.tb_redis_internal = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.tb_redis_result = new System.Windows.Forms.TextBox();
-            this.btn_link = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -70,6 +68,16 @@ namespace Project
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Redis接口";
+            // 
+            // btn_link
+            // 
+            this.btn_link.Location = new System.Drawing.Point(671, 17);
+            this.btn_link.Name = "btn_link";
+            this.btn_link.Size = new System.Drawing.Size(85, 48);
+            this.btn_link.TabIndex = 6;
+            this.btn_link.Text = "连接Redis";
+            this.btn_link.UseVisualStyleBackColor = true;
+            this.btn_link.Click += new System.EventHandler(this.btn_link_Click);
             // 
             // tb_redis_output
             // 
@@ -127,7 +135,6 @@ namespace Project
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.tb_redis_report);
-            this.groupBox2.Controls.Add(this.tb_redis);
             this.groupBox2.Controls.Add(this.panel1);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox2.Location = new System.Drawing.Point(0, 76);
@@ -145,23 +152,11 @@ namespace Project
             this.tb_redis_report.Name = "tb_redis_report";
             this.tb_redis_report.ReadOnly = true;
             this.tb_redis_report.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tb_redis_report.Size = new System.Drawing.Size(353, 286);
+            this.tb_redis_report.Size = new System.Drawing.Size(535, 286);
             this.tb_redis_report.TabIndex = 4;
-            // 
-            // tb_redis
-            // 
-            this.tb_redis.Dock = System.Windows.Forms.DockStyle.Right;
-            this.tb_redis.Location = new System.Drawing.Point(356, 76);
-            this.tb_redis.Multiline = true;
-            this.tb_redis.Name = "tb_redis";
-            this.tb_redis.ReadOnly = true;
-            this.tb_redis.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tb_redis.Size = new System.Drawing.Size(182, 286);
-            this.tb_redis.TabIndex = 6;
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.label7);
             this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this.label5);
             this.panel1.Controls.Add(this.tb_redis_internal);
@@ -171,16 +166,6 @@ namespace Project
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(535, 59);
             this.panel1.TabIndex = 5;
-            // 
-            // label7
-            // 
-            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(351, 40);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(53, 12);
-            this.label7.TabIndex = 8;
-            this.label7.Text = "过程监控";
             // 
             // label6
             // 
@@ -241,16 +226,6 @@ namespace Project
             this.tb_redis_result.Size = new System.Drawing.Size(544, 345);
             this.tb_redis_result.TabIndex = 5;
             // 
-            // btn_link
-            // 
-            this.btn_link.Location = new System.Drawing.Point(671, 17);
-            this.btn_link.Name = "btn_link";
-            this.btn_link.Size = new System.Drawing.Size(85, 48);
-            this.btn_link.TabIndex = 6;
-            this.btn_link.Text = "连接Redis";
-            this.btn_link.UseVisualStyleBackColor = true;
-            this.btn_link.Click += new System.EventHandler(this.btn_link_Click);
-            // 
             // MainPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -291,8 +266,6 @@ namespace Project
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.TextBox tb_redis_result;
-        private System.Windows.Forms.TextBox tb_redis;
-        private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button btn_link;
     }
 }

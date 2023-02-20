@@ -22,7 +22,7 @@ namespace AlgorithmLib
         [DllImport("img_func_dll.dll")]
         public static extern IntPtr Callgetres(IntPtr obj, input_struct input_struct, [In, Out] model_struct[] model_struct, int model_struct_len, ref int len, ref int progress, ref byte log);
         [DllImport("img_func_dll.dll")]
-        public static extern IntPtr NewCallgetres(IntPtr obj, byte[] img1_info, int w1, int h1, byte[] img2_info, int w2, int h2,
+        public static extern IntPtr NewCallgetres(IntPtr obj, [In, Out] byte[] img1_info, int w1, int h1, [In, Out] byte[] img2_info, int w2, int h2,
             [In, Out] int[] input_info, int input_info_len, [In, Out] model_struct[] mode_box, int model_struct_len, ref int res_len);
     }
 }

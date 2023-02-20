@@ -1,11 +1,11 @@
-﻿//#define test
+﻿#define test
 
 using EMU.Interface;
 using EMU.Parameter;
 using EMU.Util;
 #region test
 using GW.Function.FileFunction;
-using Project.ServerClass; 
+using Project.ServerClass;
 #endregion
 using System;
 using System.Collections.Generic;
@@ -246,43 +246,16 @@ namespace Project
                                         string task_id = key.Replace(redis_key_handle, "");
                                         string value = RedisHelper.Get(key);
                                         AddLog("读取Redis val：" + value, LogType.ProcessLog);
-                                        if (!string.IsNullOrEmpty(value))
-                                        {
-                                            string[] args = value.Split('&');
-                                            if (args != null)
-                                            {
-                                                AddLog("参数数量：" + args.Length, LogType.ProcessLog);
-                                                if (args.Length > 0)
-                                                {
-                                                    threadEventArgs.SetVariableValue(inParName1, args[0]);
-                                                    AddLog("识别类型：" + args[0], LogType.ProcessLog);
-                                                }
-                                                if (args.Length > 1)
-                                                {
-                                                    AddLog("坐标Json：" + args[1], LogType.ProcessLog);
-                                                    threadEventArgs.SetVariableValue(inParObject, args[1]);
-                                                }
-                                                if (args.Length > 2)
-                                                {
-                                                    AddLog("本次图片url：" + args[2], LogType.ProcessLog);
-                                                    threadEventArgs.SetVariableValue(inParName2, args[2]);
-                                                }
-                                                if (args.Length > 3)
-                                                {
-                                                    AddLog("上次图片url：" + args[3], LogType.ProcessLog);
-                                                    threadEventArgs.SetVariableValue(inParName3, args[3]);
-                                                }
-                                                ThreadManager.TaskRun((ThreadEventArgs tmp) =>
-                                                {
-                                                    tmp.ThreadName = "算法执行线程";
-                                                    algorithmPage.RunAlgorithm(args[0], args[1], args[2], args[3], task_id, tmp);
-                                                });
-                                            }
-                                        }
                                         using (StreamWriter sw = new StreamWriter(bakredis + task_id + ".txt"))
                                         {
                                             sw.WriteLine(value);
                                         }
+                                        string[] args = value.Split('&');
+                                        ThreadManager.TaskRun((ThreadEventArgs tmp) =>
+                                        {
+                                            tmp.ThreadName = "算法执行线程";
+                                            algorithmPage.RunAlgorithm(args[0], args[1], args[2], args[3], task_id, tmp);
+                                        });
                                     }
                                 }
                             }

@@ -12,12 +12,17 @@ namespace EMUROBOT
 {
     static class Program
     {
+        [DllImport("kernel32.dll")]
+        public static extern bool AllocConsole();
+        [DllImport("kernel32.dll")]
+        static extern bool FreeConsole();
         /// <summary>
         /// 应用程序的主入口点。
         /// </summary>
         [STAThread]
         static void Main(string[] args)
         {
+            //AllocConsole();
             Process application = RunningInstance();
             if (application == null)
             {
@@ -70,6 +75,7 @@ namespace EMUROBOT
             {
                 HandleRunningInstance(application);
             }
+            //FreeConsole();
         }
         #region   只运行一个实例
         public static Process RunningInstance()

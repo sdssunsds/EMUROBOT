@@ -26,8 +26,8 @@ namespace Project
         private void LogManager_AddLogEvent(string arg1, EMU.Parameter.LogType arg2)
         {
             logCount++;
-            arg1 += "\r\n";
-            WriteLogFile(arg1, arg2);
+            string s = arg1 + "\r\n";
+            WriteLogFile(s, arg2);
             BeginInvoke(new Action(() =>
             {
                 if (logCount >= 5000)
@@ -35,7 +35,7 @@ namespace Project
                     logCount = 0;
                     textBox1.Text = "";
                 }
-                textBox1.Text += arg1;
+                textBox1.Text += s;
                 textBox1.SelectionStart = textBox1.Text.Length - 1;
                 textBox1.ScrollToCaret();
             }));

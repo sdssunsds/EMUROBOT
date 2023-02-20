@@ -44,49 +44,11 @@ namespace Project
             tb_redis_output.KeyDown += Tb_redis_output_KeyDown;
             tb_redis_internal.KeyDown += Tb_redis_internal_KeyDown;
             AddLogEvent += LogManager_AddLogEvent;
-
-            ThreadManager.BackTask((int startIndex, ThreadEventArgs threadEventArgs) =>
-            {
-                threadEventArgs.ThreadName = "过程监控后台线程";
-                List<ThreadEventArgs> list = ThreadManager.GetThreadEventArgs();
-                ThreadEventArgs eventArgs = list.Find(t => t.ThreadName == Project.RedisThreadName);
-                if (eventArgs != null)
-                {
-                    sb.Clear();
-                    GetVariable(Project.inParName1, sb, eventArgs);
-                    GetVariable(Project.inParName2, sb, eventArgs);
-                    GetVariable(Project.inParName3, sb, eventArgs);
-                    object o = eventArgs.GetVariableValue(Project.inParObject, null);
-                    if (o != null)
-                    {
-                        threadEventArgs.SetVariableValue("获得的Json数据", o);
-                        RedisBusiness[] businesses = JsonManager.JsonToObject<RedisBusiness[]>(Project.JsonErrorChange(o.ToString()));
-                        threadEventArgs.SetVariableValue("Redis业务集合", businesses);
-                        StringBuilder coordinatesBuilder = new StringBuilder();
-                        StringBuilder typeBuilder = new StringBuilder();
-                        if (businesses != null)
-                        {
-                            foreach (RedisBusiness business in businesses)
-                            {
-                                coordinatesBuilder.AppendLine(business.coordinates);
-                                typeBuilder.AppendLine(business.type);
-                            } 
-                        }
-                        string coordinates = coordinatesBuilder.ToString();
-                        string type = typeBuilder.ToString();
-                        sb.AppendLine("坐标集合: " + coordinates);
-                        sb.AppendLine("坐标类型: " + type);
-                    }
-                    BeginInvoke(new Action(() =>
-                    {
-                        tb_redis.Text = sb.ToString();
-                    })); 
-                }
-            });
         }
 
         private void LogManager_AddLogEvent(string arg1, LogType arg2)
         {
+            string s = arg1 + "\r\n";
             if (arg2 == LogType.ProcessLog)
             {
                 reportCount++;
@@ -97,7 +59,7 @@ namespace Project
                         reportCount = 0;
                         tb_redis_report.Text = "";
                     }
-                    tb_redis_report.Text += arg1 + "\r\n";
+                    tb_redis_report.Text += s;
                     tb_redis_report.SelectionStart = tb_redis_report.Text.Length - 1;
                     tb_redis_report.ScrollToCaret();
                 }));
@@ -112,7 +74,7 @@ namespace Project
                         resultCount = 0;
                         tb_redis_result.Text = "";
                     }
-                    tb_redis_result.Text += arg1 + "\r\n";
+                    tb_redis_result.Text += s;
                     tb_redis_result.SelectionStart = tb_redis_result.Text.Length - 1;
                     tb_redis_result.ScrollToCaret();
                 }));
