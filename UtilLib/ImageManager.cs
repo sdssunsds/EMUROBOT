@@ -154,6 +154,43 @@ namespace EMU.Util
             }
         }
         /// <summary>
+        /// 图片转数据流
+        /// </summary>
+        /// <param name="isDispose">是否清理转换后的图片</param>
+        public static byte[] Image2Byte(Image image, bool isDispose = false)
+        {
+            try
+            {
+                Bitmap bitmap = (Bitmap)image;
+                Rectangle rectangle = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
+                BitmapData data = bitmap.LockBits(rectangle, ImageLockMode.ReadOnly, bitmap.PixelFormat);
+                int rowCount = data.Width * Image.GetPixelFormatSize(bitmap.PixelFormat) / 8;
+                long length = bitmap.Height * (long)rowCount;
+                byte[] bytes = new byte[length];
+                IntPtr ptr = data.Scan0;
+                for (int i = 0; i < bitmap.Height; i++)
+                {
+                    System.Runtime.InteropServices.Marshal.Copy(ptr, bytes, i * rowCount, rowCount);
+                    ptr += data.Stride;
+                }
+                bitmap.UnlockBits(data);
+                return bytes;
+            }
+            catch (Exception e)
+            {
+                e.Message.AddLog(LogType.ErrorLog);
+                return null;
+            }
+            finally
+            {
+                if (image != null && isDispose)
+                {
+                    image.Dispose();
+                    image = null;
+                }
+            }
+        }
+        /// <summary>
         /// 调整图片亮度
         /// </summary>
         /// <param name="b">图片</param>

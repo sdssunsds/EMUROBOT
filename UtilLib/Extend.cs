@@ -195,6 +195,10 @@ namespace EMU.Util
         {
             return ImageManager.ImageToBytes(image, isDispose);
         }
+        public static byte[] ToBytes2(this Image image, bool isDispose = false)
+        {
+            return ImageManager.Image2Byte(image, isDispose);
+        }
         public static byte[] ToBytes(this SerialPort serialPort)
         {
             byte[] buffer = new byte[serialPort.BytesToRead];

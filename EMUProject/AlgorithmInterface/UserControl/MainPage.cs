@@ -3,8 +3,11 @@ using EMU.Util;
 using GW.Function.FileFunction;
 using System;
 using System.Collections.Generic;
+using System.ServiceModel;
+using System.ServiceModel.Description;
 using System.Text;
 using System.Windows.Forms;
+using UploadImageServer;
 using static EMU.Util.LogManager;
 
 namespace Project
@@ -14,7 +17,7 @@ namespace Project
         private int reportCount = 0;
         private int resultCount = 0;
         private string urlKey = "Url", inputKey = "Input", outputKey = "OutPut", internalKey = "Internal";
-        private StringBuilder sb = new StringBuilder();
+        private ServiceHost host = null;
         private Dictionary<string, string> pairs;
 
         public static string Pwd = "";
@@ -44,6 +47,28 @@ namespace Project
             tb_redis_output.KeyDown += Tb_redis_output_KeyDown;
             tb_redis_internal.KeyDown += Tb_redis_internal_KeyDown;
             AddLogEvent += LogManager_AddLogEvent;
+
+            if (host == null)
+            {
+                string serverPath = "http://localhost:8101/";
+                host = new ServiceHost(typeof(UploadService));
+                BasicHttpBinding binding = new BasicHttpBinding();
+                binding.MaxBufferSize = 2147483647;
+                binding.MaxReceivedMessageSize = 2147483647;
+                host.AddServiceEndpoint(typeof(IService), binding, serverPath);
+                if (host.Description.Behaviors.Find<ServiceMetadataBehavior>() == null)
+                {
+                    ServiceMetadataBehavior behavior = new ServiceMetadataBehavior();
+                    behavior.HttpGetEnabled = true;
+                    behavior.HttpGetUrl = new Uri(serverPath + "PicService");
+                    host.Description.Behaviors.Add(behavior);
+                    host.Open();
+                }
+            }
+            else
+            {
+                AddLog("服务初始化完成", LogType.ProcessLog);
+            }
         }
 
         private void LogManager_AddLogEvent(string arg1, LogType arg2)

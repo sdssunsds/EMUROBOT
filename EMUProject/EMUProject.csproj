@@ -383,6 +383,7 @@
   <ItemGroup>
     <None Include="AGV\文档\AGV上位机通讯协议-20220824-V1.0.1.xlsx" />
     <None Include="AGV\文档\AGV－上位机控制命令说明－20220824－V1.0.1%281%29.docx" />
+    <None Include="AlgorithmInterface\接口协议.xlsx" />
     <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Properties\DataSources\System.Data.DataTable.datasource" />

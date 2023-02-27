@@ -1,10 +1,9 @@
-﻿#define testIntptr
+﻿//#define testIntptr
 
 using AlgorithmLib;
 using EMU.Util;
 using System;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -55,10 +54,15 @@ namespace AlgorithmControl
                 deleteDir(Application.StartupPath + "\\log");
                 return;
             }
+            string appID = "";
+            if (args != null && args.Length > 0)
+            {
+                appID = args[0];
+            }
 
             int box_length = Marshal.SizeOf(typeof(box_info));
-            string algorithmParPath = Application.StartupPath + "\\algorithm.pars";
-            string resultPath = Application.StartupPath + "\\algorithm.back";
+            string algorithmParPath = Application.StartupPath + "\\algorithm.pars" + appID;
+            string resultPath = Application.StartupPath + "\\algorithm.back" + appID;
 
 #if testIntptr
             int r = 0;
@@ -93,10 +97,10 @@ namespace AlgorithmControl
                         taskIds = new int[tmp.Length];
                         for (int i = 0; i < taskIds.Length; i++)
                         {
-                            taskIds[i] = int.Parse(tmp[i]);
+                            taskIds[i] = int.Parse(tmp[i].Trim());
                         }
-                        bytes1 = Image2Byte(Image.FromFile(sr.ReadLine()));
-                        bytes2 = Image2Byte(Image.FromFile(sr.ReadLine()));
+                        bytes1 = Image.FromFile(sr.ReadLine()).ToBytes2(true);
+                        bytes2 = Image.FromFile(sr.ReadLine()).ToBytes2(true);
                         width1 = int.Parse(sr.ReadLine());
                         height1 = int.Parse(sr.ReadLine());
                         width2 = int.Parse(sr.ReadLine());
@@ -133,42 +137,28 @@ namespace AlgorithmControl
                     }
 #else
                     IntPtr result = Algorithm.NewCallgetres(ptr, bytes1, width1, height1, bytes2, width2, height2, taskIds, taskIds.Length, models, models == null ? 0 : models.Length, ref len);
+                    Console.WriteLine("算法调用完毕");
+                    GC.Collect();
                     box_info[] boxes = new box_info[len];
                     long _len = result.ToInt64();
+                    Console.Write("(" + len + ")开始装载数据: ");
                     for (int j = 0; j < len; j++)
                     {
                         boxes[j] = Marshal.PtrToStructure<box_info>((IntPtr)((long)(_len + j * box_length)));
+                        Console.Write(j + ",");
                     }
 #endif
                     models = null;
-                    Console.WriteLine("算法调用完毕");
+                    Console.WriteLine("数据装载完成");
                     using (StreamWriter sw = new StreamWriter(resultPath))
                     {
                         sw.WriteLine(JsonManager.ObjectToJson(boxes));
                     }
                     
                     Console.WriteLine("结果已经写入文件");
-                    GC.Collect();
+                    break;
                 }
             }
-        }
-
-        static byte[] Image2Byte(Image image)
-        {
-            Bitmap bitmap = (Bitmap)image;
-            Rectangle rectangle = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
-            BitmapData data = bitmap.LockBits(rectangle, ImageLockMode.ReadOnly, bitmap.PixelFormat);
-            int rowCount = data.Width * Image.GetPixelFormatSize(bitmap.PixelFormat) / 8;
-            long length = bitmap.Height * (long)rowCount;
-            byte[] bytes = new byte[length];
-            IntPtr ptr = data.Scan0; 
-            for (int i = 0; i < bitmap.Height; i++)
-            {
-                Marshal.Copy(ptr, bytes, i * rowCount, rowCount);
-                ptr += data.Stride;
-            }
-            bitmap.UnlockBits(data);
-            return bytes;
         }
     }
 }

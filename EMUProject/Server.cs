@@ -88,7 +88,7 @@ namespace Project
             {
                 AppServer app = appServer as AppServer;
                 string log = app.Log;
-                log.AddLog(EMU.Parameter.LogType.TestLog);
+                log.AddLog(LogType.TestLog);
                 if (app.AlgorithmProjectID != null && ServerGlobal.ProgressProjectDict.ContainsKey(app.AlgorithmProjectID))
                 {
                     ServerGlobal.ProgressProjectDict[app.AlgorithmProjectID](app.AlgorithmProgress, app.AlgorithmProgressMax); 
