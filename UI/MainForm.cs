@@ -9,6 +9,7 @@ namespace EMU.UI
     public partial class MainForm : Form
     {
         public static string Version = "1.0.0";
+        public IMainForm MF { private get; set; }
         public IProject Project
         {
             get { return mainControl1.Project; }
@@ -33,6 +34,7 @@ namespace EMU.UI
                 }
             }
         }
+        public string[] Args { private get; set; }
 
         public MainForm()
         {
@@ -57,6 +59,17 @@ namespace EMU.UI
             {
                 label2.Text = Project.EnglishTitle; 
             }
+            MF?.Load(Args);
+        }
+
+        private void MainForm_Shown(object sender, EventArgs e)
+        {
+            MF?.Shown();
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            MF?.Closing();
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e)

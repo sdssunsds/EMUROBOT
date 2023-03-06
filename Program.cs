@@ -69,7 +69,8 @@ namespace EMUROBOT
                 MainForm.Version = Properties.Settings.Default.Version;
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new MainForm() { Project = new Project.AlgorithmInterface() });
+                Project.AlgorithmInterface algorithmInterface = new Project.AlgorithmInterface();
+                Application.Run(new MainForm() { Project = algorithmInterface, MF = algorithmInterface, Args = args });
             }
             else
             {

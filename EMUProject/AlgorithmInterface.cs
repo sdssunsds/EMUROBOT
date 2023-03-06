@@ -9,6 +9,7 @@ using Project.ServerClass;
 #endregion
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Threading;
@@ -18,7 +19,7 @@ using static EMU.Util.LogManager;
 
 namespace Project
 {
-    public class AlgorithmInterface : IAlgorithmInterface
+    public class AlgorithmInterface : IAlgorithmInterface, IMainForm
     {
         public IAppServer appServer { get; set; }
         public ICameraControl[] cameras { get; set; }
@@ -108,7 +109,7 @@ namespace Project
             pages[0] = new PageControl()
             {
                 Name = "服务控制",
-                MainControl = new MainPage() { Dock = DockStyle.Fill, Project = this }
+                MainControl = mainPage = new MainPage() { Dock = DockStyle.Fill, Project = this }
             };
             pages[1] = new PageControl()
             {
@@ -188,6 +189,31 @@ namespace Project
             return null;
         }
 
+        public void Load(string[] args)
+        {
+            if (args != null && args.Length > 0 && args[0] == "start")
+            {
+                mainPage?.btn_link_Click(null, null);
+            }
+        }
+
+        public void Shown()
+        {
+
+        }
+
+        public void Closing()
+        {
+            Process[] ps = Process.GetProcessesByName("AlgorithmControl");
+            if (ps != null)
+            {
+                foreach (Process item in ps)
+                {
+                    item.Kill();
+                }
+            }
+        }
+
         #region 接口专用变量
         private const string redis_key_handle = "data_to_handle_";
         private const string redis_key_result = "data_handled_";
@@ -195,8 +221,9 @@ namespace Project
         private bool isRunInterface = false;
         private int reportSleep = 0;
         private string inName, outName;
-        private RedisHelper RedisHelper = null;
         private AlgorithmPage algorithmPage = null;
+        private RedisHelper RedisHelper = null;
+        private MainPage mainPage = null;
         private List<string> redisKeys = new List<string>();
         private Dictionary<string, long> redisDB = new Dictionary<string, long>()
         {

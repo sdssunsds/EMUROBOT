@@ -206,21 +206,23 @@ namespace Project
                 Directory.CreateDirectory(resultDir);
             }
             AddLogEvent += LogManager_AddLogEvent;
+#if true
             ThreadManager.TaskRun((ThreadEventArgs eventArgs) =>
-            {
-                eventArgs.ThreadName = "算法初始化线程";
-            Run:
-                ptr = Algorithm.ExportObjectFactory();
-                AddLog("算法启动", LogType.OtherLog);
-                init = Algorithm.CallOnInit(ptr, null);
-                AddLog("算法初始化: " + init, LogType.OtherLog);
-                if (init != 0)
                 {
-                    AddLog("3秒后重新初始化算法", LogType.OtherLog);
-                    Thread.Sleep(3000);
-                    goto Run;
-                }
-            });
+                    eventArgs.ThreadName = "算法初始化线程";
+                Run:
+                    ptr = Algorithm.ExportObjectFactory();
+                    AddLog("算法启动", LogType.OtherLog);
+                    init = Algorithm.CallOnInit(ptr, null);
+                    AddLog("算法初始化: " + init, LogType.OtherLog);
+                    if (init != 0)
+                    {
+                        AddLog("3秒后重新初始化算法", LogType.OtherLog);
+                        Thread.Sleep(3000);
+                        goto Run;
+                    }
+                }); 
+#endif
         }
 
         private void LogManager_AddLogEvent(string arg1, LogType arg2)

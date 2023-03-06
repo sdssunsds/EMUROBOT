@@ -3,6 +3,7 @@
 using AlgorithmLib;
 using EMU.Util;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -15,45 +16,62 @@ namespace AlgorithmControl
     {
         static void Main(string[] args)
         {
-            if (args != null && args.Length > 0 && args[0] == "del")
+            if (args != null && args.Length > 0)
             {
-                Action<string[]> deleteFile = (string[] bakFiles) =>
+                if (args[0] == "del")
                 {
-                    if (bakFiles != null)
-                    {
-                        foreach (string item in bakFiles)
-                        {
-                            File.Delete(item);
-                            Console.WriteLine("删除文件：" + item);
-                        }
-                    }
-                };
-                Action<string> deleteDir = (string path) => { };
-                deleteDir = (string path) =>
-                {
-                    if (Directory.Exists(path))
-                    {
-                        deleteFile(Directory.GetFiles(path));
-                        string[] dirs = Directory.GetDirectories(path);
-                        if (dirs != null)
-                        {
-                            foreach (string item in dirs)
+                    Action<string[]> deleteFile = (string[] bakFiles) =>
                             {
-                                deleteDir(item);
-                                Directory.Delete(item);
-                                Console.WriteLine("删除文件夹：" + item);
+                                if (bakFiles != null)
+                                {
+                                    foreach (string item in bakFiles)
+                                    {
+                                        File.Delete(item);
+                                        Console.WriteLine("删除文件：" + item);
+                                    }
+                                }
+                            };
+                    Action<string> deleteDir = (string path) => { };
+                    deleteDir = (string path) =>
+                    {
+                        if (Directory.Exists(path))
+                        {
+                            deleteFile(Directory.GetFiles(path));
+                            string[] dirs = Directory.GetDirectories(path);
+                            if (dirs != null)
+                            {
+                                foreach (string item in dirs)
+                                {
+                                    deleteDir(item);
+                                    Directory.Delete(item);
+                                    Console.WriteLine("删除文件夹：" + item);
+                                }
                             }
-                        } 
-                    }
-                };
-                deleteDir(Application.StartupPath + "\\Bak");
-                deleteDir(Application.StartupPath + "\\bak_redis");
-                deleteDir(Application.StartupPath + "\\bak_result");
-                deleteDir(Application.StartupPath + "\\bak_img");
-                deleteDir(Application.StartupPath + "\\Image");
-                deleteDir(Application.StartupPath + "\\log");
-                return;
+                        }
+                    };
+                    deleteDir(Application.StartupPath + "\\Bak");
+                    deleteDir(Application.StartupPath + "\\bak_redis");
+                    deleteDir(Application.StartupPath + "\\bak_result");
+                    deleteDir(Application.StartupPath + "\\bak_img");
+                    deleteDir(Application.StartupPath + "\\Image");
+                    deleteDir(Application.StartupPath + "\\log");
+                    return; 
+                }
+                else
+                {
+                    do
+                    {
+                        Process[] process = Process.GetProcessesByName(args[0]);
+                        if (process == null || process.Length == 0)
+                        {
+                            Process.Start(Application.StartupPath + "\\" + args[0] + ".exe", "start");
+                        }
+                        Thread.Sleep(1000);
+                    } while (true);
+                }
             }
+            #region 多进程算法
+#if false
             string appID = "";
             if (args != null && args.Length > 0)
             {
@@ -108,7 +126,7 @@ namespace AlgorithmControl
                         string s = sr.ReadLine();
                         if (s != "null")
                         {
-                            models = JsonManager.JsonToObject<model_struct[]>(s); 
+                            models = JsonManager.JsonToObject<model_struct[]>(s);
                         }
                     }
                     File.Delete(algorithmParPath);
@@ -154,11 +172,13 @@ namespace AlgorithmControl
                     {
                         sw.WriteLine(JsonManager.ObjectToJson(boxes));
                     }
-                    
+
                     Console.WriteLine("结果已经写入文件");
                     break;
                 }
-            }
+            } 
+#endif 
+            #endregion
         }
     }
 }

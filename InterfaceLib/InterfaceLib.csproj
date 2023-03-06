@@ -70,6 +70,7 @@
     <Compile Include="Iinit.cs" />
     <Compile Include="ILaserControl.cs" />
     <Compile Include="ILightControl.cs" />
+    <Compile Include="IMainForm.cs" />
     <Compile Include="IMainTask.cs" />
     <Compile Include="IProject.cs" />
     <Compile Include="IRgvControl.cs" />

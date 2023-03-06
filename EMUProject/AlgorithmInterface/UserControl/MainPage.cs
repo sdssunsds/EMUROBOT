@@ -3,6 +3,7 @@ using EMU.Util;
 using GW.Function.FileFunction;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 using System.Text;
@@ -29,8 +30,26 @@ namespace Project
             InitializeComponent();
         }
 
+        public void btn_link_Click(object sender, EventArgs e)
+        {
+            Project.RunInterface(tb_redis_url.Text, tb_redis_input.Text, tb_redis_output.Text, int.Parse(tb_redis_internal.Text), Pwd);
+            AddLog("连接Redis成功", LogType.ProcessLog);
+        }
+
         private void MainPage_Load(object sender, EventArgs e)
         {
+            Process[] ps = Process.GetProcessesByName("AlgorithmControl");
+            if (ps == null || ps.Length == 0)
+            {
+                Process process = new Process();
+                process.StartInfo = new ProcessStartInfo();
+                process.StartInfo.Arguments = "EMUROBOT";
+                process.StartInfo.CreateNoWindow = true;
+                process.StartInfo.FileName = Application.StartupPath + "\\AlgorithmControl.exe";
+                process.StartInfo.UseShellExecute = false;
+                process.Start(); 
+            }
+
             tb_redis_url.Text = FileSystem.ReadIniFile("Redis", urlKey, "", Project.PathParameter1);
             tb_redis_input.Text = FileSystem.ReadIniFile("Redis", inputKey, "", Project.PathParameter1);
             tb_redis_output.Text = FileSystem.ReadIniFile("Redis", outputKey, "", Project.PathParameter1);
@@ -156,11 +175,6 @@ namespace Project
             {
                 SaveOperation(internalKey, tb_redis_internal.Text);
             }
-        }
-
-        private void btn_link_Click(object sender, EventArgs e)
-        {
-            Project.RunInterface(tb_redis_url.Text, tb_redis_input.Text, tb_redis_output.Text, int.Parse(tb_redis_internal.Text), Pwd);
         }
 
         private void GetVariable(string name, StringBuilder sb, ThreadEventArgs eventArgs)
