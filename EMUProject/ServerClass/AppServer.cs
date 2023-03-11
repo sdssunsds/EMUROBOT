@@ -724,9 +724,7 @@ namespace Project.ServerClass
                 string partID = input_Struct.part_str.ToString('\0');
                 string onlyID = input_Struct.only_str.ToString('\0');
                 List<model_struct> model_Structs = GetModelStructs(onlyID, train);
-                int arrayLen = model_Structs.Count;
-                byte b = 0;
-                IntPtr _result = Algorithm.Callgetres(algObj, input_Struct, model_Structs.ToArray(), arrayLen, ref resultLen, ref tmp, ref b);
+                IntPtr _result = Algorithm.Callgetres(algObj, imgPath, input_Struct.img_path.ToString('\0'), "", input_Struct.task_list, input_Struct.task_list.Length, model_Structs.ToArray(), model_Structs.Count, ref resultLen);
                 int _length = Marshal.SizeOf(typeof(box_info));
                 long _len = _result.ToInt64();
                 for (int j = 0; j < resultLen; j++)

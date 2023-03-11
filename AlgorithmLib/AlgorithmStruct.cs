@@ -10,7 +10,7 @@ namespace AlgorithmLib
             string s = "";
             foreach (char item in cs)
             {
-                if (item == '\0' || item == end)
+                if (item == end)
                 {
                     break;
                 }
