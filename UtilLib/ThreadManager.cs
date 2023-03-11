@@ -56,7 +56,7 @@ namespace EMU.Util
                         }
                     }
                     i++;
-                    if (i > 100000000)
+                    if (i > 1000000000)
                     {
                         i = 0;
                     }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AlgorithmLib;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -51,6 +53,33 @@ namespace AlgorithmControl
                     deleteDir(Application.StartupPath + "\\log");
                     return; 
                 }
+                else if (args[0] == "muban")
+                {
+                    if (args.Length > 1)
+                    {
+                        try
+                        {
+                            string path = args[1];
+                            string[] dirs = Directory.GetDirectories(path);
+                            Console.WriteLine(args[0] + "  " + args[1]);
+                            foreach (string item in dirs)
+                            {
+                                Console.WriteLine(item);
+                            }
+                            Console.ReadKey();
+                            foreach (string item in dirs)
+                            {
+                                MoveMuban(item);
+                            }
+                            Console.ReadKey();
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e.Message);
+                            Console.ReadKey();
+                        }
+                    }
+                }
                 else
                 {
                     do
@@ -63,6 +92,61 @@ namespace AlgorithmControl
                         Thread.Sleep(1000);
                     } while (true);
                 }
+            }
+        }
+
+        static void MoveMuban(string path, DirectoryInfo directory = null)
+        {
+            if (directory == null)
+            {
+                directory = new DirectoryInfo(path); 
+            }
+            DirectoryInfo[] childDir = directory.GetDirectories();
+            foreach (DirectoryInfo item in childDir)
+            {
+                Console.WriteLine(item.FullName);
+            }
+            foreach (DirectoryInfo item in childDir)
+            {
+                MoveMuban(path, item);
+            }
+            string name = "";
+            FileInfo[] files = directory.GetFiles();
+            foreach (FileInfo item in files)
+            {
+                Console.WriteLine(item.FullName);
+            }
+            foreach (FileInfo item in files)
+            {
+                if (item.Name.Contains("_"))
+                {
+                    name = item.Name.Replace("_.", ".");
+                    name = name.Substring(name.LastIndexOf("_") + 1);
+                }
+                else
+                {
+                    name = item.Name;
+                }
+                name = path + "\\" + name;
+                if (item.FullName == name)
+                {
+                    Console.WriteLine("跳过已存在文件: " + name);
+                }
+                else if (File.Exists(name))
+                {
+                    Console.WriteLine("删除已存在文件: " + name);
+                    File.Delete(name);
+                }
+                else
+                {
+                    Console.WriteLine(item.FullName + " -> " + name);
+                    File.Move(item.FullName, name); 
+                }
+            }
+            if (directory.GetFiles().Length == 0 && directory.GetDirectories().Length == 0)
+            {
+                Console.WriteLine("删除文件夹: " + directory.FullName);
+                directory.Delete(); 
             }
         }
     }

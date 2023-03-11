@@ -1,0 +1,2 @@
+extern "C" CPPLIBDLL_API box_info * __stdcall Callgetres(IExport * obj, const char* checkimg_path,const char* modelimg_path, const char* historypath ,
+ const int* input_task, const int input_info_len, const model_struct * mode_box, const int model_struct_len, int& res_len)

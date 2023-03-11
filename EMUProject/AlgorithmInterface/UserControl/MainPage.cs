@@ -84,10 +84,7 @@ namespace Project
                     host.Open();
                 }
             }
-            else
-            {
-                AddLog("服务初始化完成", LogType.ProcessLog);
-            }
+            AddLog("服务初始化完成", LogType.ProcessLog);
         }
 
         private void LogManager_AddLogEvent(string arg1, LogType arg2)
@@ -175,11 +172,6 @@ namespace Project
             {
                 SaveOperation(internalKey, tb_redis_internal.Text);
             }
-        }
-
-        private void GetVariable(string name, StringBuilder sb, ThreadEventArgs eventArgs)
-        {
-            sb.AppendLine(name + ": " + eventArgs.GetVariableValue(name, "")?.ToString());
         }
 
         private void SaveOperation(string key, string value)

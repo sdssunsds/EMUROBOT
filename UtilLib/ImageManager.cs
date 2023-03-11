@@ -3,6 +3,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace EMU.Util
 {
@@ -170,7 +171,7 @@ namespace EMU.Util
                 IntPtr ptr = data.Scan0;
                 for (int i = 0; i < bitmap.Height; i++)
                 {
-                    System.Runtime.InteropServices.Marshal.Copy(ptr, bytes, i * rowCount, rowCount);
+                    Marshal.Copy(ptr, bytes, i * rowCount, rowCount);
                     ptr += data.Stride;
                 }
                 bitmap.UnlockBits(data);
