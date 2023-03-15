@@ -124,7 +124,7 @@ namespace Project
                 {
                     uncorrect = sr.ReadToEnd();
                 }
-                if (uncorrect.Contains(partId))
+                if (!uncorrect.Contains(partId))
                 {
                     List<int> tmpTask = new List<int>();
                     tmpTask.AddRange(taskIds);
