@@ -385,3 +385,7 @@ MigrationBackup/
 /.svn
 /DLL/onnxruntime_providers_cuda.dll
 /muban
+/model
+/test/for
+/lib
+/dlltest

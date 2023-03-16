@@ -1,4 +1,5 @@
 ﻿#define readFile
+//#define outTime
 
 using AlgorithmLib;
 using EMU.Parameter;
@@ -7,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using static EMU.Util.LogManager;
@@ -22,6 +24,10 @@ namespace Project
         private int logCount = 0;
         private int exeCount = 0;
         private string bakPath = Application.StartupPath + "\\bak_img\\";
+#if readFile
+        private string errorPath = Application.StartupPath + "\\bak_error\\";
+        private string mubanPath = Application.StartupPath + "\\muban\\"; 
+#endif
         private string resultDir = "";
         private int init = -1;
         private IntPtr ptr = IntPtr.Zero;
@@ -34,6 +40,10 @@ namespace Project
             if (!Directory.Exists(bakPath))
             {
                 Directory.CreateDirectory(bakPath);
+            }
+            if (!Directory.Exists(errorPath))
+            {
+                Directory.CreateDirectory(errorPath);
             }
         }
 
@@ -173,7 +183,11 @@ namespace Project
                                         int.TryParse(s[3], out model.h), partId, mode, sn, item,
                                         () =>
                                         {
-                                            model.class_name = name.ToCharArray();
+                                            model.class_name = new char[50];
+                                            for (int i = 0; i < name.Length; i++)
+                                            {
+                                                model.class_name[i] = name[i];
+                                            }
                                             models.Add(model);
                                         });
                                 }
@@ -220,29 +234,37 @@ namespace Project
 
             #region 算法超时监控线程
             bool monitor = true;
+#if outTime
             Thread thread = new Thread(new ThreadStart(() =>
-            {
-                int i = 0;
-                int outTime = Properties.Settings.Default.AlgorithmOutTime * 2;
-                while (monitor)
                 {
-                    if (i >= outTime)
+                    int i = 0;
+                    int outTime = Properties.Settings.Default.AlgorithmOutTime * 2;
+                    while (monitor)
                     {
-                        AddLog("算法超时", LogType.OtherLog);
-                        break;
+                        if (i >= outTime)
+                        {
+                            AddLog("算法超时", LogType.OtherLog);
+                            break;
+                        }
+                        i++;
+                        Thread.Sleep(500);
                     }
-                    i++;
-                    Thread.Sleep(500);
-                }
-                monitor = false;
-            }));
+                    monitor = false;
+                })); 
+#endif
             #endregion
 
             #region 算法多线程控制
             lock (runLock)
             {
+                bool showLog = false;
                 while (exeCount >= algorithmMax)
                 {
+                    if (!showLog)
+                    {
+                        showLog = true;
+                        AddLog("等待前一个算法运行完成", LogType.OtherLog); 
+                    }
                     Thread.Sleep(50);
                 }
                 exeCount++;
@@ -257,9 +279,53 @@ namespace Project
                 tea.ThreadName = "算法运行线程";
                 if (init == 0)
                 {
+                    GC.Collect();
 #if readFile
+                    string mjson = JsonManager.ObjectToJson(models);
                     AddLog("调用算法：[Callgetres]", LogType.OtherLog);
-                    rPtr = Algorithm.Callgetres(ptr, imgPath1, upImgPath, modelPath, taskIds, taskIds.Length, models.ToArray(), models.Count, ref len);
+                    AddLog("\t>> " + mode, LogType.OtherLog);
+                    AddLog("\t>> " + sn, LogType.OtherLog);
+                    AddLog("\t>> " + partId, LogType.OtherLog);
+                    AddLog("\t>> " + imgPath1, LogType.OtherLog);
+                    AddLog("\t>> " + upImgPath, LogType.OtherLog);
+                    AddLog("\t>> " + modelPath, LogType.OtherLog);
+                    AddLog("\t>> " + type, LogType.OtherLog);
+                    AddLog("\t>> " + mjson, LogType.OtherLog);
+                    //try
+                    //{
+                        rPtr = Algorithm.Callgetres(ptr, imgPath1, upImgPath, modelPath, taskIds, taskIds.Length, models.ToArray(), models.Count, ref len);
+                    //}
+                    //catch (SEHException e)
+                    //{
+                    //    AddLog(e.Message + "\r\n" + e.StackTrace, LogType.ErrorLog);
+                    //    try
+                    //    {
+                    //        string error = errorPath + id + "\\";
+                    //        if (!Directory.Exists(error))
+                    //        {
+                    //            Directory.CreateDirectory(error);
+                    //        }
+                    //        File.Copy(imgPath1, error + "被检测图.jpg");
+
+                    //        if (File.Exists(upImgPath))
+                    //        {
+                    //            File.Copy(upImgPath, error + "模板图片.jpg");
+                    //        }
+
+                    //        string file = error + "参数文件.txt";
+                    //        using (StreamWriter sw = new StreamWriter(file))
+                    //        {
+                    //            sw.WriteLine(partId);
+                    //            sw.WriteLine(modelPath);
+                    //            sw.WriteLine(type);
+                    //            sw.WriteLine(mjson);
+                    //        }
+                    //    }
+                    //    catch (Exception ex)
+                    //    {
+                    //        AddLog(ex.Message, LogType.ErrorLog);
+                    //    }
+                    //}
 #else
                     AddLog("调用算法：[NewCallgetres]", LogType.OtherLog);
                     rPtr = Algorithm.NewCallgetres(ptr, bytes1, width1, height1, bytes2, width2, height2, taskIds, taskIds.Length, models, models == null ? 0 : models.Length, ref len);
@@ -268,16 +334,20 @@ namespace Project
                 }
                 monitor = false;
             });
-            thread.Start();
+#if outTime
+            thread.Start(); 
+#endif
             while (monitor)
             {
                 Thread.Sleep(50);
             }
             exeCount--;
+#if outTime
             if (thread.IsAlive)
             {
                 thread.Abort();
-            }
+            } 
+#endif
             #endregion
 
             #region 算法返回值解析

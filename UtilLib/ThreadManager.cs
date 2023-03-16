@@ -11,6 +11,7 @@ namespace EMU.Util
     {
         private static object backLock = new object();
         private static object runLock = new object();
+        private static object eventLock = new object();
         private static int runKey = 0;
         private static List<BackThreadFunction> backActions;
         private static List<ThreadEventArgs> eventArgs;
@@ -44,7 +45,10 @@ namespace EMU.Util
                                 args = new ThreadEventArgs();
                                 backEventArgs.Add(j, args);
                                 EventArgsAddingAction?.Invoke(args);
-                                eventArgs.Add(args);
+                                lock (eventLock)
+                                {
+                                    eventArgs.Add(args); 
+                                }
                             }
                             int index = j;
                             Task.Run(() =>
@@ -56,7 +60,7 @@ namespace EMU.Util
                         }
                     }
                     i++;
-                    if (i > 1000000000)
+                    if (i > 100000000)
                     {
                         i = 0;
                     }
@@ -78,12 +82,18 @@ namespace EMU.Util
                 ThreadEventArgs args = new ThreadEventArgs();
                 args.IsBackThread = false;
                 EventArgsAddingAction?.Invoke(args);
-                eventArgs.Add(args);
+                lock (eventLock)
+                {
+                    eventArgs.Add(args); 
+                }
                 args.IsRunThread = true;
                 action(args);
                 args.IsRunThread = false;
                 EventArgsRemovingAction?.Invoke(args);
-                eventArgs.Remove(args);
+                lock (eventLock)
+                {
+                    eventArgs.Remove(args); 
+                }
             });
         }
         public static int GetTaskRunCount()

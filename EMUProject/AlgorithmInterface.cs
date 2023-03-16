@@ -277,21 +277,28 @@ namespace Project
                                         {
                                             sw.WriteLine(value);
                                         }
-                                        string[] args = value.Split('&');
-                                        ThreadManager.TaskRun((ThreadEventArgs tmp) =>
+                                        if (!string.IsNullOrEmpty(value))
                                         {
-                                            tmp.ThreadName = "算法执行线程";
-                                            if (!string.IsNullOrEmpty(args[0]) && !string.IsNullOrEmpty(args[1]) && !string.IsNullOrEmpty(args[2]) &&
-                                                !string.IsNullOrEmpty(args[3]) && !string.IsNullOrEmpty(args[5]) && !string.IsNullOrEmpty(args[6]) &&
-                                                !string.IsNullOrEmpty(task_id))
+                                            string[] args = value.Split('&');
+                                            ThreadManager.TaskRun((ThreadEventArgs tmp) =>
                                             {
-                                                if (!algorithmPage.RunAlgorithm(args[0], args[1], args[2], args[3], args[4], args[5], args[6], task_id, tmp))
+                                                tmp.ThreadName = "算法执行线程";
+                                                if (!string.IsNullOrEmpty(args[0]) && !string.IsNullOrEmpty(args[1]) && !string.IsNullOrEmpty(args[2]) &&
+                                                    !string.IsNullOrEmpty(args[3]) && !string.IsNullOrEmpty(args[5]) && !string.IsNullOrEmpty(args[6]) &&
+                                                    !string.IsNullOrEmpty(task_id))
                                                 {
-                                                    AddLog("算法执行失败", LogType.GeneralLog);
-                                                    DeleteRedis(key);
+                                                    if (!algorithmPage.RunAlgorithm(args[0], args[1], args[2], args[3], args[4], args[5], args[6], task_id, tmp))
+                                                    {
+                                                        AddLog("算法执行失败", LogType.GeneralLog);
+                                                        DeleteRedis(key);
+                                                    }
                                                 }
-                                            }
-                                        });
+                                            }); 
+                                        }
+                                        else
+                                        {
+                                            DeleteRedis(key);
+                                        }
                                     }
                                 }
                             }

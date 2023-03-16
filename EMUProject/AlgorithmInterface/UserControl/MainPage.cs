@@ -38,17 +38,17 @@ namespace Project
 
         private void MainPage_Load(object sender, EventArgs e)
         {
-            Process[] ps = Process.GetProcessesByName("AlgorithmControl");
-            if (ps == null || ps.Length == 0)
-            {
-                Process process = new Process();
-                process.StartInfo = new ProcessStartInfo();
-                process.StartInfo.Arguments = "EMUROBOT";
-                process.StartInfo.CreateNoWindow = true;
-                process.StartInfo.FileName = Application.StartupPath + "\\AlgorithmControl.exe";
-                process.StartInfo.UseShellExecute = false;
-                process.Start(); 
-            }
+            //Process[] ps = Process.GetProcessesByName("AlgorithmControl");
+            //if (ps == null || ps.Length == 0)
+            //{
+            //    Process process = new Process();
+            //    process.StartInfo = new ProcessStartInfo();
+            //    process.StartInfo.Arguments = "EMUROBOT";
+            //    process.StartInfo.CreateNoWindow = true;
+            //    process.StartInfo.FileName = Application.StartupPath + "\\AlgorithmControl.exe";
+            //    process.StartInfo.UseShellExecute = false;
+            //    process.Start(); 
+            //}
 
             tb_redis_url.Text = FileSystem.ReadIniFile("Redis", urlKey, "", Project.PathParameter1);
             tb_redis_input.Text = FileSystem.ReadIniFile("Redis", inputKey, "", Project.PathParameter1);

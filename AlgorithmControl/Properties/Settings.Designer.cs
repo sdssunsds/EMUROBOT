@@ -25,7 +25,7 @@ namespace AlgorithmControl.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("127.0.0.1")]
+        [global::System.Configuration.DefaultSettingValueAttribute("192.168.100.173")]
         public string RedisIP {
             get {
                 return ((string)(this["RedisIP"]));

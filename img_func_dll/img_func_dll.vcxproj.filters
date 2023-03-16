@@ -1,0 +1,260 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{07a0eda2-8bbb-452a-a839-141d6ea414f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{87eeb64f-67c3-4ef3-8b9f-95837981d147}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\model">
+      <UniqueIdentifier>{6e2e0b18-dcbe-4f3d-942a-0af57f9f31e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\model\v5-6">
+      <UniqueIdentifier>{c3fb38a7-7ec3-433f-b466-728b6eb5b5ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\function">
+      <UniqueIdentifier>{30d8ab9d-82dd-434e-b333-b99e1befa78b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\function">
+      <UniqueIdentifier>{2622c48f-664f-478e-8dcf-b6d56136247c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\model">
+      <UniqueIdentifier>{c3124330-ba4d-4e18-ab7a-9add0262db40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\model\v5-6">
+      <UniqueIdentifier>{834ede2b-7830-45db-b860-998274484858}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\config">
+      <UniqueIdentifier>{469ff37b-514b-4979-980d-cf352cf54aa6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\model\class">
+      <UniqueIdentifier>{647fddb2-4a21-4b83-97f1-4c2016f8b378}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\model\class">
+      <UniqueIdentifier>{d4d09888-6fcc-4be0-9f04-59675f9a3b8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\model\v7">
+      <UniqueIdentifier>{9cf2053e-606a-4bb2-a396-c4affd094811}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\model\v7">
+      <UniqueIdentifier>{fdc8a98f-bf8e-4221-b6a0-7282685ae3c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\model\correct">
+      <UniqueIdentifier>{ecbc25fa-2110-466f-8172-96802106e278}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\model\correct">
+      <UniqueIdentifier>{d4f19b78-e353-47c4-a98b-70621156268a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="yolov5\v6\calibrator_v6.h">
+      <Filter>头文件\model\v5-6</Filter>
+    </ClInclude>
+    <ClInclude Include="yolov5\v6\common_v6.h">
+      <Filter>头文件\model\v5-6</Filter>
+    </ClInclude>
+    <ClInclude Include="yolov5\v6\preprocess_v6.h">
+      <Filter>头文件\model\v5-6</Filter>
+    </ClInclude>
+    <ClInclude Include="yolov5\v6\utils_v6.h">
+      <Filter>头文件\model\v5-6</Filter>
+    </ClInclude>
+    <ClInclude Include="yolov5\v6\yololayer_v6.h">
+      <Filter>头文件\model\v5-6</Filter>
+    </ClInclude>
+    <ClInclude Include="yolov5\v6\yolov5_v6.h">
+      <Filter>头文件\model\v5-6</Filter>
+    </ClInclude>
+    <ClInclude Include="yolov7\yolov7.h">
+      <Filter>头文件\model\v7</Filter>
+    </ClInclude>
+    <ClInclude Include="yolov5\infer_class.h">
+      <Filter>头文件\model\class</Filter>
+    </ClInclude>
+    <ClInclude Include="basic_struct.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="common_class.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DLL.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="mainclass_dll.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="axis_check.h">
+      <Filter>头文件\function</Filter>
+    </ClInclude>
+    <ClInclude Include="common_func.h">
+      <Filter>头文件\function</Filter>
+    </ClInclude>
+    <ClInclude Include="ct_check.h">
+      <Filter>头文件\function</Filter>
+    </ClInclude>
+    <ClInclude Include="foreign_body.h">
+      <Filter>头文件\function</Filter>
+    </ClInclude>
+    <ClInclude Include="get_loss.h">
+      <Filter>头文件\function</Filter>
+    </ClInclude>
+    <ClInclude Include="locking_wire.h">
+      <Filter>头文件\function</Filter>
+    </ClInclude>
+    <ClInclude Include="loss_check.h">
+      <Filter>头文件\function</Filter>
+    </ClInclude>
+    <ClInclude Include="oil_leakage.h">
+      <Filter>头文件\function</Filter>
+    </ClInclude>
+    <ClInclude Include="oil_level.h">
+      <Filter>头文件\function</Filter>
+    </ClInclude>
+    <ClInclude Include="sashazui.h">
+      <Filter>头文件\function</Filter>
+    </ClInclude>
+    <ClInclude Include="scratch.h">
+      <Filter>头文件\function</Filter>
+    </ClInclude>
+    <ClInclude Include="screw.h">
+      <Filter>头文件\function</Filter>
+    </ClInclude>
+    <ClInclude Include="screw_loose_check.h">
+      <Filter>头文件\function</Filter>
+    </ClInclude>
+    <ClInclude Include="slide_window_infer.h">
+      <Filter>头文件\function</Filter>
+    </ClInclude>
+    <ClInclude Include="model_config.h">
+      <Filter>头文件\config</Filter>
+    </ClInclude>
+    <ClInclude Include="basic_yolo.h">
+      <Filter>头文件\model</Filter>
+    </ClInclude>
+    <ClInclude Include="yolov5\logging.h">
+      <Filter>头文件\model\v5-6</Filter>
+    </ClInclude>
+    <ClInclude Include="gjt_check.h">
+      <Filter>头文件\function</Filter>
+    </ClInclude>
+    <ClInclude Include="zxj_common.h">
+      <Filter>头文件\function</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\trtbuffer\buffers.h">
+      <Filter>头文件\model\correct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\trtbuffer\common.h">
+      <Filter>头文件\model\correct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\trtbuffer\error_recorder.h">
+      <Filter>头文件\model\correct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\trtbuffer\half.h">
+      <Filter>头文件\model\correct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\trtbuffer\logger_trtbuffer.h">
+      <Filter>头文件\model\correct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\trtbuffer\logging_trtbuffer.h">
+      <Filter>头文件\model\correct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\read_config.h">
+      <Filter>头文件\model\correct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\utils.h">
+      <Filter>头文件\model\correct</Filter>
+    </ClInclude>
+    <ClInclude Include="spsg.h">
+      <Filter>头文件\model\correct</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="yolov5\v6\preprocess_v6.cu">
+      <Filter>源文件\model\v5-6</Filter>
+    </CudaCompile>
+    <CudaCompile Include="yolov5\v6\yololayer_v6.cu">
+      <Filter>源文件\model\v5-6</Filter>
+    </CudaCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="axis_check.cpp">
+      <Filter>源文件\function</Filter>
+    </ClCompile>
+    <ClCompile Include="common_func.cpp">
+      <Filter>源文件\function</Filter>
+    </ClCompile>
+    <ClCompile Include="ct_check.cpp">
+      <Filter>源文件\function</Filter>
+    </ClCompile>
+    <ClCompile Include="foreign_body.cpp">
+      <Filter>源文件\function</Filter>
+    </ClCompile>
+    <ClCompile Include="get_loss.cpp">
+      <Filter>源文件\function</Filter>
+    </ClCompile>
+    <ClCompile Include="locking_wire.cpp">
+      <Filter>源文件\function</Filter>
+    </ClCompile>
+    <ClCompile Include="loss_check.cpp">
+      <Filter>源文件\function</Filter>
+    </ClCompile>
+    <ClCompile Include="oil_leakage.cpp">
+      <Filter>源文件\function</Filter>
+    </ClCompile>
+    <ClCompile Include="oil_level.cpp">
+      <Filter>源文件\function</Filter>
+    </ClCompile>
+    <ClCompile Include="sashazui.cpp">
+      <Filter>源文件\function</Filter>
+    </ClCompile>
+    <ClCompile Include="scratch.cpp">
+      <Filter>源文件\function</Filter>
+    </ClCompile>
+    <ClCompile Include="screw.cpp">
+      <Filter>源文件\function</Filter>
+    </ClCompile>
+    <ClCompile Include="screw_loose_check.cpp">
+      <Filter>源文件\function</Filter>
+    </ClCompile>
+    <ClCompile Include="slide_window_infer.cpp">
+      <Filter>源文件\function</Filter>
+    </ClCompile>
+    <ClCompile Include="yolov5\infer_class.cpp">
+      <Filter>源文件\model\class</Filter>
+    </ClCompile>
+    <ClCompile Include="yolov5\v6\yolov5_v6.cpp">
+      <Filter>源文件\model\v5-6</Filter>
+    </ClCompile>
+    <ClCompile Include="yolov7\yolov7.cpp">
+      <Filter>源文件\model\v7</Filter>
+    </ClCompile>
+    <ClCompile Include="basic_yolo.cpp">
+      <Filter>源文件\model</Filter>
+    </ClCompile>
+    <ClCompile Include="DLL.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="mainclass_dll.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="gjt_check.cpp">
+      <Filter>源文件\function</Filter>
+    </ClCompile>
+    <ClCompile Include="zxj_common.cpp">
+      <Filter>源文件\function</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\trtbuffer\logger_trtbuffer.cpp">
+      <Filter>源文件\model\correct</Filter>
+    </ClCompile>
+    <ClCompile Include="spsg.cpp">
+      <Filter>源文件\model\correct</Filter>
+    </ClCompile>
+    <ClCompile Include="correct\super_glue.cpp">
+      <Filter>源文件\model\correct</Filter>
+    </ClCompile>
+    <ClCompile Include="correct\super_point.cpp">
+      <Filter>源文件\model\correct</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

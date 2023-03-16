@@ -49,6 +49,7 @@ namespace AlgorithmControl
                     deleteDir(Application.StartupPath + "\\bak_redis");
                     deleteDir(Application.StartupPath + "\\bak_result");
                     deleteDir(Application.StartupPath + "\\bak_img");
+                    deleteDir(Application.StartupPath + "\\bak_error");
                     deleteDir(Application.StartupPath + "\\Image");
                     deleteDir(Application.StartupPath + "\\log");
                     return; 
