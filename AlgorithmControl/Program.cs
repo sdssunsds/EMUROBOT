@@ -1,6 +1,4 @@
-﻿using AlgorithmLib;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -85,10 +83,15 @@ namespace AlgorithmControl
                 {
                     do
                     {
+                        string arg = "start";
+                        for (int i = 1; i < args.Length; i++)
+                        {
+                            arg += " " + args[i];
+                        }
                         Process[] process = Process.GetProcessesByName(args[0]);
                         if (process == null || process.Length == 0)
                         {
-                            Process.Start(Application.StartupPath + "\\" + args[0] + ".exe", "start");
+                            Process.Start(Application.StartupPath + "\\" + args[0] + ".exe", arg);
                         }
                         Thread.Sleep(1000);
                     } while (true);

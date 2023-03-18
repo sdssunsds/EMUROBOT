@@ -69,6 +69,7 @@ namespace EMU.Util
         }
         public static void TaskRun(ThreadFunction action)
         {
+            int _runKey = 0;
             lock (runLock)
             {
                 do
@@ -76,6 +77,7 @@ namespace EMU.Util
                     runKey++;
                 } while (runActions.ContainsKey(runKey));
                 runActions.Add(runKey, action);
+                _runKey = runKey;
             }
             Task.Run(() =>
             {
@@ -93,6 +95,10 @@ namespace EMU.Util
                 lock (eventLock)
                 {
                     eventArgs.Remove(args); 
+                }
+                lock (runLock)
+                {
+                    runActions.Remove(_runKey);
                 }
             });
         }

@@ -1,7 +1,6 @@
 ﻿using EMU.Util;
 using System;
 using System.IO;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace Project
@@ -60,7 +59,7 @@ namespace Project
             WriteLogFile(s, arg2);
             BeginInvoke(new Action(() =>
             {
-                if (logCount >= 5000)
+                if (logCount >= 50)
                 {
                     logCount = 0;
                     textBox1.Text = "";

@@ -1,12 +1,10 @@
 ﻿using EMU.Parameter;
-using EMU.Util;
 using GW.Function.FileFunction;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.ServiceModel;
 using System.ServiceModel.Description;
-using System.Text;
 using System.Windows.Forms;
 using UploadImageServer;
 using static EMU.Util.LogManager;
@@ -23,6 +21,8 @@ namespace Project
 
         public static string Pwd = "";
 
+        public string AppArgs { get; set; }
+
         public IAlgorithmInterface Project { get; set; }
 
         public MainPage()
@@ -34,21 +34,22 @@ namespace Project
         {
             Project.RunInterface(tb_redis_url.Text, tb_redis_input.Text, tb_redis_output.Text, int.Parse(tb_redis_internal.Text), Pwd);
             AddLog("连接Redis成功", LogType.ProcessLog);
+            btn_link.Enabled = false;
         }
 
         private void MainPage_Load(object sender, EventArgs e)
         {
-            //Process[] ps = Process.GetProcessesByName("AlgorithmControl");
-            //if (ps == null || ps.Length == 0)
-            //{
-            //    Process process = new Process();
-            //    process.StartInfo = new ProcessStartInfo();
-            //    process.StartInfo.Arguments = "EMUROBOT";
-            //    process.StartInfo.CreateNoWindow = true;
-            //    process.StartInfo.FileName = Application.StartupPath + "\\AlgorithmControl.exe";
-            //    process.StartInfo.UseShellExecute = false;
-            //    process.Start(); 
-            //}
+            Process[] ps = Process.GetProcessesByName("AlgorithmControl");
+            if (ps == null || ps.Length == 0)
+            {
+                Process process = new Process();
+                process.StartInfo = new ProcessStartInfo();
+                process.StartInfo.Arguments = "EMUROBOT" + AppArgs;
+                process.StartInfo.CreateNoWindow = true;
+                process.StartInfo.FileName = Application.StartupPath + "\\AlgorithmControl.exe";
+                process.StartInfo.UseShellExecute = false;
+                process.Start();
+            }
 
             tb_redis_url.Text = FileSystem.ReadIniFile("Redis", urlKey, "", Project.PathParameter1);
             tb_redis_input.Text = FileSystem.ReadIniFile("Redis", inputKey, "", Project.PathParameter1);
@@ -95,7 +96,7 @@ namespace Project
                 reportCount++;
                 BeginInvoke(new Action(() =>
                 {
-                    if (reportCount >= 5000)
+                    if (reportCount >= 100)
                     {
                         reportCount = 0;
                         tb_redis_report.Text = "";
@@ -110,7 +111,7 @@ namespace Project
                 resultCount++;
                 BeginInvoke(new Action(() =>
                 {
-                    if (resultCount >= 5000)
+                    if (resultCount >= 100)
                     {
                         resultCount = 0;
                         tb_redis_result.Text = "";

@@ -27,6 +27,7 @@ void spsg::init(std::string basic_path,std::string model_path)
 
 cv::Mat spsg::change(cv::Mat image0, cv::Mat image1,cv::Mat& invert)
 {
+    std::cout << "00" << std::endl;
     cv::resize(image0, image0, cv::Size(width, height));
     cv::resize(image1, image1, cv::Size(width, height));
     Eigen::Matrix<double, 259, Eigen::Dynamic> feature_points0, feature_points1;
@@ -39,12 +40,15 @@ cv::Mat spsg::change(cv::Mat image0, cv::Mat image1,cv::Mat& invert)
         std::cerr << "Failed when extracting features from second image." << std::endl;
         return cv::Mat();
     }
-    superglue->matching_points(feature_points0, feature_points1, superglue_matches);
+    std::cout << "11" << std::endl;
+    superglue->matching_points(feature_points0, feature_points1, superglue_matches); 
+
     int num0=feature_points0.cols();
     int num1 = feature_points1.cols();
   cv::Mat match_image;
   std::vector<cv::KeyPoint> keypoints0, keypoints1;
   std::vector<cv::Point> points0, points1;
+  std::cout << "22" << std::endl;
   for (int i=0;i<superglue_matches.size();i++)
   {
     cv::DMatch match= superglue_matches[i];
@@ -61,12 +65,13 @@ cv::Mat spsg::change(cv::Mat image0, cv::Mat image1,cv::Mat& invert)
     keypoints1.emplace_back(x1, y1, 8, -1, score1);
     //cv::line(show, cv::Point(int(x0), int(y0)), cv::Point(int(x1) + image0.cols, int(y1)), cv::Scalar(0, 255, 0));
   }
+  std::cout << "33" << std::endl;
   cv::Mat image0_to_image1;
   if (points0.size()>=50)
   {
       image0_to_image1 = cv::findHomography(points0, points1, CV_FM_RANSAC);
       invert= cv::findHomography( points1,points0, CV_FM_RANSAC);
   }
-  
+  std::cout << "44" << std::endl;
   return image0_to_image1;
 }

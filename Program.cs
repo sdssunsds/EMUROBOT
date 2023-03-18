@@ -22,7 +22,15 @@ namespace EMUROBOT
         [STAThread]
         static void Main(string[] args)
         {
-            AllocConsole();
+            bool showConsole = false;
+            if (args != null && Array.IndexOf(args, "-c") > -1)
+            {
+                showConsole = true;
+            }
+            if (showConsole)
+            {
+                AllocConsole(); 
+            }
             Process application = RunningInstance();
             if (application == null)
             {
@@ -76,7 +84,10 @@ namespace EMUROBOT
             {
                 HandleRunningInstance(application);
             }
-            FreeConsole();
+            if (showConsole)
+            {
+                FreeConsole(); 
+            }
         }
         #region   只运行一个实例
         public static Process RunningInstance()

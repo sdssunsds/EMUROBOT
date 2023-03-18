@@ -168,6 +168,9 @@
     <ClInclude Include="spsg.h">
       <Filter>头文件\model\correct</Filter>
     </ClInclude>
+    <ClInclude Include="logger.h">
+      <Filter>头文件\function</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="yolov5\v6\preprocess_v6.cu">
@@ -255,6 +258,9 @@
     </ClCompile>
     <ClCompile Include="correct\super_point.cpp">
       <Filter>源文件\model\correct</Filter>
+    </ClCompile>
+    <ClCompile Include="logger.cpp">
+      <Filter>源文件\function</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

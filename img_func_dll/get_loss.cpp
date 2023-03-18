@@ -63,18 +63,18 @@ void get_loss::analy_res(cv::Mat inputimg, std::vector<model_struct_box> mode_bo
 		std::vector<inf_res> inf1 = infer["screw_mz"]->do_infer(inputimg);
 		inf.insert(inf.end(), inf1.begin(), inf1.end());
 		cv::Mat show;
-		if (show_test)
-		{
-			inputimg.copyTo(show);
-			for (auto s : inf)
-			{
-				cv::rectangle(show, s.box, cv::Scalar(0, 0, 255), 2);
-			}
-			for (auto s : mode_box_input)
-			{
-				cv::rectangle(show, s.box, cv::Scalar(0, 255, 0), 2);
-			}
-		}
+		//if (show_test)
+		//{
+		//	inputimg.copyTo(show);
+		//	for (auto s : inf)
+		//	{
+		//		cv::rectangle(show, s.box, cv::Scalar(0, 0, 255), 2);
+		//	}
+		//	for (auto s : mode_box_input)
+		//	{
+		//		cv::rectangle(show, s.box, cv::Scalar(0, 255, 0), 2);
+		//	}
+		//}
 		std::map < std::string, std::vector <inf_res>> check_map;
 		for (auto s : inf)
 		{
@@ -88,6 +88,7 @@ void get_loss::analy_res(cv::Mat inputimg, std::vector<model_struct_box> mode_bo
 			}
 
 		}
+		std::cout << "3" << std::endl;
 		//std::sort(mode_box.begin(), mode_box.begin(), sort_box_area);
 		std::vector<cv::Point> bias;
 		for (auto ss : model_check_map)
@@ -136,6 +137,7 @@ void get_loss::analy_res(cv::Mat inputimg, std::vector<model_struct_box> mode_bo
 				loss_check[ss.first] = ss.second;
 			}
 		}
+		std::cout << "4" << std::endl;
 		cv::Rect box = cv::boundingRect(bias);
 		cv::Point center(box.x + box.width / 2, box.y + box.height / 2);
 		for (auto s : loss_check)
@@ -167,6 +169,7 @@ void get_loss::analy_res(cv::Mat inputimg, std::vector<model_struct_box> mode_bo
 				res_s.push_back(obj);
 			}
 		}
+		std::cout << "5" << std::endl;
 	}
 	else
 	{
@@ -196,11 +199,15 @@ void get_loss::analy_res(cv::Mat inputimg, cv::Mat modelimg, std::vector<model_s
 	gray_input = gray_input - (mean_model - mean_input);
 	cv::Mat invert_trans;
 	std::vector<box_info_str>res;
+	std::cout << "0" << std::endl;
 	cv::Mat trans_Mat = correct_img.change(gray_input, gray_model, invert_trans);
 	if (!trans_Mat.empty())
 	{
+		std::cout << "1" << std::endl;
 		cv::warpPerspective(input_copy, input_copy, trans_Mat, inputimg.size());
+		std::cout << "2" << std::endl;
 		analy_res(input_copy, mode_box, infer, task_id_com, res);
+		std::cout << "6" << std::endl;
 		for (int i = 0; i < res.size(); i++)
 		{
 			cv::Rect box=res[i].box;
@@ -225,5 +232,10 @@ void get_loss::analy_res(cv::Mat inputimg, cv::Mat modelimg, std::vector<model_s
 			res[i].box = box&cv::Rect(0,0, inputimg.cols, inputimg.rows);
 			res_s.emplace_back(res[i]);
 		}
+		std::cout << "7" << std::endl;
+	}
+	else
+	{
+		analy_res(input_copy, mode_box, infer, task_id_com, res);
 	}
 }

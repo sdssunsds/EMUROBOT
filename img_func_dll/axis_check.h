@@ -1,6 +1,7 @@
 #pragma once
 #include"basic_struct.h"
 #include "common_func.h"
+#include "logger.h"
 //¬÷÷·ªÆ∫€ºÏ≤‚
 class axis_check
 {

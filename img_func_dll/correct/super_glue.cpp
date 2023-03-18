@@ -147,7 +147,7 @@ bool SuperGlue::infer(const Eigen::Matrix<double, 259, Eigen::Dynamic> &features
     }
 
     assert(engine_->getNbBindings() == 7);
-
+    std::cout << "0000" << std::endl;
     const int keypoints_0_index = engine_->getBindingIndex(superglue_config_.input_tensor_names[0].c_str());
     const int scores_0_index = engine_->getBindingIndex(superglue_config_.input_tensor_names[1].c_str());
     const int descriptors_0_index = engine_->getBindingIndex(superglue_config_.input_tensor_names[2].c_str());
@@ -155,8 +155,9 @@ bool SuperGlue::infer(const Eigen::Matrix<double, 259, Eigen::Dynamic> &features
     const int scores_1_index = engine_->getBindingIndex(superglue_config_.input_tensor_names[4].c_str());
     const int descriptors_1_index = engine_->getBindingIndex(superglue_config_.input_tensor_names[5].c_str());
     const int output_score_index = engine_->getBindingIndex(superglue_config_.output_tensor_names[0].c_str());
-
-    bool test=context_->setBindingDimensions(keypoints_0_index, Dims3(1, features0.cols(), 2));
+    std::cout << "kkkk" << std::endl;
+    int k = features0.cols();
+    context_->setBindingDimensions(keypoints_0_index, Dims3(1, features0.cols(), 2));
     context_->setBindingDimensions(scores_0_index, Dims2(1, features0.cols()));
     context_->setBindingDimensions(descriptors_0_index, Dims3(1, 256, features0.cols()));
     context_->setBindingDimensions(keypoints_1_index, Dims3(1, features1.cols(), 2));
@@ -172,20 +173,20 @@ bool SuperGlue::infer(const Eigen::Matrix<double, 259, Eigen::Dynamic> &features
     output_scores_dims_ = context_->getBindingDimensions(output_score_index);
 
     BufferManager buffers(engine_, 0, context_.get());
-
+    std::cout << "1111" << std::endl;
     ASSERT(superglue_config_.input_tensor_names.size() == 6);
     if (!process_input(buffers, features0, features1)) {
         return false;
     }
 
     buffers.copyInputToDevice();
-
+    std::cout << "2222" << std::endl;
     bool status = context_->executeV2(buffers.getDeviceBindings().data());
     if (!status) {
         return false;
     }
     buffers.copyOutputToHost();
-
+    std::cout << "3333" << std::endl;
     if (!process_output(buffers, indices0, indices1, mscores0, mscores1)) {
         return false;
     }
@@ -502,11 +503,13 @@ int SuperGlue::matching_points(Eigen::Matrix<double, 259, Eigen::Dynamic>& featu
   Eigen::Matrix<double, 259, Eigen::Dynamic> norm_features1 = normalize_keypoints(features1, superglue_config_.image_width, superglue_config_.image_height);
   Eigen::VectorXi indices0, indices1;
   Eigen::VectorXd mscores0, mscores1;
+  std::cout << "111" << std::endl;
   infer(norm_features0, norm_features1, indices0, indices1, mscores0, mscores1);
 
   int num_match = 0;
   std::vector<cv::Point2f> points0, points1;
   std::vector<int> point_indexes;
+  std::cout << "111" << std::endl;
   for(size_t i = 0; i < indices0.size(); i++){
     if(indices0(i) < indices1.size() && indices0(i) >= 0 && indices1(indices0(i)) == i){
       double d = 1.0 - (mscores0[i] + mscores1[indices0[i]]) / 2.0;
@@ -516,10 +519,11 @@ int SuperGlue::matching_points(Eigen::Matrix<double, 259, Eigen::Dynamic>& featu
       num_match++;
     }
   }
-
+  std::cout << "222" << std::endl;
   if(outlier_rejection){
     std::vector<uchar> inliers;
     cv::findFundamentalMat(points0, points1, cv::FM_RANSAC, 3, 0.99, inliers);
+    std::cout << "2222" << std::endl;
     int j = 0;
     for(int i = 0; i < matches.size(); i++){
       if(inliers[i]){
@@ -528,7 +532,7 @@ int SuperGlue::matching_points(Eigen::Matrix<double, 259, Eigen::Dynamic>& featu
     }
     matches.resize(j);
   }
-
+  std::cout << "333" << std::endl;
   return matches.size();
 }
 

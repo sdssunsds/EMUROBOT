@@ -1,5 +1,6 @@
 ﻿#define readFile
 //#define outTime
+//#define testData
 
 using AlgorithmLib;
 using EMU.Parameter;
@@ -21,12 +22,12 @@ namespace Project
         private const int modelFileMax = 10;
 
         private object runLock = new object();
-        private int logCount = 0;
+        private int box_length = 0;
         private int exeCount = 0;
+        private int logCount = 0;
         private string bakPath = Application.StartupPath + "\\bak_img\\";
 #if readFile
         private string errorPath = Application.StartupPath + "\\bak_error\\";
-        private string mubanPath = Application.StartupPath + "\\muban\\"; 
 #endif
         private string resultDir = "";
         private int init = -1;
@@ -45,6 +46,7 @@ namespace Project
             {
                 Directory.CreateDirectory(errorPath);
             }
+            box_length = Marshal.SizeOf(typeof(box_info));
         }
 
         public bool RunAlgorithm(string mode, string sn, string partId, string type, string json, string url_now, string url_up, string id, ThreadEventArgs eventArgs)
@@ -54,14 +56,14 @@ namespace Project
                 Thread.Sleep(3000);
             }
             #region 数据转换
-            eventArgs.SetVariableValue("车型", mode);
-            eventArgs.SetVariableValue("车号", sn);
-            eventArgs.SetVariableValue("部件编号", partId);
-            eventArgs.SetVariableValue("任务编号", id);
-            eventArgs.SetVariableValue("识别类型", type);
-            eventArgs.SetVariableValue("本次图片", url_now);
-            eventArgs.SetVariableValue("上次图片", url_up);
-            eventArgs.SetVariableValue("原始版Json", json);
+            eventArgs?.SetVariableValue("车型", mode);
+            eventArgs?.SetVariableValue("车号", sn);
+            eventArgs?.SetVariableValue("部件编号", partId);
+            eventArgs?.SetVariableValue("任务编号", id);
+            eventArgs?.SetVariableValue("识别类型", type);
+            eventArgs?.SetVariableValue("本次图片", url_now);
+            eventArgs?.SetVariableValue("上次图片", url_up);
+            eventArgs?.SetVariableValue("原始版Json", json);
 #if !readFile
             json = Project.JsonErrorChange(json);
             eventArgs.SetVariableValue("修正后Json", json); 
@@ -83,6 +85,9 @@ namespace Project
             #endregion
 
             #region 图片下载
+#if testData
+            string imgPath1 = url_now;
+#else
             string imgPath1 = bakPath + id + ".jpg";
             Bitmap bitmap1 = GW.Function.ImageFunction.Manage.ImageManage.Download(url_now);
             bitmap1.Save(imgPath1);
@@ -101,6 +106,7 @@ namespace Project
             int height2 = bitmap2.Height;
             byte[] bytes1 = bitmap1.ToBytes2(true);
             byte[] bytes2 = bitmap2.ToBytes2(true); 
+#endif
 #endif
             #endregion
 
@@ -291,45 +297,46 @@ namespace Project
                     AddLog("\t>> " + modelPath, LogType.OtherLog);
                     AddLog("\t>> " + type, LogType.OtherLog);
                     AddLog("\t>> " + mjson, LogType.OtherLog);
-                    //try
-                    //{
+                    try
+                    {
                         rPtr = Algorithm.Callgetres(ptr, imgPath1, upImgPath, modelPath, taskIds, taskIds.Length, models.ToArray(), models.Count, ref len);
-                    //}
-                    //catch (SEHException e)
-                    //{
-                    //    AddLog(e.Message + "\r\n" + e.StackTrace, LogType.ErrorLog);
-                    //    try
-                    //    {
-                    //        string error = errorPath + id + "\\";
-                    //        if (!Directory.Exists(error))
-                    //        {
-                    //            Directory.CreateDirectory(error);
-                    //        }
-                    //        File.Copy(imgPath1, error + "被检测图.jpg");
+                    }
+                    catch (SEHException e)
+                    {
+                        AddLog(e.Message + "\r\n" + e.StackTrace, LogType.ErrorLog);
+                        try
+                        {
+                            string error = errorPath + id + "\\";
+                            if (!Directory.Exists(error))
+                            {
+                                Directory.CreateDirectory(error);
+                            }
+                            File.Copy(imgPath1, error + "被检测图.jpg");
 
-                    //        if (File.Exists(upImgPath))
-                    //        {
-                    //            File.Copy(upImgPath, error + "模板图片.jpg");
-                    //        }
+                            if (File.Exists(upImgPath))
+                            {
+                                File.Copy(upImgPath, error + "模板图片.jpg");
+                            }
 
-                    //        string file = error + "参数文件.txt";
-                    //        using (StreamWriter sw = new StreamWriter(file))
-                    //        {
-                    //            sw.WriteLine(partId);
-                    //            sw.WriteLine(modelPath);
-                    //            sw.WriteLine(type);
-                    //            sw.WriteLine(mjson);
-                    //        }
-                    //    }
-                    //    catch (Exception ex)
-                    //    {
-                    //        AddLog(ex.Message, LogType.ErrorLog);
-                    //    }
-                    //}
+                            string file = error + "参数文件.txt";
+                            using (StreamWriter sw = new StreamWriter(file))
+                            {
+                                sw.WriteLine(partId);
+                                sw.WriteLine(modelPath);
+                                sw.WriteLine(type);
+                                sw.WriteLine(mjson);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            AddLog(ex.Message, LogType.ErrorLog);
+                        }
+                    }
 #else
                     AddLog("调用算法：[NewCallgetres]", LogType.OtherLog);
                     rPtr = Algorithm.NewCallgetres(ptr, bytes1, width1, height1, bytes2, width2, height2, taskIds, taskIds.Length, models, models == null ? 0 : models.Length, ref len);
 #endif
+                    AddLog("收到算法返回的结果句柄：" + rPtr, LogType.OtherLog);
                     GC.Collect();
                 }
                 monitor = false;
@@ -363,11 +370,12 @@ namespace Project
                 return false;
             }
             boxes = new box_info[len];
-            int box_length = System.Runtime.InteropServices.Marshal.SizeOf(typeof(box_info));
+            AddLog("创建结果对象数组", LogType.OtherLog);
             long _len = rPtr.ToInt64();
             for (int i = 0; i < len; i++)
             {
-                boxes[i] = System.Runtime.InteropServices.Marshal.PtrToStructure<box_info>((IntPtr)((long)(_len + i * box_length)));
+                boxes[i] = Marshal.PtrToStructure<box_info>((IntPtr)((long)(_len + i * box_length)));
+                AddLog("反序列化结果对象[" + i + "]", LogType.OtherLog);
 #if readFile
                 if (isNormal && boxes[i].state_enum != 0)
                 {
@@ -379,11 +387,14 @@ namespace Project
 
             #region 结果数据转换，回写Redis用
             List<RedisResult> list = new List<RedisResult>();
+            AddLog("创建回写Redis的数据集合", LogType.OtherLog);
             string code = "";
             foreach (box_info box in boxes)
             {
                 code = box.state_enum.ChangeCode();
+                AddLog("映射结果码 " + box.state_enum + " >> " + code, LogType.OtherLog);
                 RedisResult result = list.Find(r => r.jclx == code);
+                AddLog("寻找已生成的数据对象", LogType.OtherLog);
                 if (result == null)
                 {
                     result = new RedisResult()
@@ -391,13 +402,17 @@ namespace Project
                         jclx = code,
                         result = new List<Rectangle>()
                     };
+                    AddLog("未找到数据对象，并开始生成新的数据对象", LogType.OtherLog);
                     list.Add(result);
+                    AddLog("添加数据对象", LogType.OtherLog);
                 }
                 result.result.Add(new Rectangle(box.x, box.y, box.w, box.h));
+                AddLog("添加数据对象的结果区域", LogType.OtherLog);
             }
             #endregion
 
             #region 清理内存
+            AddLog("开始清理内存", LogType.OtherLog);
             boxes = null;
 #if !readFile
             bytes1 = null;
@@ -413,14 +428,15 @@ namespace Project
 #if readFile
             if (isNormal)
             {
+                AddLog("开始记录本次正常结果图像到历史中", LogType.OtherLog);
                 string[] files = Directory.GetFiles(modelPath);
                 if (files != null && files.Length >= modelFileMax)
                 {
-                    int d = files.Length - modelFileMax - 1;
+                    int d = files.Length - modelFileMax + 1;
                     string name = "";
                     for (int i = 0; i < d; i++)
                     {
-                        name = modelPath + i + ".jpg";
+                        name = modelPath + i.ToString("00") + ".jpg";
                         if (File.Exists(name))
                         {
                             File.Delete(name);
@@ -429,11 +445,12 @@ namespace Project
                     files = Directory.GetFiles(modelPath);
                     for (int i = 0; i < files.Length; i++)
                     {
-                        File.Move(files[i], modelPath + i + ".jpg");
+                        File.Move(files[i], modelPath + i.ToString("00") + ".jpg");
+                        File.Delete(files[i]);
                     }
                 }
                 int index = files != null ? files.Length : 0;
-                File.Copy(imgPath1, modelPath + index + ".jpg");
+                File.Copy(imgPath1, modelPath + index.ToString("00") + ".jpg");
             } 
 #endif
             string _json = JsonManager.ObjectToJson(list);
@@ -445,11 +462,50 @@ namespace Project
             if (!string.IsNullOrEmpty(_json))
             {
                 AddLog("算法结果：" + _json, LogType.OtherLog);
-                Project.ResultBack(id, _json);
+#if testData
+                AddLog("得到算法编号：" + id, LogType.GeneralLog);
+                AddLog("得到算法结果：" + _json, LogType.GeneralLog);
+#else
+                Project.ResultBack(id, _json); 
+#endif
             }
             #endregion
 
             return true;
+        }
+
+        public void TestRunAlgorithm()
+        {
+#if testData
+            string[] redisFiles = Directory.GetFiles(Application.StartupPath + "\\bak_redis");
+            string txt = "";
+            foreach (string item in redisFiles)
+            {
+                string taskId = new FileInfo(item).Name;
+                using (StreamReader sr = new StreamReader(item))
+                {
+                    txt = sr.ReadToEnd();
+                }
+                AddLog("读取的文件名：" + taskId, LogType.ProcessLog);
+                AddLog("读取文件内容：" + txt, LogType.ProcessLog);
+                taskId = taskId.Replace(".txt", "");
+                if (!string.IsNullOrEmpty(txt))
+                {
+                    string[] args = txt.Split('&');
+                    if (args.Length > 6)
+                    {
+                        if (!RunAlgorithm(args[0], args[1], args[2], args[3], args[4], Application.StartupPath + "\\bak_img\\" + taskId + ".jpg", args[6], taskId, null))
+                        {
+                            AddLog("算法执行失败", LogType.GeneralLog);
+                        }
+                    }
+                }
+            }
+            AddLog("执行完毕", LogType.GeneralLog);
+            AddLog("==============================", LogType.ProcessLog);
+            AddLog("30秒后重复...", LogType.ProcessLog);
+            Thread.Sleep(30000);
+#endif
         }
 
         private void AlgorithmPage_Load(object sender, EventArgs e)
@@ -487,7 +543,7 @@ namespace Project
                 string s = arg1 + "\r\n";
                 BeginInvoke(new Action(() =>
                 {
-                    if (logCount >= 5000)
+                    if (logCount >= 100)
                     {
                         logCount = 0;
                         textBox1.Text = "";
