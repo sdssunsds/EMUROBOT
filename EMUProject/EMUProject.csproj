@@ -146,6 +146,12 @@
     <Compile Include="AlgorithmInterface\UserControl\AlgorithmPage.Designer.cs">
       <DependentUpon>AlgorithmPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="AlgorithmInterface\Form\ExportAlgorithmDataForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AlgorithmInterface\Form\ExportAlgorithmDataForm.Designer.cs">
+      <DependentUpon>ExportAlgorithmDataForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Global.cs" />
     <Compile Include="AlgorithmInterface\UserControl\MainPage.cs">
       <SubType>UserControl</SubType>
@@ -416,6 +422,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AGV\UserControl\TestControl.resx">
       <DependentUpon>TestControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AlgorithmInterface\Form\ExportAlgorithmDataForm.resx">
+      <DependentUpon>ExportAlgorithmDataForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AlgorithmInterface\UserControl\AlgorithmPage.resx">
       <DependentUpon>AlgorithmPage.cs</DependentUpon>

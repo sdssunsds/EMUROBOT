@@ -87,6 +87,14 @@ namespace Project
                 else if (item.Name == "软件ToolStripMenuItem")
                 {
                     item.DropDownItems.RemoveByKey("toolStripMenuItem3");
+                    ToolStripMenuItem strip = new ToolStripMenuItem();
+                    strip.Name = "export";
+                    strip.Text = "数据导出";
+                    strip.Click += (object sender, EventArgs e) =>
+                    {
+                        new ExportAlgorithmDataForm().Show();
+                    };
+                    item.DropDownItems.Insert(0, strip);
                 }
                 else if (item.Name == "设置ToolStripMenuItem")
                 {

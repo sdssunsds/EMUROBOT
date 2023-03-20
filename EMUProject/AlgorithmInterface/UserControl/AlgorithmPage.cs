@@ -55,6 +55,24 @@ namespace Project
             {
                 Thread.Sleep(3000);
             }
+
+            #region 算法多线程控制
+            lock (runLock)
+            {
+                bool showLog = false;
+                while (exeCount >= algorithmMax)
+                {
+                    if (!showLog)
+                    {
+                        showLog = true;
+                        AddLog("等待前一个算法运行完成", LogType.OtherLog);
+                    }
+                    Thread.Sleep(50);
+                }
+                exeCount++;
+            }
+            #endregion
+
             #region 数据转换
             eventArgs?.SetVariableValue("车型", mode);
             eventArgs?.SetVariableValue("车号", sn);
@@ -260,23 +278,6 @@ namespace Project
 #endif
             #endregion
 
-            #region 算法多线程控制
-            lock (runLock)
-            {
-                bool showLog = false;
-                while (exeCount >= algorithmMax)
-                {
-                    if (!showLog)
-                    {
-                        showLog = true;
-                        AddLog("等待前一个算法运行完成", LogType.OtherLog); 
-                    }
-                    Thread.Sleep(50);
-                }
-                exeCount++;
-            }
-            #endregion
-
             #region 算法调用线程
             int len = 0;
             IntPtr rPtr = IntPtr.Zero;
@@ -295,7 +296,7 @@ namespace Project
                     AddLog("\t>> " + imgPath1, LogType.OtherLog);
                     AddLog("\t>> " + upImgPath, LogType.OtherLog);
                     AddLog("\t>> " + modelPath, LogType.OtherLog);
-                    AddLog("\t>> " + type, LogType.OtherLog);
+                    AddLog("\t>> " + string.Join(",", taskIds), LogType.OtherLog);
                     AddLog("\t>> " + mjson, LogType.OtherLog);
                     try
                     {
@@ -477,6 +478,7 @@ namespace Project
         public void TestRunAlgorithm()
         {
 #if testData
+            Thread.Sleep(5000);
             string[] redisFiles = Directory.GetFiles(Application.StartupPath + "\\bak_redis");
             string txt = "";
             foreach (string item in redisFiles)
@@ -486,9 +488,36 @@ namespace Project
                 {
                     txt = sr.ReadToEnd();
                 }
-                AddLog("读取的文件名：" + taskId, LogType.ProcessLog);
-                AddLog("读取文件内容：" + txt, LogType.ProcessLog);
                 taskId = taskId.Replace(".txt", "");
+                string resultPath = Application.StartupPath + "\\bak_result\\" + taskId + ".json";
+                if (File.Exists(resultPath))
+                {
+                    string json = "";
+                    using (StreamReader sr = new StreamReader(resultPath))
+                    {
+                        json = sr.ReadToEnd();
+                    }
+                    if (!string.IsNullOrEmpty(json))
+                    {
+                        bool pass = true;
+                        List<RedisResult> rr = JsonManager.JsonToObject<List<RedisResult>>(json);
+                        foreach (RedisResult r in rr)
+                        {
+                            if (r.jclx == "0107")
+                            {
+                                pass = false;
+                                break;
+                            }
+                        }
+                        if (pass)
+                        {
+                            Thread.Sleep(1);
+                            continue;
+                        }
+                    }
+                }
+                AddLog("读取的文件名：" + taskId + ".txt", LogType.ProcessLog);
+                AddLog("读取文件内容：" + txt, LogType.ProcessLog);
                 if (!string.IsNullOrEmpty(txt))
                 {
                     string[] args = txt.Split('&');
@@ -500,6 +529,7 @@ namespace Project
                         }
                     }
                 }
+                Thread.Sleep(1000);
             }
             AddLog("执行完毕", LogType.GeneralLog);
             AddLog("==============================", LogType.ProcessLog);
@@ -516,7 +546,7 @@ namespace Project
                 Directory.CreateDirectory(resultDir);
             }
             AddLogEvent += LogManager_AddLogEvent;
-#if true
+#if false
             ThreadManager.TaskRun((ThreadEventArgs eventArgs) =>
             {
                 eventArgs.ThreadName = "算法初始化线程";
