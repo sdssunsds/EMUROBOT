@@ -367,7 +367,7 @@ vector<vector<model_struct_box>> loss_check::easy_match(cv::Mat& inputmat, vecto
             std::vector<int> bais_x_layer;
             int comped_y = 0;
             int e = i + 2 > int(comp_vec.size()) ? int(comp_vec.size()) : i + 2;
-            int bg = i - 1;
+            int bg = i - 1>0? i - 1:0;
             for (int idm = 0; idm < s_model.size(); idm++)
             {
                 cv::Rect box2 = cv::Rect(s_model[idm].box.x - bias_x - expand, s_model[idm].box.y - bias_y - expand, s_model[idm].box.width + 2 * expand, s_model[idm].box.height + 2 * expand);

@@ -4,7 +4,6 @@
 void foreign_body::analy_res(cv::Mat inputimg,
 	std::map<std::string, basic_yolo*> infer, bool color, std::vector<int>& task_id_com,std::vector<box_info_str>& res_s)
 {
-	std::cout << "开始进行异物检测任务》》》" << std::endl;
 	const int id = 1;
 	if (color)
 	{
@@ -26,6 +25,8 @@ void foreign_body::analy_res(cv::Mat inputimg,
 }
 void foreign_body::analy_res(cv::Mat inputimg, basic_yolo* infer, std::vector<box_info_str>& res)
 {
+	cv::Mat copy;
+	inputimg.copyTo(copy);
 	std::vector<box_info_str> res_s;
 	cv::Mat resize;
 	int stepSize_0 = 900; //infer["foreign_body"]->basic_config.INPUT_H - infer["foreign_body"]->basic_config.INPUT_H % 100 - 100;
@@ -41,6 +42,7 @@ void foreign_body::analy_res(cv::Mat inputimg, basic_yolo* infer, std::vector<bo
 			box_s.name = s.box_name.c_str();
 			box_s.state = Foreign_body;
 			res_s.push_back(box_s);
+			cv::rectangle(copy,s.box,cv::Scalar(0,0,255));
 		}
 	}
 	res.insert(res.end(), res_s.begin(), res_s.end());

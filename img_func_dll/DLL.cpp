@@ -108,7 +108,7 @@ extern "C" CPPLIBDLL_API box_info * __stdcall Callgetres(IExport * obj, const ch
 		std::vector<box_info> res_f = obj->get_imgres_img(checkimg, modelimg, input_info_vec, mode_box_vec,historypath);
 		res_len = res_f.size();
 		std::cout << "结果获取成功" << std::endl;
-		box_info* buffer = new box_info[sizeof(box_info)];
+		box_info* buffer = new box_info[res_len];
 		if (!res_f.empty())
 		{
 			memcpy(buffer, &res_f[0], res_f.size() * sizeof(box_info));

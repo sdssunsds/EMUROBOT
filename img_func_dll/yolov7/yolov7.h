@@ -35,6 +35,7 @@ private:
     yolodetect v7_dec;
     int output_size = 1;
     int num_class = 1;
+    float* blob;
     const char* INPUT_BLOB_NAME = "data";
     const char* OUTPUT_BLOB_NAME = "prob";
     void decode_outputs(float* prob, int output_size, std::vector<inf_res>& objects, float scale, const int img_w, const int img_h);
@@ -43,7 +44,7 @@ private:
     void nms_sorted_bboxes(const std::vector<boxinfo>& faceobjects, std::vector<int>& picked, float nms_threshold);
     void generate_yolo_proposals(float* feat_blob, int output_size, float prob_threshold, std::vector<boxinfo>& objects);
     cv::Mat static_resize(cv::Mat& img);
-    float* blobFromImage(cv::Mat& img);
+    void blobFromImage(cv::Mat& img);
     void doInference(IExecutionContext& context, cudaStream_t& stream, void** buffers, float* output, int batchSize);
     std::vector<boxinfo> nms(std::vector<boxinfo>& res,float nms_thresh);
 };

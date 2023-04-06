@@ -126,7 +126,7 @@ namespace Project
             };
             pages[2] = new PageControl()
             {
-                Name = "日志",
+                Name = "异常日志",
                 MainControl = new LogPage() { Dock = DockStyle.Fill }
             };
             return pages;
@@ -199,13 +199,95 @@ namespace Project
 
         public void Load(string[] args)
         {
-            if (args != null && args.Length > 0 && args[0] == "start")
+            //args = new string[] { "-f", "2574", "0", "60001020032619010010000", @"E:\Code\EMUROBOT\bin\Debug\muban\2574\60001020032619010010000.jpg" };
+            AddLog("软件参数：" + string.Join(" ", args), LogType.ProcessLog);
+            if (args != null && args.Length > 0)
             {
                 if (mainPage != null)
                 {
-                    mainPage.AppArgs = Array.IndexOf(args, "-c") > -1 ? " -c" : "";
-                    mainPage.btn_link_Click(null, null);
+                    mainPage.isOpenControl = false;
+                    if (Array.IndexOf(args, "-c") > -1)
+                    {
+                        algorithmPage.InitAlgorithm();
+                    }
+                    if (Array.IndexOf(args, "start") > -1)
+                    {
+                        mainPage.btn_link_Click(null, null); 
+                    }
                 }
+                int index = Array.IndexOf(args, "-f");
+                if (index > -1 && index + 1 < args.Length)
+                {
+                    string sn = args[index + 1];
+                    string type = args[index + 2];
+                    string partId = args[index + 3];
+                    string path = args[index + 4];
+                    algorithmPage.InitAlgorithm();
+                    ThreadManager.TaskRun((ThreadEventArgs eventArgs) =>
+                    {
+                        for (int i = 0; i < 100; i++)
+                        {
+                            if (!algorithmPage.RunAlgorithm("380AL", sn, partId, type, "", path, "", i.ToString("000000000000000"), eventArgs, true, true))
+                            {
+                                AddLog("算法执行失败", LogType.GeneralLog);
+                            }
+                            Thread.Sleep(1000);
+                        }
+                    });
+                }
+                if (Array.IndexOf(args, "-p") > -1)
+                {
+                    mainPage.Enabled = false;
+                    bool runAlgorithm = Array.IndexOf(args, "-a") > -1;
+                    int taskIndex = Array.IndexOf(args, "-t");
+                    string taskType = "0";
+                    if (taskIndex > -1)
+                    {
+                        taskType = args[taskIndex + 1];
+                    }
+                    if (runAlgorithm)
+                    {
+                        algorithmPage.InitAlgorithm();
+                    }
+                    ThreadManager.TaskRun((ThreadEventArgs threadEventArgs) =>
+                    {
+                        threadEventArgs.ThreadName = "压力测试线程";
+                        string[] dirs = Directory.GetDirectories(Application.StartupPath + "\\muban");
+                        Dictionary<string, List<string>> imgFiles = new Dictionary<string, List<string>>();
+                        foreach (string dir in dirs)
+                        {
+                            string name = dir.Replace(Application.StartupPath + "\\muban\\", "");
+                            imgFiles.Add(name, new List<string>());
+                            imgFiles[name].AddRange(Directory.GetFiles(dir));
+                        }
+                        while (true)
+                        {
+                            ulong i = 0;
+                            foreach (KeyValuePair<string, List<string>> item in imgFiles)
+                            {
+                                foreach (string file in item.Value)
+                                {
+                                    string partId = file.Substring(file.LastIndexOf("\\") + 1).Replace(".jpg", "");
+                                    AddLog("读取图片：" + file, LogType.ProcessLog);
+                                    if (!algorithmPage.RunAlgorithm("380AL", item.Key, partId, taskType, "", file, file, i.ToString("000000000000000"), threadEventArgs, true, runAlgorithm))
+                                    {
+                                        AddLog("算法执行失败", LogType.GeneralLog);
+                                    }
+                                    Thread.Sleep(500);
+                                    i++;
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+            else
+            {
+                if (mainPage != null)
+                {
+                    mainPage.isOpenControl = true; 
+                }
+                algorithmPage?.InitAlgorithm();
             }
         }
 

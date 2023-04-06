@@ -49,9 +49,34 @@ namespace Project
             box_length = Marshal.SizeOf(typeof(box_info));
         }
 
-        public bool RunAlgorithm(string mode, string sn, string partId, string type, string json, string url_now, string url_up, string id, ThreadEventArgs eventArgs)
+        public void InitAlgorithm()
         {
-            while (init != 0)
+            ThreadManager.TaskRun((ThreadEventArgs eventArgs) =>
+            {
+                lock (runLock)
+                {
+                    eventArgs.ThreadName = "算法初始化线程";
+                    if (init < 0)
+                    {
+                    Run:
+                        ptr = Algorithm.ExportObjectFactory();
+                        AddLog("算法启动", LogType.OtherLog);
+                        init = Algorithm.CallOnInit(ptr, null);
+                        AddLog("算法初始化: " + init, LogType.OtherLog);
+                        if (init != 0)
+                        {
+                            AddLog("3秒后重新初始化算法", LogType.OtherLog);
+                            Thread.Sleep(3000);
+                            goto Run;
+                        }  
+                    }
+                }
+            });
+        }
+
+        public bool RunAlgorithm(string mode, string sn, string partId, string type, string json, string url_now, string url_up, string id, ThreadEventArgs eventArgs, bool isTest = false, bool isRun = true)
+        {
+            while (init != 0 && isRun)
             {
                 Thread.Sleep(3000);
             }
@@ -107,8 +132,17 @@ namespace Project
             string imgPath1 = url_now;
 #else
             string imgPath1 = bakPath + id + ".jpg";
-            Bitmap bitmap1 = GW.Function.ImageFunction.Manage.ImageManage.Download(url_now);
-            bitmap1.Save(imgPath1);
+            Bitmap bitmap1 = null;
+            if (isTest)
+            {
+                bitmap1 = (Bitmap)Image.FromFile(url_now);
+                bitmap1.Save(imgPath1);
+            }
+            else
+            {
+                bitmap1 = GW.Function.ImageFunction.Manage.ImageManage.Download(url_now);
+                bitmap1.Save(imgPath1); 
+            }
             AddLog("缓存完成：" + url_now + " 本地路径：" + imgPath1, LogType.OtherLog);
 #if readFile
             bitmap1.Dispose();
@@ -300,7 +334,10 @@ namespace Project
                     AddLog("\t>> " + mjson, LogType.OtherLog);
                     try
                     {
-                        rPtr = Algorithm.Callgetres(ptr, imgPath1, upImgPath, modelPath, taskIds, taskIds.Length, models.ToArray(), models.Count, ref len);
+                        if (isRun)
+                        {
+                            rPtr = Algorithm.Callgetres(ptr, imgPath1, upImgPath, modelPath, taskIds, taskIds.Length, models.ToArray(), models.Count, ref len); 
+                        }
                     }
                     catch (SEHException e)
                     {
@@ -365,24 +402,37 @@ namespace Project
             json = "";
 #endif
             box_info[] boxes = null;
-            if (rPtr == IntPtr.Zero)
+            if (isRun && rPtr == IntPtr.Zero)
             {
                 AddLog("未能获得算法结果", LogType.OtherLog);
                 return false;
             }
-            boxes = new box_info[len];
-            AddLog("创建结果对象数组", LogType.OtherLog);
-            long _len = rPtr.ToInt64();
-            for (int i = 0; i < len; i++)
+            if (isRun)
             {
-                boxes[i] = Marshal.PtrToStructure<box_info>((IntPtr)((long)(_len + i * box_length)));
-                AddLog("反序列化结果对象[" + i + "]", LogType.OtherLog);
-#if readFile
-                if (isNormal && boxes[i].state_enum != 0)
+                boxes = new box_info[len];
+                AddLog("创建结果对象数组", LogType.OtherLog);
+                long _len = rPtr.ToInt64();
+                for (int i = 0; i < len; i++)
                 {
-                    isNormal = false;
-                } 
+                    boxes[i] = Marshal.PtrToStructure<box_info>((IntPtr)((long)(_len + i * box_length)));
+#if readFile
+                    if (isNormal && boxes[i].state_enum != 0)
+                    {
+                        isNormal = false;
+                    }
 #endif
+                }
+            }
+            else
+            {
+                boxes = new box_info[100];
+                AddLog("生成虚拟结果", LogType.GeneralLog);
+                for (int i = 0; i < 100; i++)
+                {
+                    boxes[i] = new box_info();
+                    boxes[i].class_name = new char[50];
+                    boxes[i].state_enum = boxes[i].x = boxes[i].y = boxes[i].w = boxes[i].h = 0;
+                }
             }
             #endregion
 
@@ -390,12 +440,16 @@ namespace Project
             List<RedisResult> list = new List<RedisResult>();
             AddLog("创建回写Redis的数据集合", LogType.OtherLog);
             string code = "";
+            Dictionary<int, string> codeId = new Dictionary<int, string>();
             foreach (box_info box in boxes)
             {
                 code = box.state_enum.ChangeCode();
-                AddLog("映射结果码 " + box.state_enum + " >> " + code, LogType.OtherLog);
+                if (!codeId.ContainsKey(box.state_enum))
+                {
+                    codeId.Add(box.state_enum, code);
+                    AddLog("映射结果码 " + box.state_enum + " >> " + code, LogType.OtherLog); 
+                }
                 RedisResult result = list.Find(r => r.jclx == code);
-                AddLog("寻找已生成的数据对象", LogType.OtherLog);
                 if (result == null)
                 {
                     result = new RedisResult()
@@ -408,7 +462,6 @@ namespace Project
                     AddLog("添加数据对象", LogType.OtherLog);
                 }
                 result.result.Add(new Rectangle(box.x, box.y, box.w, box.h));
-                AddLog("添加数据对象的结果区域", LogType.OtherLog);
             }
             #endregion
 
@@ -467,7 +520,10 @@ namespace Project
                 AddLog("得到算法编号：" + id, LogType.GeneralLog);
                 AddLog("得到算法结果：" + _json, LogType.GeneralLog);
 #else
-                Project.ResultBack(id, _json); 
+                if (!isTest)
+                {
+                    Project.ResultBack(id, _json);  
+                }
 #endif
             }
             #endregion
@@ -546,23 +602,6 @@ namespace Project
                 Directory.CreateDirectory(resultDir);
             }
             AddLogEvent += LogManager_AddLogEvent;
-#if false
-            ThreadManager.TaskRun((ThreadEventArgs eventArgs) =>
-            {
-                eventArgs.ThreadName = "算法初始化线程";
-            Run:
-                ptr = Algorithm.ExportObjectFactory();
-                AddLog("算法启动", LogType.OtherLog);
-                init = Algorithm.CallOnInit(ptr, null);
-                AddLog("算法初始化: " + init, LogType.OtherLog);
-                if (init != 0)
-                {
-                    AddLog("3秒后重新初始化算法", LogType.OtherLog);
-                    Thread.Sleep(3000);
-                    goto Run;
-                }
-            }); 
-#endif
         }
 
         private void LogManager_AddLogEvent(string arg1, LogType arg2)

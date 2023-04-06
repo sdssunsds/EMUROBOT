@@ -151,26 +151,26 @@ int yolov5_v6_inf::init(trt_basic_config input_config, std::string modelpath)
     CUDA_CHECK(cudaMalloc(&v6_dec.img_device, MAX_IMAGE_INPUT_SIZE_THRESH * 3));
     return 0;
 }
-float* blobFromImage(cv::Mat& img) {
-    cv::cvtColor(img, img, cv::COLOR_BGR2RGB);
-
-    float* blob = new float[img.total() * 3];
-    int channels = 3;
-    int img_h = img.rows;
-    int img_w = img.cols;
-    for (size_t c = 0; c < channels; c++)
-    {
-        for (size_t h = 0; h < img_h; h++)
-        {
-            for (size_t w = 0; w < img_w; w++)
-            {
-                blob[c * img_w * img_h + h * img_w + w] =
-                    (((float)img.at<cv::Vec3b>(h, w)[c]) / 255.0f);
-            }
-        }
-    }
-    return blob;
-}
+//float* blobFromImage(cv::Mat& img) {
+//    cv::cvtColor(img, img, cv::COLOR_BGR2RGB);
+//
+//    float* blob = new float[img.total() * 3];
+//    int channels = 3;
+//    int img_h = img.rows;
+//    int img_w = img.cols;
+//    for (size_t c = 0; c < channels; c++)
+//    {
+//        for (size_t h = 0; h < img_h; h++)
+//        {
+//            for (size_t w = 0; w < img_w; w++)
+//            {
+//                blob[c * img_w * img_h + h * img_w + w] =
+//                    (((float)img.at<cv::Vec3b>(h, w)[c]) / 255.0f);
+//            }
+//        }
+//    }
+//    return blob;
+//}
 cv::Mat static_resize(cv::Mat& img) {
 
     float r = std::min(640 / (img.cols * 1.0), 640 / (img.rows * 1.0));

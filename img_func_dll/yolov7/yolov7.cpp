@@ -33,10 +33,8 @@ cv::Mat YOLO7::static_resize(cv::Mat& img) {
     
     return out;
 }
-float* YOLO7::blobFromImage(cv::Mat& img) {
+void YOLO7::blobFromImage(cv::Mat& img) {
     cv::cvtColor(img, img, cv::COLOR_BGR2RGB);
-
-    float* blob = new float[img.total() * 3];
     int channels = 3;
     int img_h = img.rows;
     int img_w = img.cols;
@@ -51,7 +49,6 @@ float* YOLO7::blobFromImage(cv::Mat& img) {
             }
         }
     }
-    return blob;
 }
 
 void YOLO7::qsort_descent_inplace(std::vector<boxinfo>& faceobjects, int left, int right)
@@ -222,6 +219,7 @@ int YOLO7::init(trt_basic_config input_config, std::string modelpath)
 
         return -1;
     }
+    blob=new float[basic_config.INPUT_H* basic_config.INPUT_W*3];
     file.seekg(0, file.end);
     size = file.tellg();
     file.seekg(0, file.beg);
@@ -240,7 +238,7 @@ int YOLO7::init(trt_basic_config input_config, std::string modelpath)
     for (int j = 0; j < out_dims.nbDims; j++) {
         output_size *= out_dims.d[j];
     }
-    v7_dec.output = new float[output_size];
+    v7_dec.output = new float[output_size+10];
     assert(v7_dec.engine->getNbBindings() == 2);
     void* buffers[2];
     v7_dec.inputIndex = v7_dec.engine->getBindingIndex(INPUT_BLOB_NAME);
@@ -273,7 +271,7 @@ YOLO7::~YOLO7()
 void YOLO7::doInference(IExecutionContext& context, cudaStream_t& stream, void** buffers, float* output, int batchSize) {
 
     context.enqueue(batchSize, buffers, stream, nullptr);
-    CHECK(cudaMemcpyAsync(output, buffers[1], output_size * sizeof(float), cudaMemcpyDeviceToHost, stream));
+    CHECK(cudaMemcpyAsync(output, buffers[1], (output_size) * sizeof(float), cudaMemcpyDeviceToHost, stream));
     cudaStreamSynchronize(stream);
 }
 std::vector<inf_res> YOLO7::do_infer(cv::Mat input)
@@ -283,16 +281,17 @@ std::vector<inf_res> YOLO7::do_infer(cv::Mat input)
     int img_w = img.cols;
     int img_h = img.rows;
     cv::Mat pr_img = static_resize(img);
-    float* blob;
-    blob = blobFromImage(pr_img);
+    blobFromImage(pr_img);
     float scale = std::min(basic_config.INPUT_W / (img.cols * 1.0), basic_config.INPUT_H / (img.rows * 1.0));
-
     CHECK(cudaMemcpyAsync(v7_dec.buffers[v7_dec.inputIndex], blob, 3 * basic_config.INPUT_H * basic_config.INPUT_W * sizeof(float), cudaMemcpyHostToDevice, v7_dec.stream));
-    delete[] blob;
-    doInference(*v7_dec.context, v7_dec.stream, (void**)v7_dec.buffers, v7_dec.output, 1);
+    float* output = new float[output_size + 10];
+    //doInference(*v7_dec.context, v7_dec.stream, (void**)v7_dec.buffers, v7_dec.output, 1);
+    doInference(*v7_dec.context, v7_dec.stream, (void**)v7_dec.buffers, output, 1);
     std::vector<inf_res> objects;
     //std::vector<boxinfo> objects;
-    decode_outputs(v7_dec.output, output_size, objects, scale, img_w, img_h);
+    //decode_outputs(v7_dec.output, output_size, objects, scale, img_w, img_h);
+    decode_outputs(output, output_size, objects, scale, img_w, img_h);
+    delete []output;
     return objects;
 
 }

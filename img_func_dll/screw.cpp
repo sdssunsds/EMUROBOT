@@ -383,21 +383,21 @@ void screw::analy_res(cv::Mat& inputimg, vector<model_struct_box> mode_box, std:
 			box_s.state = Normal;
 			res_s.push_back(box_s);
 		}
-		if (mode_box.size()>0)
-		{
-			std::vector<std::vector<box_info_str>> loss_res = getloss_res(inputimg, res_s, mode_box);
-			for (auto s: loss_res)
-			{
-				for (auto ss:s)
-				{
-					res_ss.push_back(ss);
-				}
-			}
-		}
-		else
-		{
+		//if (mode_box.size()>0)
+		//{
+		//	std::vector<std::vector<box_info_str>> loss_res = getloss_res(inputimg, res_s, mode_box);
+		//	for (auto s: loss_res)
+		//	{
+		//		for (auto ss:s)
+		//		{
+		//			res_ss.push_back(ss);
+		//		}
+		//	}
+		//}
+		//else
+		//{
 			res_ss.insert(res_ss.end(), res_s.begin(), res_s.end());
-		}
+		//}
 	}
 	task_id_com.push_back(id);
 }

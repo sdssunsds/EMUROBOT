@@ -10,7 +10,7 @@ using namespace cv;
 using namespace std;
 class Classifier {
 public:
-	void init(infer_class_config info);
+	void init(std::string model_basic_path, infer_class_config info);
 	void set_input(Mat img);
 	infer_class_info infer(Mat img);
 private:

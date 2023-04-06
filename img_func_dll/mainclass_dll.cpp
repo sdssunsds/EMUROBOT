@@ -23,7 +23,7 @@ main_class::~main_class()
 }
 int main_class::init(char* log)
 {
-	std::vector<std::string> model_list{"superglue_indoor_sim_int32.engine","superglue_outdoor_sim_int32.engine","superpoint_v1_sim_int32.engine"}, total_model_list, old_model_list;
+	std::vector<std::string> model_list{"superglue_indoor_sim_int32","superglue_outdoor_sim_int32","superpoint_v1_sim_int32"}, total_model_list, old_model_list;
 	std::string model_basic_path = "../model/";
 	logger.TraceInfo("模型基本路径:"+ model_basic_path);
 	std::string old_model_path = model_basic_path+ "old_model";
@@ -67,12 +67,15 @@ int main_class::init(char* log)
 			std::cout << "正在初始化目标检测模型：" << i.first << "》》》";
 			infer_map_basic_yolo[i.first] = new YOLO7;
 			ifstream f((basic_model_path + i.second.engine_name + ".wts").c_str());
-		v7ini:if (infer_map_basic_yolo[i.first]->init(i.second, model_basic_path)||f.good())
+		v7ini:if (infer_map_basic_yolo[i.first]->init(i.second, model_basic_path)==-1||f.good())
 			{
 				std::cout << "正在重新转换检测模型：" << i.first << std::endl;
 				logger.TraceInfo("正在重新转换检测模型:" + i.first);
-				int stat=onnx_trans(basic_model_path + i.second.engine_name, model_basic_path + i.second.engine_name, "--fp16");
-				goto v7ini;
+				int stat=onnx_trans(basic_model_path + i.second.engine_name, model_basic_path + i.second.engine_name, "--int8");
+				if (stat)
+				{
+					goto v7ini;
+				}
 			}
 			else
 			{
@@ -85,9 +88,9 @@ int main_class::init(char* log)
 	}
 	for (auto i : init_class_info)
 	{
-		
+		i.second.engine_name = model_basic_path + i.second.engine_name;
 		infer_class_map[i.first] = new Classifier;
-		infer_class_map[i.first]->init(i.second);
+		infer_class_map[i.first]->init(model_basic_path,i.second);
 		model_list.push_back(i.second.engine_name);
 	}
 	logger.TraceInfo("正在移除不用或者旧的模型");
@@ -257,24 +260,24 @@ vector<box_info> main_class::get_imgres_img_common(cv::Mat& inputimg, cv::Mat& m
 			std::cout << "检测成功。" << std::endl;
 			logger.TraceInfo("检测成功");
 		}
-		//else if (task == 5)
-		//{
-		//	std::cout << "--------开始进行面阵撒沙管检测任务》》》" << std::endl;
-		//	logger.TraceInfo("--------开始进行面阵撒沙管检测任务》》》");
-		//	if (!color)
-		//	{
-		//		logger.TraceInfo("不是面阵相机图片，无法进行任务，请检查");
-		//		std::cout << "不是面阵相机图片，无法进行任务，请检查" << std::endl;
-		//	}
-		//	else
-		//	{
-		//		
-		//		sashazui::analy_res(inputimg, infer_map_basic_yolo, task_num, res_s);
-		//		std::cout << "检测成功。" << std::endl;
-		//		logger.TraceInfo("检测成功");
-		//	}
-		//	
-		//}
+		else if (task == 5)
+		{
+			std::cout << "--------开始进行面阵撒沙管检测任务》》》" << std::endl;
+			logger.TraceInfo("--------开始进行面阵撒沙管检测任务》》》");
+			if (!color)
+			{
+				logger.TraceInfo("不是面阵相机图片，无法进行任务，请检查");
+				std::cout << "不是面阵相机图片，无法进行任务，请检查" << std::endl;
+			}
+			else
+			{
+				
+				sashazui::analy_res(inputimg, infer_map_basic_yolo, task_num, res_s);
+				std::cout << "检测成功。" << std::endl;
+				logger.TraceInfo("检测成功");
+			}
+			
+		}
 		else if (task == 6)
 		{
 			std::cout << "--------开始进行面阵部件丢失检测任务》》》" << std::endl;
@@ -322,13 +325,13 @@ vector<box_info> main_class::get_imgres_img_common(cv::Mat& inputimg, cv::Mat& m
 			oil_leakage::analy_res(inputimg,  infer_map_basic_yolo, color, task_num, res_s);
 			std::cout << "检测成功。" << std::endl;
 		}
-		//else if (task == 9)
-		//{
-		//	logger.TraceInfo("--------开始进行车头检测任务》》》");
-		//	std::cout << "--------开始进行车头检测任务》》》" << std::endl;
-		//	//ct_check::analy_res(inputimg, res_s, infer_map_basic_yolo,color, task_num,res_s);
+		else if (task == 9)
+		{
+			logger.TraceInfo("--------开始进行车头检测任务》》》");
+			std::cout << "--------开始进行车头检测任务》》》" << std::endl;
+			//ct_check::analy_res(inputimg, res_s, infer_map_basic_yolo,color, task_num,res_s);
 
-		//}
+		}
 		else
 		{
 			continue;

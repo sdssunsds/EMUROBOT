@@ -84,10 +84,6 @@ namespace AlgorithmControl
                     do
                     {
                         string arg = "start";
-                        for (int i = 1; i < args.Length; i++)
-                        {
-                            arg += " " + args[i];
-                        }
                         Process[] process = Process.GetProcessesByName(args[0]);
                         if (process == null || process.Length == 0)
                         {

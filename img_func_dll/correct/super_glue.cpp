@@ -503,13 +503,11 @@ int SuperGlue::matching_points(Eigen::Matrix<double, 259, Eigen::Dynamic>& featu
   Eigen::Matrix<double, 259, Eigen::Dynamic> norm_features1 = normalize_keypoints(features1, superglue_config_.image_width, superglue_config_.image_height);
   Eigen::VectorXi indices0, indices1;
   Eigen::VectorXd mscores0, mscores1;
-  std::cout << "111" << std::endl;
   infer(norm_features0, norm_features1, indices0, indices1, mscores0, mscores1);
 
   int num_match = 0;
   std::vector<cv::Point2f> points0, points1;
   std::vector<int> point_indexes;
-  std::cout << "111" << std::endl;
   for(size_t i = 0; i < indices0.size(); i++){
     if(indices0(i) < indices1.size() && indices0(i) >= 0 && indices1(indices0(i)) == i){
       double d = 1.0 - (mscores0[i] + mscores1[indices0[i]]) / 2.0;
@@ -519,11 +517,9 @@ int SuperGlue::matching_points(Eigen::Matrix<double, 259, Eigen::Dynamic>& featu
       num_match++;
     }
   }
-  std::cout << "222" << std::endl;
   if(outlier_rejection){
     std::vector<uchar> inliers;
     cv::findFundamentalMat(points0, points1, cv::FM_RANSAC, 3, 0.99, inliers);
-    std::cout << "2222" << std::endl;
     int j = 0;
     for(int i = 0; i < matches.size(); i++){
       if(inliers[i]){
@@ -532,7 +528,6 @@ int SuperGlue::matching_points(Eigen::Matrix<double, 259, Eigen::Dynamic>& featu
     }
     matches.resize(j);
   }
-  std::cout << "333" << std::endl;
   return matches.size();
 }
 

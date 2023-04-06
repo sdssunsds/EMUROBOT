@@ -10,14 +10,14 @@ wchar_t* multiByteToWideChar(const string& pKey)
 	MultiByteToWideChar(CP_OEMCP, 0, pCStrKey, strlen(pCStrKey) + 1, pWCStrKey, pSize);
 	return pWCStrKey;
 }
-void Classifier::init(infer_class_config info) {
+void Classifier::init(std::string model_basic_path, infer_class_config info) {
 	labels = info.classname;
 	class_num = info.num_classes;
 	auto allocator_info = Ort::MemoryInfo::CreateCpu(OrtDeviceAllocator, OrtMemTypeDefault);
 	session_option.SetInterOpNumThreads(5);
 	OrtSessionOptionsAppendExecutionProvider_CUDA(session_option, 0);
 	session_option.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_ALL);
-	session = Ort::Session(env, multiByteToWideChar(info.engine_name), session_option);
+	session = Ort::Session(env, multiByteToWideChar(model_basic_path+info.engine_name+".onnx"), session_option);
 	Ort::AllocatorWithDefaultOptions allocator;
 	input_names.push_back(session.GetInputName(0, allocator));
 	output_names.push_back(session.GetOutputName(0, allocator));

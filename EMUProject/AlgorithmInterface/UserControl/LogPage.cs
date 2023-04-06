@@ -57,17 +57,20 @@ namespace Project
             logCount++;
             string s = arg1 + "\r\n";
             WriteLogFile(s, arg2);
-            BeginInvoke(new Action(() =>
+            if (arg2 == EMU.Parameter.LogType.ErrorLog)
             {
-                if (logCount >= 50)
+                BeginInvoke(new Action(() =>
                 {
-                    logCount = 0;
-                    textBox1.Text = "";
-                }
-                textBox1.Text += s;
-                textBox1.SelectionStart = textBox1.Text.Length - 1;
-                textBox1.ScrollToCaret();
-            }));
+                    if (logCount >= 50)
+                    {
+                        logCount = 0;
+                        textBox1.Text = "";
+                    }
+                    textBox1.Text += s;
+                    textBox1.SelectionStart = textBox1.Text.Length - 1;
+                    textBox1.ScrollToCaret();
+                })); 
+            }
         }
 
         private void CheckLogDir()

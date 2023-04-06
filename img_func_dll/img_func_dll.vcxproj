@@ -44,6 +44,7 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>../include/trtbuffer;../include/eigen;../include/onnx;../yolov5_Trt;../include;../include/opencv;../include/tensorrt;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>../lib/onnx;../lib/trt;../lib/opencv;../lib/cudnn;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
+    <OutDir>E:\Code\EMUROBOT\bin\Debug\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>../include/cudnn;../yolov5_Trt;../include;../include/opencv;../include/tensorrt;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
