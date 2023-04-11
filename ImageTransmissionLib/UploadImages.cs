@@ -28,6 +28,16 @@ namespace EMU.ImageTransmission
             }
         }
 
+        public void AddLog(string log, int type = 6)
+        {
+            picService.AddLog(log, type);
+        }
+
+        public int GetLocation(string id, string picName1, string picName2, string picName3, string robotID, int state)
+        {
+            return picService.GetLocation(id, picName1, picName2, picName3, robotID, state);
+        }
+
         public void UploadImage(Image image, int picIndex)
         {
             byte[] bytes = ImageManager.ImageToBytes(image);
@@ -72,21 +82,31 @@ namespace EMU.ImageTransmission
             picService.UploadImage2(picIndex, dataIndex, dataLength, id, imgData, robotID);
         }
 
-        public void UploadComplete()
+        public void UploadImage3(string picName, int dataIndex, int dataLength, string id, byte[] imgData, string robotID)
         {
-            UploadComplete(uploadID, Parameter.Properties.Settings.Default.RobotID);
+            picService.UploadImage3(picName, dataIndex, dataLength, id, imgData, robotID);
         }
 
-        public void UploadComplete(string id, string robotID)
+        public void UploadComplete(string id, string robotID, int number)
         {
             try
             {
-                picService.UploadComplete(id, robotID);
+                picService.UploadComplete(id, robotID, number);
             }
             catch (Exception e)
             {
                 e.Message.AddLog(LogType.ErrorLog);
             }
+        }
+
+        public void UploadParameter(float[] kc, float[] kk, string robotID)
+        {
+            picService.UploadParameter(kc, kk, robotID);
+        }
+
+        public void UploadComplete()
+        {
+            UploadComplete(uploadID, Parameter.Properties.Settings.Default.RobotID, 0);
         }
 
         public string UploadPictrue(string parsIndex, int robot, int dataIndex, int dataLength, string id, byte[] imgData, string robotID)

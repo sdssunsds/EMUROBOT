@@ -3,10 +3,21 @@ using System.ServiceModel;
 
 namespace UploadImageServer
 {
-    // 注意: 使用“重构”菜单上的“重命名”命令，可以同时更改代码和配置文件中的接口名“IService1”。
     [ServiceContract]
     public interface IService
     {
+        [OperationContract]
+        [FaultContract(typeof(FaultMessage))]
+        void AddLog(string log, int type = 6);
+
+        [OperationContract]
+        [FaultContract(typeof(FaultMessage))]
+        int GetLocation(string id, string picName1, string picName2, string picName3, string robotID, int state);
+
+        [OperationContract]
+        [FaultContract(typeof(FaultMessage))]
+        void Upload3DData(string parsIndex, int robot, string data, string id, string robotID);
+
         [OperationContract]
         [FaultContract(typeof(FaultMessage))]
         void UploadImage(int picIndex, int dataIndex, int dataLength, string id, byte[] imgData, string robotID);
@@ -17,7 +28,11 @@ namespace UploadImageServer
 
         [OperationContract]
         [FaultContract(typeof(FaultMessage))]
-        void UploadComplete(string id, string robotID);
+        void UploadImage3(string picName, int dataIndex, int dataLength, string id, byte[] imgData, string robotID);
+
+        [OperationContract]
+        [FaultContract(typeof(FaultMessage))]
+        void UploadComplete(string id, string robotID, int number);
 
         [OperationContract]
         [FaultContract(typeof(FaultMessage))]
@@ -25,7 +40,7 @@ namespace UploadImageServer
 
         [OperationContract]
         [FaultContract(typeof(FaultMessage))]
-        void Upload3DData(string parsIndex, int robot, string data, string id, string robotID);
+        void UploadParameter(float[] kc, float[] kk, string robotID);
     }
 
     [DataContract]

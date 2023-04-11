@@ -114,6 +114,20 @@ namespace AlgorithmLib
             img_path = imgPath.ToCharArray(200);
             save_path = savePath.ToCharArray(200);
         }
+        /// <summary>
+        /// 构造
+        /// </summary>
+        /// <param name="train">车型车号</param>
+        /// <param name="time">时间</param>
+        /// <param name="img">原始图片路径</param>
+        /// <param name="save">切图后路径</param>
+        public config_info(string img, string train, string time, string save)
+        {
+            img_path = PuzzleCdoublePlus.GetChar(img, 200);
+            train_type = PuzzleCdoublePlus.GetChar(train, 50);
+            this.time = PuzzleCdoublePlus.GetChar(time, 50);
+            save_path = PuzzleCdoublePlus.GetChar(save, 200);
+        }
     }
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public struct input_task

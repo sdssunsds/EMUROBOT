@@ -16,12 +16,16 @@ namespace UploadImageServer
     public class UploadService : IService
     {
 #if puzzleC
-        public static Action<string, string> CompleteAction;
+        public static Action<string, string, int> CompleteAction;
 #endif
+        public static Action<string, int> Addlog;
+        public static Func<string, string, string, string, string, int, int> Location;
 
         private static Dictionary<string, List<int>> savePicArray = null;
         private static Dictionary<string, List<string>> savePicArray2 = null;
         private static Dictionary<string, Dictionary<int, byte[]>> picDataRom = null;
+        private static Dictionary<string, Dictionary<int, byte[]>> picDataRom2 = null;
+        private static Dictionary<string, Dictionary<int, byte[]>> picDataRom3 = null;
         private static Dictionary<string, Dictionary<RobotName, Dictionary<int, byte[]>>> picDataRoms = null;
 
         /// <summary>
@@ -55,6 +59,7 @@ namespace UploadImageServer
         
         public static Action<Image, string, string, string> XzImage { get; set; }
         public static Action<string, Image, string, string, RobotName, string> MzImage { get; set; }
+        public static Action<Image, string, string> LocImage { get; set; }
         public static Action<string, string, string, string, RobotName, string> _3dData { get; set; }
 
         public UploadService()
@@ -71,10 +76,28 @@ namespace UploadImageServer
             {
                 picDataRom = new Dictionary<string, Dictionary<int, byte[]>>();
             }
+            if (picDataRom2 == null)
+            {
+                picDataRom2 = new Dictionary<string, Dictionary<int, byte[]>>();
+            }
+            if (picDataRom3 == null)
+            {
+                picDataRom3 = new Dictionary<string, Dictionary<int, byte[]>>();
+            }
             if (picDataRoms == null)
             {
                 picDataRoms = new Dictionary<string, Dictionary<RobotName, Dictionary<int, byte[]>>>();
             }
+        }
+
+        public void AddLog(string log, int type = 6)
+        {
+            Addlog?.Invoke(log, type);
+        }
+
+        public int GetLocation(string id, string picName1, string picName2, string picName3, string robotID, int state)
+        {
+            return Location != null ? Location(id, picName1, picName2, picName3, robotID, state) : 0;
         }
 
         public void Upload3DData(string parsIndex, int robot, string data, string id, string robotID)
@@ -84,12 +107,12 @@ namespace UploadImageServer
             _3dData?.Invoke(parsIndex, data, vs[0], vs[1], robotName, robotID);
         }
 
-        public void UploadComplete(string id, string robotID)
+        public void UploadComplete(string id, string robotID, int number)
         {
 #if puzzleC
             Task.Run(() =>
             {
-                CompleteAction?.Invoke(id, robotID);
+                CompleteAction?.Invoke(id, robotID, number);
             });
             if (savePicArray.ContainsKey(id))
             {
@@ -165,6 +188,7 @@ namespace UploadImageServer
                 savePicArray.Remove(id);
                 savePicArray2.Remove(id);
                 picDataRom.Clear();
+                picDataRom2.Clear();
             }
         }
 
@@ -232,36 +256,87 @@ namespace UploadImageServer
                 savePicArray2[id].Add(picIndex);
             }
 
-            if (!picDataRom.ContainsKey(picIndex))
+            if (!picDataRom2.ContainsKey(picIndex))
             {
-                picDataRom.Add(picIndex, new Dictionary<int, byte[]>());
+                picDataRom2.Add(picIndex, new Dictionary<int, byte[]>());
             }
 
-            if (picDataRom[picIndex].ContainsKey(dataIndex))
+            if (picDataRom2[picIndex].ContainsKey(dataIndex))
             {
-                picDataRom[picIndex][dataIndex] = imgData;
+                picDataRom2[picIndex][dataIndex] = imgData;
             }
             else
             {
-                picDataRom[picIndex].Add(dataIndex, imgData);
+                picDataRom2[picIndex].Add(dataIndex, imgData);
             }
 
-            if (picDataRom[picIndex].Count == dataLength)
+            if (picDataRom2[picIndex].Count == dataLength)
             {
-                string dir = UploadPath + @"\" + id + "_" + robotID;
-                List<byte> bufferRom = new List<byte>();
-                for (int i = 0; i < dataLength; i++)
+                try
                 {
-                    bufferRom.AddRange(picDataRom[picIndex][i]);
+                    string dir = UploadPath + @"\" + id + "_" + robotID;
+                    List<byte> bufferRom = new List<byte>();
+                    for (int i = 0; i < dataLength; i++)
+                    {
+                        bufferRom.AddRange(picDataRom2[picIndex][i]);
+                    }
+                    bufferRom.ToArray().SaveImage(dir + @"\" + picIndex + FileManager.SaveImageExtend());
+                    picDataRom2[picIndex.ToString()].Clear();
+                    picDataRom2.Remove(picIndex.ToString());
+                    GC.Collect();
+                    savePicArray2[id].Sort();
+                    string[] vs = id.Split('_');
+                    XzImage?.Invoke(bufferRom.ToArray().ToImage(), vs[0], vs[1], robotID);
                 }
-                bufferRom.ToArray().SaveImage(dir + @"\" + picIndex + FileManager.SaveImageExtend());
-                picDataRom[picIndex.ToString()].Clear();
-                picDataRom.Remove(picIndex.ToString());
-                GC.Collect();
-                savePicArray2[id].Sort();
-                string[] vs = id.Split('_');
-                XzImage?.Invoke(bufferRom.ToArray().ToImage(), vs[0], vs[1], robotID);
+                catch (Exception e)
+                {
+                    AddLog("执行保存线阵图片Error：" + e.Message);
+                }
             }
+        }
+
+        public void UploadImage3(string picName, int dataIndex, int dataLength, string id, byte[] imgData, string robotID)
+        {
+            if (!picDataRom3.ContainsKey(picName))
+            {
+                picDataRom3.Add(picName, new Dictionary<int, byte[]>());
+            }
+
+            if (picDataRom3[picName].ContainsKey(dataIndex))
+            {
+                picDataRom3[picName][dataIndex] = imgData;
+            }
+            else
+            {
+                picDataRom3[picName].Add(dataIndex, imgData);
+            }
+
+            if (picDataRom3[picName].Count == dataLength)
+            {
+                try
+                {
+                    string dir = UploadPath + id + "_" + robotID;
+                    List<byte> bufferRom = new List<byte>();
+                    for (int i = 0; i < dataLength; i++)
+                    {
+                        bufferRom.AddRange(picDataRom3[picName][i]);
+                    }
+                    bufferRom.ToArray().SaveImage(dir + @"\" + picName);
+                    picDataRom3[picName].Clear();
+                    picDataRom3.Remove(picName);
+                    GC.Collect();
+                    LocImage?.Invoke(bufferRom.ToArray().ToImage(), picName, robotID);
+                }
+                catch (Exception e)
+                {
+                    AddLog("执行保存定位图片Error：" + e.Message);
+                }
+            }
+        }
+
+        public void UploadParameter(float[] kc, float[] kk, string robotID)
+        {
+
         }
 
         public string UploadPictrue(string parsIndex, int robot, int dataIndex, int dataLength, string id, byte[] imgData, string robotID)

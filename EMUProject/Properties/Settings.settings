@@ -104,5 +104,8 @@
     <Setting Name="AlgorithmOutTime" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">300</Value>
     </Setting>
+    <Setting Name="EnginePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">D:\PuzzleServer\PicturePuzzleService\HostWinform\bin\Debug\concat_yolov560_m_640_4_1031.engine</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

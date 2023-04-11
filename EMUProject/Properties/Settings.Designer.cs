@@ -430,5 +430,18 @@ namespace Project.Properties {
                 this["AlgorithmOutTime"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\PuzzleServer\\PicturePuzzleService\\HostWinform\\bin\\Debug\\concat_yolov560_m_640_" +
+            "4_1031.engine")]
+        public string EnginePath {
+            get {
+                return ((string)(this["EnginePath"]));
+            }
+            set {
+                this["EnginePath"] = value;
+            }
+        }
     }
 }

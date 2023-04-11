@@ -67,7 +67,7 @@ namespace Project.ServerClass
                     });
                 }
                 AppServer app = Project.appServer as AppServer;
-                app.Complete(id, robot);
+                app.Complete(id, robot, 0);
 
                 EMU.Util.ThreadManager.TaskRun((EMU.Util.ThreadEventArgs threadEventArgs) =>
                 {

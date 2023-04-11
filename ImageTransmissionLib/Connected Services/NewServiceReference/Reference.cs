@@ -15,40 +15,59 @@ namespace EMU.ImageTransmission.NewServiceReference {
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="NewServiceReference.IService")]
     public interface IService {
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddLog", ReplyAction="http://tempuri.org/IService/AddLogResponse")]
+        void AddLog(string log, int type);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/AddLog", ReplyAction="http://tempuri.org/IService/AddLogResponse")]
+        System.Threading.Tasks.Task AddLogAsync(string log, int type);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetLocation", ReplyAction="http://tempuri.org/IService/GetLocationResponse")]
+        int GetLocation(string id, string picName1, string picName2, string picName3, string robotID, int state);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/GetLocation", ReplyAction="http://tempuri.org/IService/GetLocationResponse")]
+        System.Threading.Tasks.Task<int> GetLocationAsync(string id, string picName1, string picName2, string picName3, string robotID, int state);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/Upload3DData", ReplyAction="http://tempuri.org/IService/Upload3DDataResponse")]
+        void Upload3DData(string parsIndex, int robot, string data, string id, string robotID);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/Upload3DData", ReplyAction="http://tempuri.org/IService/Upload3DDataResponse")]
+        System.Threading.Tasks.Task Upload3DDataAsync(string parsIndex, int robot, string data, string id, string robotID);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UploadImage", ReplyAction="http://tempuri.org/IService/UploadImageResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(UploadImageServer.FaultMessage), Action="http://tempuri.org/IService/UploadImageFaultMessageFault", Name="FaultMessage", Namespace="http://schemas.datacontract.org/2004/07/UploadImageServer")]
         void UploadImage(int picIndex, int dataIndex, int dataLength, string id, byte[] imgData, string robotID);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UploadImage", ReplyAction="http://tempuri.org/IService/UploadImageResponse")]
         System.Threading.Tasks.Task UploadImageAsync(int picIndex, int dataIndex, int dataLength, string id, byte[] imgData, string robotID);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UploadImage2", ReplyAction="http://tempuri.org/IService/UploadImage2Response")]
-        [System.ServiceModel.FaultContractAttribute(typeof(UploadImageServer.FaultMessage), Action="http://tempuri.org/IService/UploadImage2FaultMessageFault", Name="FaultMessage", Namespace="http://schemas.datacontract.org/2004/07/UploadImageServer")]
         void UploadImage2(string picIndex, int dataIndex, int dataLength, string id, byte[] imgData, string robotID);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UploadImage2", ReplyAction="http://tempuri.org/IService/UploadImage2Response")]
         System.Threading.Tasks.Task UploadImage2Async(string picIndex, int dataIndex, int dataLength, string id, byte[] imgData, string robotID);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UploadComplete", ReplyAction="http://tempuri.org/IService/UploadCompleteResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(UploadImageServer.FaultMessage), Action="http://tempuri.org/IService/UploadCompleteFaultMessageFault", Name="FaultMessage", Namespace="http://schemas.datacontract.org/2004/07/UploadImageServer")]
-        void UploadComplete(string id, string robotID);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UploadImage3", ReplyAction="http://tempuri.org/IService/UploadImage3Response")]
+        void UploadImage3(string picName, int dataIndex, int dataLength, string id, byte[] imgData, string robotID);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UploadImage3", ReplyAction="http://tempuri.org/IService/UploadImage3Response")]
+        System.Threading.Tasks.Task UploadImage3Async(string picName, int dataIndex, int dataLength, string id, byte[] imgData, string robotID);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UploadComplete", ReplyAction="http://tempuri.org/IService/UploadCompleteResponse")]
-        System.Threading.Tasks.Task UploadCompleteAsync(string id, string robotID);
+        void UploadComplete(string id, string robotID, int number);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UploadComplete", ReplyAction="http://tempuri.org/IService/UploadCompleteResponse")]
+        System.Threading.Tasks.Task UploadCompleteAsync(string id, string robotID, int number);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UploadPictrue", ReplyAction="http://tempuri.org/IService/UploadPictrueResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(UploadImageServer.FaultMessage), Action="http://tempuri.org/IService/UploadPictrueFaultMessageFault", Name="FaultMessage", Namespace="http://schemas.datacontract.org/2004/07/UploadImageServer")]
         string UploadPictrue(string parsIndex, int robot, int dataIndex, int dataLength, string id, byte[] imgData, string robotID);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UploadPictrue", ReplyAction="http://tempuri.org/IService/UploadPictrueResponse")]
         System.Threading.Tasks.Task<string> UploadPictrueAsync(string parsIndex, int robot, int dataIndex, int dataLength, string id, byte[] imgData, string robotID);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/Upload3DData", ReplyAction="http://tempuri.org/IService/Upload3DDataResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(UploadImageServer.FaultMessage), Action="http://tempuri.org/IService/Upload3DDataFaultMessageFault", Name="FaultMessage", Namespace="http://schemas.datacontract.org/2004/07/UploadImageServer")]
-        void Upload3DData(string parsIndex, int robot, string data, string id, string robotID);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UploadParameter", ReplyAction="http://tempuri.org/IService/UploadParameterResponse")]
+        void UploadParameter(float[] kc, float[] kk, string robotID);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/Upload3DData", ReplyAction="http://tempuri.org/IService/Upload3DDataResponse")]
-        System.Threading.Tasks.Task Upload3DDataAsync(string parsIndex, int robot, string data, string id, string robotID);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService/UploadParameter", ReplyAction="http://tempuri.org/IService/UploadParameterResponse")]
+        System.Threading.Tasks.Task UploadParameterAsync(float[] kc, float[] kk, string robotID);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -78,6 +97,30 @@ namespace EMU.ImageTransmission.NewServiceReference {
                 base(binding, remoteAddress) {
         }
         
+        public void AddLog(string log, int type) {
+            base.Channel.AddLog(log, type);
+        }
+        
+        public System.Threading.Tasks.Task AddLogAsync(string log, int type) {
+            return base.Channel.AddLogAsync(log, type);
+        }
+        
+        public int GetLocation(string id, string picName1, string picName2, string picName3, string robotID, int state) {
+            return base.Channel.GetLocation(id, picName1, picName2, picName3, robotID, state);
+        }
+        
+        public System.Threading.Tasks.Task<int> GetLocationAsync(string id, string picName1, string picName2, string picName3, string robotID, int state) {
+            return base.Channel.GetLocationAsync(id, picName1, picName2, picName3, robotID, state);
+        }
+        
+        public void Upload3DData(string parsIndex, int robot, string data, string id, string robotID) {
+            base.Channel.Upload3DData(parsIndex, robot, data, id, robotID);
+        }
+        
+        public System.Threading.Tasks.Task Upload3DDataAsync(string parsIndex, int robot, string data, string id, string robotID) {
+            return base.Channel.Upload3DDataAsync(parsIndex, robot, data, id, robotID);
+        }
+        
         public void UploadImage(int picIndex, int dataIndex, int dataLength, string id, byte[] imgData, string robotID) {
             base.Channel.UploadImage(picIndex, dataIndex, dataLength, id, imgData, robotID);
         }
@@ -94,12 +137,20 @@ namespace EMU.ImageTransmission.NewServiceReference {
             return base.Channel.UploadImage2Async(picIndex, dataIndex, dataLength, id, imgData, robotID);
         }
         
-        public void UploadComplete(string id, string robotID) {
-            base.Channel.UploadComplete(id, robotID);
+        public void UploadImage3(string picName, int dataIndex, int dataLength, string id, byte[] imgData, string robotID) {
+            base.Channel.UploadImage3(picName, dataIndex, dataLength, id, imgData, robotID);
         }
         
-        public System.Threading.Tasks.Task UploadCompleteAsync(string id, string robotID) {
-            return base.Channel.UploadCompleteAsync(id, robotID);
+        public System.Threading.Tasks.Task UploadImage3Async(string picName, int dataIndex, int dataLength, string id, byte[] imgData, string robotID) {
+            return base.Channel.UploadImage3Async(picName, dataIndex, dataLength, id, imgData, robotID);
+        }
+        
+        public void UploadComplete(string id, string robotID, int number) {
+            base.Channel.UploadComplete(id, robotID, number);
+        }
+        
+        public System.Threading.Tasks.Task UploadCompleteAsync(string id, string robotID, int number) {
+            return base.Channel.UploadCompleteAsync(id, robotID, number);
         }
         
         public string UploadPictrue(string parsIndex, int robot, int dataIndex, int dataLength, string id, byte[] imgData, string robotID) {
@@ -110,12 +161,12 @@ namespace EMU.ImageTransmission.NewServiceReference {
             return base.Channel.UploadPictrueAsync(parsIndex, robot, dataIndex, dataLength, id, imgData, robotID);
         }
         
-        public void Upload3DData(string parsIndex, int robot, string data, string id, string robotID) {
-            base.Channel.Upload3DData(parsIndex, robot, data, id, robotID);
+        public void UploadParameter(float[] kc, float[] kk, string robotID) {
+            base.Channel.UploadParameter(kc, kk, robotID);
         }
         
-        public System.Threading.Tasks.Task Upload3DDataAsync(string parsIndex, int robot, string data, string id, string robotID) {
-            return base.Channel.Upload3DDataAsync(parsIndex, robot, data, id, robotID);
+        public System.Threading.Tasks.Task UploadParameterAsync(float[] kc, float[] kk, string robotID) {
+            return base.Channel.UploadParameterAsync(kc, kk, robotID);
         }
     }
 }

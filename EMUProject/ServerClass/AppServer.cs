@@ -1,4 +1,5 @@
 ﻿#define algorithm2
+#define algorithm3
 
 using GW.Function.ExcelFunction;
 using EMU.ApplicationData;
@@ -18,18 +19,21 @@ using AlgorithmLib;
 using System.Runtime.InteropServices;
 using System.Drawing.Imaging;
 using System.Threading;
+using System.Diagnostics;
 
 namespace Project.ServerClass
 {
     internal class AppServer : IAppServer
     {
         private const int excelHeightStartRowIndex = 0;
+        private static bool locationInitComplete = false;
         private static bool puzzleInitComplete = false;
         private static object algorithmLock = new object();
         private static object completeLock = new object();
         private static object runLock = new object();
         private static IntPtr algObj = IntPtr.Zero;
         private static IntPtr imgObj = IntPtr.Zero;
+        private static IntPtr objLocation = IntPtr.Zero;
         private int progressIndex = 0;
         private string enginePath;
         private string projectID;
@@ -46,11 +50,6 @@ namespace Project.ServerClass
         {
             get { return projectID; }
         }
-        public string Log
-        {
-            get { return log; }
-            set { log = value; }
-        }
 
         public event AcceptClient AcceptClient;
         public event SendClient SendClient;
@@ -63,10 +62,17 @@ namespace Project.ServerClass
         {
             if (host == null)
             {
+                UploadService.Addlog = AddLog;
+                UploadService.Location = GetLocation;
                 UploadService.XzImage = ImageReadyXz;
                 UploadService.MzImage = ImageReadyMz;
+                UploadService.LocImage = ImageReadyLoc;
                 UploadService._3dData = Accept3dData;
+#if algorithm3
+                UploadService.CompleteAction = Complete2;
+#else
                 UploadService.CompleteAction = Complete;
+#endif
                 enginePath = Application.StartupPath + @"\cutimg.engine";
                 host = new ServiceHost(typeof(UploadService));
                 BasicHttpBinding binding = new BasicHttpBinding();
@@ -88,6 +94,32 @@ namespace Project.ServerClass
             {
                 throw new Exception("服务初始化完成");
             }
+        }
+
+        private void AddLog(string log, int type)
+        {
+            log.AddLog((LogType)type);
+        }
+
+        private int GetLocation(string id, string picName1, string picName2, string picName3, string robotID, int state)
+        {
+            AddLog("获取定位信息");
+            string dir = UploadService.UploadPath + id + "_" + robotID;
+            string path1 = dir + @"\Location\" + picName1;
+            string path2 = dir + @"\Location\" + picName2;
+            string path3 = dir + @"\Location\" + picName3;
+            if (objLocation == IntPtr.Zero)
+            {
+                objLocation = CheckLocationCdoublePlus.LocationFactory();
+                locationInitComplete = CheckLocationCdoublePlus.CallOnInit(objLocation, Application.StartupPath + "\\axis_s_640.engine") == 0;
+            }
+            if (locationInitComplete)
+            {
+                int loc = (int)CheckLocationCdoublePlus.Callgetdis(objLocation, path1, path2, state);
+                AddLog("得到定位修正：" + loc);
+                return loc;
+            }
+            return 0;
         }
 
         private void ImageReadyXz(Image img, string mode, string sn, string robotID)
@@ -114,7 +146,16 @@ namespace Project.ServerClass
             appDeviceFrame.para.train_mode = mode;
             appDeviceFrame.para.train_sn = sn;
             AcceptClient?.Invoke(appDeviceFrame);
+#if algorithm3
+            MzComplete2(robotID, mode, sn, parsId, appDeviceFrame.ParsID, robotName, img);
+#else
             MzComplete(robotID, mode, sn, parsId, appDeviceFrame.ParsID, robotName, img);
+#endif
+        }
+
+        private void ImageReadyLoc(Image img, string name, string robotID)
+        {
+
         }
 
         private void Accept3dData(string parsId, string data, string mode, string sn, RobotName robotName, string robotID)
@@ -131,7 +172,7 @@ namespace Project.ServerClass
             AcceptClient?.Invoke(appDeviceFrame);
         }
 
-        public void Complete(string id, string robotID)
+        public void Complete(string id, string robotID, int number)
         {
             lock (completeLock)
             {
@@ -642,6 +683,27 @@ namespace Project.ServerClass
             }
         }
 
+        public void Complete2(string id, string robotID, int number)
+        {
+            lock (completeLock)
+            {
+                Process process = new Process();
+                process.StartInfo.FileName = Application.StartupPath + "\\PuzzleConsole.exe";
+                process.StartInfo.Arguments = id + " " + robotID + " " + number;
+                process.Start();
+                if (algObj == IntPtr.Zero)
+                {
+                    algObj = Algorithm.ExportObjectFactory();
+                    puzzleInitComplete = puzzleInitComplete && Algorithm.CallOnInit(algObj, null) == 0;
+                }
+                if (puzzleInitComplete)
+                {
+                    process.WaitForExit();
+
+                } 
+            }
+        }
+
         public void MzComplete(string robotID, string mode, string sn, string name, string parsId, RobotName robotName, Image img)
         {
             if (ServerGlobal.StartProjectDict.ContainsKey(robotID))
@@ -706,6 +768,11 @@ namespace Project.ServerClass
                 });
                 Thread.Sleep(500);
             }
+        }
+
+        public void MzComplete2(string robotID, string mode, string sn, string name, string parsId, RobotName robotName, Image img)
+        {
+
         }
 
         private void AddLog(string log)
