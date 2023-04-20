@@ -178,60 +178,7 @@ namespace Project
             }
 
             string csvPath = mubanPath + mode + "_" + sn + ".csv";
-            List<model_struct> models = new List<model_struct>();
-            if (File.Exists(csvPath))
-            {
-                using (StreamReader sr = new StreamReader(csvPath))
-                {
-                    while (true)
-                    {
-                        string row = sr.ReadLine();
-                        if (string.IsNullOrEmpty(row))
-                        {
-                            break;
-                        }
-                        if (row.IndexOf(partId) == 0)
-                        {
-                            string pars = row.Substring(row.IndexOf(",") + 1);
-                            string name = pars.Substring(0, pars.IndexOf(","));
-                            string loc = pars.Substring(pars.IndexOf(",") + 1);
-                            loc = loc.Replace("\"", "");
-                            string[] locs = loc.Split(';');
-                            AddLog("找到模板参数: " + row, LogType.OtherLog);
-                            if (locs != null)
-                            {
-                                foreach (string item in locs)
-                                {
-                                    string[] s = item.Split(',');
-                                    if (s != null && s.Length > 3)
-                                    {
-                                        model_struct model = new model_struct();
-                                        SetErrorLocation(
-                                            int.TryParse(s[0], out model.x) &&
-                                            int.TryParse(s[1], out model.y) &&
-                                            int.TryParse(s[2], out model.w) &&
-                                            int.TryParse(s[3], out model.h), partId, mode, sn, item,
-                                            () =>
-                                            {
-                                                model.class_name = new char[50];
-                                                for (int i = 0; i < name.Length; i++)
-                                                {
-                                                    model.class_name[i] = name[i];
-                                                }
-                                                models.Add(model);
-                                            });
-                                    }
-                                }
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                AddLog("缺失的配置文件: " + csvPath, LogType.OtherLog);
-            }
+            List<model_struct> models = Project.dataBase.GetTs<model_struct>(null, csvPath, partId, mode, sn);
 
             string uncorrectPath = mubanPath + "uncorrect.txt";
             if (File.Exists(uncorrectPath))
@@ -545,6 +492,7 @@ namespace Project
                     txt = sr.ReadToEnd();
                 }
                 taskId = taskId.Replace(".txt", "");
+#if false
                 string resultPath = Application.StartupPath + "\\bak_result\\" + taskId + ".json";
                 if (File.Exists(resultPath))
                 {
@@ -570,8 +518,9 @@ namespace Project
                             Thread.Sleep(1);
                             continue;
                         }
-                    }
+                    } 
                 }
+#endif
                 AddLog("读取的文件名：" + taskId + ".txt", LogType.ProcessLog);
                 AddLog("读取文件内容：" + txt, LogType.ProcessLog);
                 if (!string.IsNullOrEmpty(txt))
@@ -647,18 +596,6 @@ namespace Project
                         }
                     }
                 }));
-            }
-        }
-
-        private void SetErrorLocation(bool b, string partId, string mode, string sn, string loc, Action act)
-        {
-            if (b)
-            {
-                act();
-            }
-            else
-            {
-                AddLog($"模板参数解析失败: {mode}.{sn}.{partId} >> {loc}", LogType.OtherLog); 
             }
         }
     }

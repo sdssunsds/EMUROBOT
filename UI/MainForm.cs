@@ -16,6 +16,7 @@ namespace EMU.UI
             set
             {
                 mainControl1.Project = value;
+                Iinit iinit = null;
                 if (value is RobotClient)
                 {
                     value.homePage = new HomePage()
@@ -26,12 +27,17 @@ namespace EMU.UI
                 }
                 else if (value is Server)
                 {
-                    new Lib.ServerInit().Setup(value, null);
+                    iinit = new Lib.ServerInit();
                 }
                 else if (value is AGVServer)
                 {
-                    new Lib.AGVInit().Setup(value, null);
+                    iinit = new Lib.AGVInit();
                 }
+                else if (value is AlgorithmInterface)
+                {
+                    iinit = new Lib.AlgorithmInterfaceInit();
+                }
+                iinit?.Setup(value, null);
             }
         }
         public string[] Args { private get; set; }
@@ -47,6 +53,7 @@ namespace EMU.UI
             Project.ColorChanged = ColorChange;
             if (!string.IsNullOrEmpty(Properties.Settings.Default.SkinFile))
             {
+                skinEngine.SkinDialogs = false;
                 skinEngine.SkinFile = Properties.Settings.Default.SkinFile;
             }
             Global.MainColor = label1.BackColor = label2.BackColor = pictureBox1.BackColor = Properties.Settings.Default.Color;

@@ -2,12 +2,8 @@
 using EMU.Util;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -291,7 +287,7 @@ namespace Project
                                     }
                                     break;
                                 case "结果图片":
-                                    if (imgDict.ContainsKey(id) && resultDict.ContainsKey(id) && !string.IsNullOrEmpty(resultDict[id]))
+                                    if (imgDict.ContainsKey(id) && File.Exists(imgDict[id][0]) && resultDict.ContainsKey(id) && !string.IsNullOrEmpty(resultDict[id]))
                                     {
                                         List<RedisResult> list = JsonManager.JsonToObject<List<RedisResult>>(resultDict[id]);
                                         if (list != null && list.Count > 0)

@@ -79,7 +79,7 @@ namespace Project.ServerClass
             this.btn_insert.Name = "btn_insert";
             this.btn_insert.Size = new System.Drawing.Size(95, 95);
             this.btn_insert.TabIndex = 0;
-            this.btn_insert.Text = "添加检修计划";
+            this.btn_insert.Text = "添加检\r\n修计划";
             this.btn_insert.UseVisualStyleBackColor = true;
             this.btn_insert.Click += new System.EventHandler(this.btn_insert_Click);
             // 
@@ -91,7 +91,7 @@ namespace Project.ServerClass
             this.btn_frash.Name = "btn_frash";
             this.btn_frash.Size = new System.Drawing.Size(95, 95);
             this.btn_frash.TabIndex = 2;
-            this.btn_frash.Text = "刷新检修计划";
+            this.btn_frash.Text = "刷新检\r\n修计划";
             this.btn_frash.UseVisualStyleBackColor = true;
             this.btn_frash.Click += new System.EventHandler(this.btn_frash_Click);
             // 

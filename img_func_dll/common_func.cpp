@@ -611,22 +611,31 @@ cv::Point common_func::point_trans(cv::Mat trans_mat, cv::Point inputpoint)
 	Pointmat.at<double>(1, 0) = inputpoint.y;
 	Pointmat.at<double>(2, 0) = 1;
 	cv::Mat res = trans_mat * Pointmat;
+	float x = res.at<double>(0, 0);
+	float y = res.at<double>(1, 0);
+	float z = res.at<double>(2, 0);
+
 	//double x = (trans_mat.at<double>(0, 0) * inputpoint.x + trans_mat.at<double>(0,1) * inputpoint.y + trans_mat.at<double>(0, 2)) / (trans_mat.at<double>(2, 0) * inputpoint.x + trans_mat.at<double>(2, 1) * inputpoint.y + trans_mat.at<double>(2, 2));
 	//double y = (trans_mat.at<double>(1, 0) * inputpoint.x + trans_mat.at<double>(1, 1) * inputpoint.y + trans_mat.at<double>(1, 2)) / (trans_mat.at<double>(2, 0) * inputpoint.x + trans_mat.at<double>(2, 1) * inputpoint.y + trans_mat.at<double>(2, 2));
-	return cv::Point(int(res.at<double>(0, 0)), int(res.at<double>(1, 0)));
+	return cv::Point(int(x/z), int(y/z));
 }
-cv::Rect common_func::rect_trans(cv::Mat trans_mat, cv::Rect inputrect)
+cv::Rect common_func::rect_trans(cv::Mat trans_mat, cv::Rect inputrect,cv::Mat input, cv::Mat test)
 {
+	cv::rectangle(input, inputrect, cv::Scalar(255, 255, 0), 1);
 	cv::Point p1 = inputrect.tl();
-	cv::Point p2 = p1;
-	p2.x += inputrect.width;
-	cv::Point p3 = p1;
-	p2.y+= inputrect.height;
+	cv::Point p2(inputrect.br().x,p1.y);
+	cv::Point p3(inputrect.tl().x, inputrect.br().y);
 	cv::Point p4 = inputrect.br();
 	p1 = point_trans(trans_mat, p1);
+	cv::circle(test,p1,1,cv::Scalar(0,255,0),-1);
 	p2 = point_trans(trans_mat, p2);
+	cv::circle(test, p2, 1, cv::Scalar(0, 255, 0), -1);
 	p3 = point_trans(trans_mat, p3);
+	cv::circle(test, p3, 1, cv::Scalar(0, 255, 0), -1);
 	p4 = point_trans(trans_mat, p4);
-	return cv::boundingRect(std::vector<cv::Point>{p1, p2, p3, p4});
+	cv::circle(test, p4, 1, cv::Scalar(0, 255, 0), -1);
+	cv::Rect box= cv::boundingRect(std::vector<cv::Point>{p1, p2, p3, p4});
+	cv::rectangle(test, box, cv::Scalar(255, 255, 0), 1);
+	return box;
 
 }

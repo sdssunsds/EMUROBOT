@@ -120,5 +120,10 @@ namespace Project.ServerClass
                 MessageBox.Show(ex.StackTrace);
             }
         }
+
+        private void dataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 }

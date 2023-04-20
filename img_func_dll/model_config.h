@@ -1,7 +1,8 @@
 #pragma once
 #include"basic_struct.h"
 //线阵相机检测螺丝模型1
-const trt_basic_config screw_config = {"v7","",0.4, 0.5 ,320,320,"screw_yolov7_w6_4_320",{"LS_6J", "LS_SZ" , "LM_6J" , "LS_N6"}};
+const trt_basic_config screw_config = { "v7","w6",0.3, 0.5 ,320,320,"yolov7-w6-4-320_ep1",{"LS_SZ", "LS_6J" , "LM_6J" , "LS_N6"} };
+// const trt_basic_config screw_config = {"v7","",0.3, 0.5 ,320,320,"screw_yolov7_w6_4_320",{"LS_6J", "LS_SZ" , "LM_6J" , "LS_N6"}};
 //螺丝丢失二次检测模型
 const trt_basic_config screw_loss = { "v5","x",0.1,0.5 ,320,320,"loss_screw_yolov5x_320_2_dongjie",{"001","002"} };
 //面阵相机螺丝检测
@@ -11,16 +12,16 @@ const trt_basic_config screw_mz_config = { "v5","m",0.3,0.5 ,1024,1024,"LS_yolov
 const trt_basic_config screw_config_db = { "v5","m",0.5 ,0.1,1280,1280,"screw_yolov5m_3_1280",{"KLS","GREEN","LS"}};
 
 //线阵相机检测异物模型,线阵1为面阵
-const trt_basic_config foreign_body_config = { "v7","",0.3 ,0.45,1024,1024,"x_CLW_yolov7_w6_1_1024",{"foreign_body"} };
-const trt_basic_config foreign_body_config1 = { "v7","", 0.35 ,0.45,1280,1280,"MZ_CLW_yolov7_w6_1_1280",{"foreign_body"} };
+const trt_basic_config foreign_body_config = { "v7","w6",0.3 ,0.45,1024,1024,"x_CLW_yolov7_w6_1_1024",{"foreign_body"} };
+const trt_basic_config foreign_body_config1 = { "v7","w6", 0.3 ,0.45,1280,1280,"MZ_CLW_yolov7_w6_1_1280",{"foreign_body"} };
 //铁丝断裂检测
-const trt_basic_config locking_wire_config = { "v7","",0.3 ,0.42,1280,1280,"TS_detect_6_1280",{"LS_4J", "LS_D6J", "LS_6J", "TS_4J", "TS_ZYK",  "TS_FS"} }; //
+const trt_basic_config locking_wire_config = { "v7","w6",0.3 ,0.42,1280,1280,"TS_detect_6_1280",{"LS_4J", "LS_D6J", "LS_6J", "TS_4J", "TS_ZYK",  "TS_FS"} }; //
 //油位表检测
 const trt_basic_config oil_config = { "v5","m",0.2,0.5 ,1024,1024,"oil_1024_m_5",{"oil_guage","scale","yellow","liquid_level"} };
 //撒沙咀检测
 const trt_basic_config sashazui_config = { "v5","n",0.5,0.5 ,800,800,"nozzle_yolov5n_800",{"screw","rect","up","down"} };
 //易丢失部件检测
-const trt_basic_config losscheck_config = { "v7","",0.3 ,0.5,1024,1024,"yolov7-w6_17_1024",{ "Zpt","Sh" ,"Lock_6l_s","Lock_6l","X_p","Kkx","Zp","Djmp","Hk","X_kk","Fhf","Zykd","Pqk","Pipe","Gjt","Mfj","Pzq"} };
+const trt_basic_config losscheck_config = { "v7","",0.2 ,0.5,1024,1024,"yolov7-w6_17_1024",{ "Zpt","Sh" ,"Lock_6l_s","Lock_6l","X_p","Kkx","Zp","Djmp","Hk","X_kk","Fhf","Zykd","Pqk","Pipe","Gjt","Mfj","Pzq"} };
 //漏油以及划痕检测
 const trt_basic_config oil_leakage_config = { "v5","m", 0.3 ,0.6,640,640,"Drop_SJ_HJ_yolov560_m_640_3_1209",{"yd","yj","HJ"} };//油滴、划痕、油迹
 //车头检测

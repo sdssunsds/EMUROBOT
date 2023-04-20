@@ -186,8 +186,9 @@ void get_loss::analy_res(cv::Mat inputimg, std::vector<model_struct_box> mode_bo
 void get_loss::analy_res(cv::Mat inputimg, cv::Mat modelimg, std::vector<model_struct_box> mode_box,
 	std::map<std::string, basic_yolo*> infer, spsg& correct_img, std::vector<int>& task_id_com, std::vector<box_info_str>& res_s)
 {
-	cv::Mat input_copy;
+	cv::Mat input_copy, input_copy1;
 	inputimg.copyTo(input_copy);
+	inputimg.copyTo(input_copy1);
 	cv::Mat gray_model, gray_input, trans_res, tran_input;
 	cv::cvtColor(inputimg, gray_input, cv::COLOR_BGR2GRAY);
 	cv::cvtColor(modelimg, gray_model, cv::COLOR_BGR2GRAY);
@@ -204,7 +205,7 @@ void get_loss::analy_res(cv::Mat inputimg, cv::Mat modelimg, std::vector<model_s
 		for (int i = 0; i < res.size(); i++)
 		{
 			cv::Rect box=res[i].box;
-			box = common_func::rect_trans(invert_trans, box);
+			box = common_func::rect_trans(invert_trans, box,input_copy, input_copy1);
 			if (res[i].state != 0)
 			{
 				if (box.tl().x<0 || box.tl().y<0 || box.br().x > inputimg.cols || box.br().y > inputimg.rows)
@@ -213,12 +214,12 @@ void get_loss::analy_res(cv::Mat inputimg, cv::Mat modelimg, std::vector<model_s
 				}
 				else
 				{
-					//cv::rectangle(inputimg, box, cv::Scalar(0, 0, 255));
+					cv::rectangle(input_copy1, box, cv::Scalar(0, 0, 255));
 				}
 			}
 			else
 			{
-				//cv::rectangle(inputimg, box, cv::Scalar(0, 255, 0));
+				cv::rectangle(input_copy1, box, cv::Scalar(0, 255, 0));
 			}
 
 			

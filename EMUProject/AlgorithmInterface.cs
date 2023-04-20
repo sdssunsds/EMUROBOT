@@ -199,7 +199,6 @@ namespace Project
 
         public void Load(string[] args)
         {
-            //args = new string[] { "-f", "2574", "0", "60001020032619010010000", @"E:\Code\EMUROBOT\bin\Debug\muban\2574\60001020032619010010000.jpg" };
             AddLog("软件参数：" + string.Join(" ", args), LogType.ProcessLog);
             if (args != null && args.Length > 0)
             {
@@ -285,7 +284,7 @@ namespace Project
             {
                 if (mainPage != null)
                 {
-                    mainPage.isOpenControl = true; 
+                    mainPage.isOpenControl = true;
                 }
                 algorithmPage?.InitAlgorithm();
             }
@@ -293,7 +292,7 @@ namespace Project
 
         public void Shown()
         {
-
+            dataBase.CustomEvent += DataBase_CustomEvent;
         }
 
         public void Closing()
@@ -412,6 +411,12 @@ namespace Project
                     } 
                 }
             });
+        }
+
+        private object DataBase_CustomEvent(params object[] pars)
+        {
+            AddLog(pars[0].ToString(), (LogType)pars[1]);
+            return null;
         }
 
         public string JsonErrorChange(string json)

@@ -67,7 +67,7 @@ namespace Project.ServerClass
                     });
                 }
                 AppServer app = Project.appServer as AppServer;
-                app.Complete(id, robot, 0);
+                app.Complete2(id, robot, 0);
 
                 EMU.Util.ThreadManager.TaskRun((EMU.Util.ThreadEventArgs threadEventArgs) =>
                 {
@@ -92,7 +92,7 @@ namespace Project.ServerClass
                                 foreach (string file in files)
                                 {
                                     name = file.Substring(file.LastIndexOf("\\") + 1).Replace(EMU.Util.FileManager.GetImageExtend(), "");
-                                    app.MzComplete(robot, ids[0], ids[1], name, name.Split('_')[0], robotName, System.Drawing.Image.FromFile(file));
+                                    app.MzComplete2(robot, ids[0], ids[1], name, name.Split('_')[0], robotName, System.Drawing.Image.FromFile(file));
                                     System.Threading.Thread.Sleep(500);
                                 }
                             }

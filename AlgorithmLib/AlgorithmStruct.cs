@@ -123,10 +123,19 @@ namespace AlgorithmLib
         /// <param name="save">切图后路径</param>
         public config_info(string img, string train, string time, string save)
         {
-            img_path = PuzzleCdoublePlus.GetChar(img, 200);
-            train_type = PuzzleCdoublePlus.GetChar(train, 50);
-            this.time = PuzzleCdoublePlus.GetChar(time, 50);
-            save_path = PuzzleCdoublePlus.GetChar(save, 200);
+            img_path = GetChar(img, 200);
+            train_type = GetChar(train, 50);
+            this.time = GetChar(time, 50);
+            save_path = GetChar(save, 200);
+        }
+        public static char[] GetChar(string value, int length)
+        {
+            char[] cs = new char[length];
+            for (int i = 0; i < length && i < value.Length; i++)
+            {
+                cs[i] = value[i];
+            }
+            return cs;
         }
     }
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]

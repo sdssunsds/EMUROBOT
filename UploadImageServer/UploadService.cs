@@ -135,7 +135,7 @@ namespace UploadImageServer
                             length += savePicArray[id].Count / 8;
                         }
 
-                #region 压缩拼图
+                        #region 压缩拼图
                         int currentHeight = 0;
                         int height = 2260 * (i == 0 ? length : savePicArray[id].Count / 8);
                         using (Bitmap tableChartImage = new Bitmap(2048, height / 2))
@@ -156,7 +156,7 @@ namespace UploadImageServer
                             }
                             CompressImg(PuzzlePath + @"\" + id + @"\" + ids[0] + "_" + ids[1] + "_" + (i + 1) + "_" + robotID + FileManager.SaveImageExtend(), tableChartImage, 100);
                         }
-                #endregion
+                        #endregion
                         index = length;
                     }
                 }

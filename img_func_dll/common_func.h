@@ -31,5 +31,5 @@ public:
 	static void draw_rotate_rect(cv::Mat& image, cv::RotatedRect rotate_rect);
 	static cv::Rect expend_box(cv::Rect basic_box, int img_cols, int img_rows, int expend_x, int expend_y);
 	static cv::Point point_trans(cv::Mat trans_mat, cv::Point inputpoint);
-	static cv::Rect rect_trans(cv::Mat trans_mat, cv::Rect inputpoint);
+	static cv::Rect rect_trans(cv::Mat trans_mat, cv::Rect inputpoint, cv::Mat input, cv::Mat test);
 };

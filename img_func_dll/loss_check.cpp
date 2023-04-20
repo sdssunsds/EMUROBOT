@@ -366,8 +366,10 @@ vector<vector<model_struct_box>> loss_check::easy_match(cv::Mat& inputmat, vecto
             std::vector<int> bais_y_layer;
             std::vector<int> bais_x_layer;
             int comped_y = 0;
+
             int e = i + 2 > int(comp_vec.size()) ? int(comp_vec.size()) : i + 2;
             int bg = i - 1>0? i - 1:0;
+            std::map<cv::Rect, cv::Rect> box_marrymap;
             for (int idm = 0; idm < s_model.size(); idm++)
             {
                 cv::Rect box2 = cv::Rect(s_model[idm].box.x - bias_x - expand, s_model[idm].box.y - bias_y - expand, s_model[idm].box.width + 2 * expand, s_model[idm].box.height + 2 * expand);
@@ -387,7 +389,7 @@ vector<vector<model_struct_box>> loss_check::easy_match(cv::Mat& inputmat, vecto
                             continue;
                         }
                         cv::Rect box1 = cv::Rect(s_comp[id].box.x, s_comp[id].box.y, s_comp[id].box.width, s_comp[id].box.height);
-                        if ((box1 & box2).area() > 0)
+                        if ((box1 & box2).area() > box1.area() * 0.5)
                         {
                             hit_res.emplace_back(hit_struct{k,id,s_comp[id]});                          
                         }
@@ -395,11 +397,32 @@ vector<vector<model_struct_box>> loss_check::easy_match(cv::Mat& inputmat, vecto
                 }
                 if (hit_res.empty())
                 {
-                    model_struct_box loss;
-                    loss = s_model[idm];
-                    loss.box = box2;
-                    lossmap.push_back(loss);
-                    cv::rectangle(copy_img_basic, box2, cv::Scalar(0, 128, 128), 1);
+                    //
+                    std::vector<hit_struct> hit_retry_res;
+                    for (int k = bg; k < e; k++)
+                    {
+                        vector<model_struct_box> s_comp = comp_vec[k];
+                        if (s_comp.size() == 0)
+                        {
+                            continue;
+                        }
+                        for (int id = 0; id < s_comp.size(); id++)
+                        {
+                            cv::Rect box1 = cv::Rect(s_comp[id].box.x, s_comp[id].box.y, s_comp[id].box.width, s_comp[id].box.height);
+                            if ((box1 & box2).area() > box1.area()*0.5)
+                            {
+                                hit_retry_res.emplace_back(hit_struct{ k,id,s_comp[id] });
+                            }
+                        }
+                    }
+                    if (hit_retry_res.empty())
+                    {
+                        model_struct_box loss;
+                        loss = s_model[idm];
+                        loss.box = box2;
+                        lossmap.push_back(loss);
+                        cv::rectangle(copy_img_basic, box2, cv::Scalar(0, 128, 128), 1);
+                    }                  
                 }
                 else if(hit_res.size()==1)
                 {

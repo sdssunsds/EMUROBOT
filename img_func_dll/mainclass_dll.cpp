@@ -71,7 +71,7 @@ int main_class::init(char* log)
 			{
 				std::cout << "正在重新转换检测模型：" << i.first << std::endl;
 				logger.TraceInfo("正在重新转换检测模型:" + i.first);
-				int stat=onnx_trans(basic_model_path + i.second.engine_name, model_basic_path + i.second.engine_name, "--int8");
+				int stat=onnx_trans(basic_model_path + i.second.engine_name, model_basic_path + i.second.engine_name, "--best");
 				if (stat)
 				{
 					goto v7ini;

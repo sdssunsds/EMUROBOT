@@ -4,8 +4,10 @@ using System.Data;
 
 namespace EMU.Interface
 {
+    public delegate object Custom(params object[] pars);
     public interface IDataBase
     {
+        event Custom CustomEvent;
         T GetT<T>(Func<T, bool> func, params object[] pars);
         List<T> GetTs<T>(Func<T, bool> func = null, params object[] pars);
         DataTable GetTable(string rowFilter = "", params object[] pars);

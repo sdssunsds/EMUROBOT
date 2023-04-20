@@ -36,13 +36,13 @@ namespace Project.ServerClass
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.dataGridView3D = new System.Windows.Forms.DataGridView();
-            this.lb_time = new System.Windows.Forms.ListBox();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column4 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.Column5 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lb_time = new System.Windows.Forms.ListBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -55,8 +55,10 @@ namespace Project.ServerClass
             this.groupBox1.Controls.Add(this.lb_mode);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(200, 540);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Size = new System.Drawing.Size(150, 432);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "车型";
@@ -65,10 +67,11 @@ namespace Project.ServerClass
             // 
             this.lb_mode.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lb_mode.FormattingEnabled = true;
-            this.lb_mode.ItemHeight = 15;
-            this.lb_mode.Location = new System.Drawing.Point(3, 21);
+            this.lb_mode.ItemHeight = 12;
+            this.lb_mode.Location = new System.Drawing.Point(2, 16);
+            this.lb_mode.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.lb_mode.Name = "lb_mode";
-            this.lb_mode.Size = new System.Drawing.Size(194, 516);
+            this.lb_mode.Size = new System.Drawing.Size(146, 414);
             this.lb_mode.TabIndex = 0;
             this.lb_mode.SelectedIndexChanged += new System.EventHandler(this.lb_mode_SelectedIndexChanged);
             // 
@@ -76,9 +79,11 @@ namespace Project.ServerClass
             // 
             this.groupBox2.Controls.Add(this.lb_sn);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Left;
-            this.groupBox2.Location = new System.Drawing.Point(200, 0);
+            this.groupBox2.Location = new System.Drawing.Point(150, 0);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(200, 540);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox2.Size = new System.Drawing.Size(150, 432);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "车号";
@@ -87,10 +92,11 @@ namespace Project.ServerClass
             // 
             this.lb_sn.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lb_sn.FormattingEnabled = true;
-            this.lb_sn.ItemHeight = 15;
-            this.lb_sn.Location = new System.Drawing.Point(3, 21);
+            this.lb_sn.ItemHeight = 12;
+            this.lb_sn.Location = new System.Drawing.Point(2, 16);
+            this.lb_sn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.lb_sn.Name = "lb_sn";
-            this.lb_sn.Size = new System.Drawing.Size(194, 516);
+            this.lb_sn.Size = new System.Drawing.Size(146, 414);
             this.lb_sn.TabIndex = 1;
             this.lb_sn.SelectedIndexChanged += new System.EventHandler(this.lb_sn_SelectedIndexChanged);
             // 
@@ -100,9 +106,11 @@ namespace Project.ServerClass
             this.groupBox3.Controls.Add(this.dataGridView3D);
             this.groupBox3.Controls.Add(this.lb_time);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox3.Location = new System.Drawing.Point(400, 0);
+            this.groupBox3.Location = new System.Drawing.Point(300, 0);
+            this.groupBox3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(384, 540);
+            this.groupBox3.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox3.Size = new System.Drawing.Size(288, 432);
             this.groupBox3.TabIndex = 2;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "历史检测结果";
@@ -112,12 +120,14 @@ namespace Project.ServerClass
             this.dataGridView.BackgroundColor = System.Drawing.SystemColors.Control;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView.Location = new System.Drawing.Point(197, 21);
+            this.dataGridView.Location = new System.Drawing.Point(148, 16);
+            this.dataGridView.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.RowHeadersWidth = 51;
             this.dataGridView.RowTemplate.Height = 27;
-            this.dataGridView.Size = new System.Drawing.Size(184, 259);
+            this.dataGridView.Size = new System.Drawing.Size(138, 208);
             this.dataGridView.TabIndex = 3;
+            this.dataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellContentClick);
             // 
             // dataGridView3D
             // 
@@ -131,23 +141,13 @@ namespace Project.ServerClass
             this.Column5,
             this.Column6});
             this.dataGridView3D.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.dataGridView3D.Location = new System.Drawing.Point(197, 280);
+            this.dataGridView3D.Location = new System.Drawing.Point(148, 224);
+            this.dataGridView3D.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.dataGridView3D.Name = "dataGridView3D";
             this.dataGridView3D.RowHeadersWidth = 51;
             this.dataGridView3D.RowTemplate.Height = 27;
-            this.dataGridView3D.Size = new System.Drawing.Size(184, 257);
+            this.dataGridView3D.Size = new System.Drawing.Size(138, 206);
             this.dataGridView3D.TabIndex = 0;
-            // 
-            // lb_time
-            // 
-            this.lb_time.Dock = System.Windows.Forms.DockStyle.Left;
-            this.lb_time.FormattingEnabled = true;
-            this.lb_time.ItemHeight = 15;
-            this.lb_time.Location = new System.Drawing.Point(3, 21);
-            this.lb_time.Name = "lb_time";
-            this.lb_time.Size = new System.Drawing.Size(194, 516);
-            this.lb_time.TabIndex = 2;
-            this.lb_time.SelectedIndexChanged += new System.EventHandler(this.lb_time_SelectedIndexChanged);
             // 
             // Column1
             // 
@@ -207,15 +207,28 @@ namespace Project.ServerClass
             this.Column6.ReadOnly = true;
             this.Column6.Width = 125;
             // 
+            // lb_time
+            // 
+            this.lb_time.Dock = System.Windows.Forms.DockStyle.Left;
+            this.lb_time.FormattingEnabled = true;
+            this.lb_time.ItemHeight = 12;
+            this.lb_time.Location = new System.Drawing.Point(2, 16);
+            this.lb_time.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.lb_time.Name = "lb_time";
+            this.lb_time.Size = new System.Drawing.Size(146, 414);
+            this.lb_time.TabIndex = 2;
+            this.lb_time.SelectedIndexChanged += new System.EventHandler(this.lb_time_SelectedIndexChanged);
+            // 
             // DetectionResultHistoryControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "DetectionResultHistoryControl";
-            this.Size = new System.Drawing.Size(784, 540);
+            this.Size = new System.Drawing.Size(588, 432);
             this.Load += new System.EventHandler(this.DetectionResultHistoryControl_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);

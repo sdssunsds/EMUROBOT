@@ -193,7 +193,7 @@ namespace EMU.Parameter
         }
         public static PartsType GetType(string id)
         {
-            return (PartsType)Convert.ToInt32(id, 16);
+            return (PartsType)int.Parse(id);
         }
         public static PartsType GetPartsType(string lengthID)
         {

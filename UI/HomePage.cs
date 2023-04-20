@@ -1,8 +1,6 @@
-﻿using Basler;
-using EMU.ApplicationData;
+﻿using EMU.ApplicationData;
 using EMU.Business;
 using EMU.BusinessManager;
-using EMU.ImageTransmission;
 using EMU.Interface;
 using EMU.Parameter;
 using EMU.Util;

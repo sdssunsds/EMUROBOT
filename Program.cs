@@ -79,6 +79,7 @@ namespace EMUROBOT
                 Application.SetCompatibleTextRenderingDefault(false);
                 Project.AlgorithmInterface algorithmInterface = new Project.AlgorithmInterface();
                 Application.Run(new MainForm() { Project = algorithmInterface, MF = algorithmInterface, Args = args });
+                //Application.Run(new MainForm() { Project = new Project.Server(), Args = args });
             }
             else
             {
