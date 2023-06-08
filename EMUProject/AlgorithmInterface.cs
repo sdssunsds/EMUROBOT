@@ -95,6 +95,26 @@ namespace Project
                         new ExportAlgorithmDataForm().Show();
                     };
                     item.DropDownItems.Insert(0, strip);
+
+                    ToolStripMenuItem change = new ToolStripMenuItem();
+                    change.Name = "artificial";
+                    change.Text = "人工修正";
+                    change.Click += (object sender, EventArgs e) =>
+                    {
+                        ChangeForm.CanChanged = false;
+                        algorithmPage.ChangeForm = new ChangeForm();
+                        algorithmPage.ChangeForm.Show();
+                    };
+                    item.DropDownItems.Insert(1, change);
+
+                    ToolStripMenuItem history = new ToolStripMenuItem();
+                    history.Name = "history";
+                    history.Text = "修正历史";
+                    history.Click += (object sender, EventArgs e) =>
+                    {
+                        new ChangeHistoryForm().Show();
+                    };
+                    item.DropDownItems.Insert(2, history);
                 }
                 else if (item.Name == "设置ToolStripMenuItem")
                 {
@@ -226,7 +246,7 @@ namespace Project
                     {
                         for (int i = 0; i < 100; i++)
                         {
-                            if (!algorithmPage.RunAlgorithm("380AL", sn, partId, type, "", path, "", i.ToString("000000000000000"), eventArgs, true, true))
+                            if (!algorithmPage.RunAlgorithm("380AL", sn, "00000001", partId, type, "", path, "", i.ToString("000000000000000"), eventArgs, true, true))
                             {
                                 AddLog("算法执行失败", LogType.GeneralLog);
                             }
@@ -268,7 +288,7 @@ namespace Project
                                 {
                                     string partId = file.Substring(file.LastIndexOf("\\") + 1).Replace(".jpg", "");
                                     AddLog("读取图片：" + file, LogType.ProcessLog);
-                                    if (!algorithmPage.RunAlgorithm("380AL", item.Key, partId, taskType, "", file, file, i.ToString("000000000000000"), threadEventArgs, true, runAlgorithm))
+                                    if (!algorithmPage.RunAlgorithm("380AL", item.Key, "00000001", partId, taskType, "", file, file, i.ToString("000000000000000"), threadEventArgs, true, runAlgorithm))
                                     {
                                         AddLog("算法执行失败", LogType.GeneralLog);
                                     }
@@ -282,10 +302,10 @@ namespace Project
             }
             else
             {
-                if (mainPage != null)
-                {
-                    mainPage.isOpenControl = true;
-                }
+                //if (mainPage != null)
+                //{
+                //    mainPage.isOpenControl = true;
+                //}
                 algorithmPage?.InitAlgorithm();
             }
         }
@@ -308,7 +328,7 @@ namespace Project
         }
 
         #region 接口专用变量
-        private const string redis_key_handle = "data_to_handle_";
+        public const string redis_key_handle = "data_to_handle_";
         private const string redis_key_result = "data_handled_";
 
         private bool isRunInterface = false;
@@ -374,16 +394,34 @@ namespace Project
                                         if (!string.IsNullOrEmpty(value))
                                         {
                                             string[] args = value.Split('&');
-                                            if (args.Length > 6)
+                                            if (args.Length > 7)
                                             {
                                                 ThreadManager.TaskRun((ThreadEventArgs tmp) =>
                                                 {
                                                     tmp.ThreadName = "算法执行线程";
-                                                    if (!string.IsNullOrEmpty(args[0]) && !string.IsNullOrEmpty(args[1]) && !string.IsNullOrEmpty(args[2]) &&
-                                                        !string.IsNullOrEmpty(args[3]) && !string.IsNullOrEmpty(args[5]) && !string.IsNullOrEmpty(args[6]) &&
-                                                        !string.IsNullOrEmpty(task_id))
+                                                    string robot = args[0];
+                                                    string mode = args[1];
+                                                    string sn = args[2];
+                                                    string part = args[3];
+                                                    string type = args[4];
+                                                    string json = args[5];
+                                                    string img = args[6];
+                                                    string up_img = args[7];
+                                                    tmp.SetVariableValue(nameof(mode), mode);
+                                                    tmp.SetVariableValue(nameof(sn), sn);
+                                                    tmp.SetVariableValue(nameof(robot), robot);
+                                                    tmp.SetVariableValue(nameof(part), part);
+                                                    tmp.SetVariableValue(nameof(type), type);
+                                                    tmp.SetVariableValue(nameof(json), json);
+                                                    tmp.SetVariableValue(nameof(img), img);
+                                                    tmp.SetVariableValue(nameof(up_img), up_img);
+                                                    tmp.SetVariableValue(nameof(key), key);
+                                                    tmp.SetVariableValue(nameof(task_id), task_id);
+                                                    if (!string.IsNullOrEmpty(mode) && !string.IsNullOrEmpty(sn) && !string.IsNullOrEmpty(robot) &&
+                                                        !string.IsNullOrEmpty(part) && !string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(img) &&
+                                                        !string.IsNullOrEmpty(up_img) && !string.IsNullOrEmpty(task_id))
                                                     {
-                                                        if (!algorithmPage.RunAlgorithm(args[0], args[1], args[2], args[3], args[4], args[5], args[6], task_id, tmp))
+                                                        if (!algorithmPage.RunAlgorithm(mode, sn, robot, part, type, json, img, up_img, task_id, tmp))
                                                         {
                                                             AddLog("算法执行失败", LogType.GeneralLog);
                                                             DeleteRedis(key);
@@ -487,7 +525,7 @@ namespace Project
             }
         }
 
-        private void DeleteRedis(string key)
+        public void DeleteRedis(string key)
         {
             RedisHelper.DeleteValue(key);
             redisKeys.Remove(key);

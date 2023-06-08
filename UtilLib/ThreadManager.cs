@@ -91,6 +91,7 @@ namespace EMU.Util
                 args.IsRunThread = true;
                 action(args);
                 args.IsRunThread = false;
+                Console.WriteLine("结束：" + args.ThreadName);
                 EventArgsRemovingAction?.Invoke(args);
                 lock (eventLock)
                 {

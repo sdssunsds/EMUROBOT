@@ -55,6 +55,40 @@ namespace AlgorithmLib
                     return "";
             }
         }
+        public static AlgorithmStateEnum ToState(this string code)
+        {
+            switch (code)
+            {
+                case "0200":
+                    return AlgorithmStateEnum.正常;
+                case "0115":
+                    return AlgorithmStateEnum.异常;
+                case "0205":
+                    return AlgorithmStateEnum.螺丝丢失;
+                case "0201":
+                    return AlgorithmStateEnum.螺丝松动;
+                case "0301":
+                    return AlgorithmStateEnum.铁丝断裂;
+                case "0103":
+                    return AlgorithmStateEnum.划痕;
+                case "0107":
+                    return AlgorithmStateEnum.异物;
+                case "0801":
+                    return AlgorithmStateEnum.油位异常;
+                case "4201":
+                    return AlgorithmStateEnum.油液浑浊;
+                case "0106":
+                    return AlgorithmStateEnum.漏油;
+                case "0112":
+                    return AlgorithmStateEnum.丢失;
+                case "0113":
+                    return AlgorithmStateEnum.车头中缝过大;
+                case "0114":
+                    return AlgorithmStateEnum.管接头松脱;
+                default:
+                    return AlgorithmStateEnum.无法检测;
+            }
+        }
         public static char[] ToCharArray(this string value, int length)
         {
             char[] cs = new char[length];

@@ -101,6 +101,7 @@
     <Compile Include="ExportManager.cs" />
     <Compile Include="Extend.cs" />
     <Compile Include="FileManager.cs" />
+    <Compile Include="HttpAgreementManager.cs" />
     <Compile Include="ImageManager.cs" />
     <Compile Include="JsonManager.cs" />
     <Compile Include="LogManager.cs" />

@@ -153,6 +153,30 @@
     <Compile Include="AlgorithmInterface\Form\ExportAlgorithmDataForm.Designer.cs">
       <DependentUpon>ExportAlgorithmDataForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="AlgorithmInterface\Form\ChangeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AlgorithmInterface\Form\ChangeForm.Designer.cs">
+      <DependentUpon>ChangeForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AlgorithmInterface\Form\ChangeHistoryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AlgorithmInterface\Form\ChangeHistoryForm.Designer.cs">
+      <DependentUpon>ChangeHistoryForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Form\TestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Form\TestForm.Designer.cs">
+      <DependentUpon>TestForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\UserControl\FrameSelectControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\UserControl\FrameSelectControl.Designer.cs">
+      <DependentUpon>FrameSelectControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Global.cs" />
     <Compile Include="AlgorithmInterface\UserControl\MainPage.cs">
       <SubType>UserControl</SubType>
@@ -424,6 +448,12 @@
     <EmbeddedResource Include="AGV\UserControl\TestControl.resx">
       <DependentUpon>TestControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="AlgorithmInterface\Form\ChangeForm.resx">
+      <DependentUpon>ChangeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AlgorithmInterface\Form\ChangeHistoryForm.resx">
+      <DependentUpon>ChangeHistoryForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AlgorithmInterface\Form\ExportAlgorithmDataForm.resx">
       <DependentUpon>ExportAlgorithmDataForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -435,6 +465,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AlgorithmInterface\UserControl\MainPage.resx">
       <DependentUpon>MainPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Form\TestForm.resx">
+      <DependentUpon>TestForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Form\PictureForm.resx">
       <DependentUpon>PictureForm.cs</DependentUpon>
@@ -496,6 +529,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ServerClass\UserControl\XzOrMzRunControl.resx">
       <DependentUpon>XzOrMzRunControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\UserControl\FrameSelectControl.resx">
+      <DependentUpon>FrameSelectControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\UserControl\PagesControl.resx">
       <DependentUpon>PagesControl.cs</DependentUpon>

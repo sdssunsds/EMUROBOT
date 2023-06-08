@@ -35,6 +35,8 @@ namespace Project
 
         public IAlgorithmInterface Project { get; set; }
 
+        public ChangeForm ChangeForm { get; set; }
+
         public AlgorithmPage()
         {
             InitializeComponent();
@@ -74,7 +76,7 @@ namespace Project
             });
         }
 
-        public bool RunAlgorithm(string mode, string sn, string partId, string type, string json, string url_now, string url_up, string id, ThreadEventArgs eventArgs, bool isTest = false, bool isRun = true)
+        public bool RunAlgorithm(string mode, string sn, string robotId, string partId, string type, string json, string url_now, string url_up, string id, ThreadEventArgs eventArgs, bool isTest = false, bool isRun = true)
         {
             while (init != 0 && isRun)
             {
@@ -349,10 +351,58 @@ namespace Project
             json = "";
 #endif
             box_info[] boxes = null;
+            Action clearMemory = () =>
+            {
+                AddLog("开始清理内存", LogType.OtherLog);
+                boxes = null;
+#if !readFile
+                bytes1 = null;
+                bytes2 = null; 
+#endif
+                models = null;
+                tmp = null;
+                taskIds = null;
+                GC.Collect();
+            };
+            Action runArtificial = () =>
+            {
+                if (boxes == null)
+                {
+                    boxes = new box_info[0];
+                }
+                if (ChangeForm.ResultAct == null)
+                {
+                    ChangeForm.ResultAct = (bool normal, Data data, List<RedisResult> list, bool runRedis) =>
+                    {
+                        ThreadManager.TaskRun((ThreadEventArgs threadEventArgs) =>
+                        {
+                            threadEventArgs.ThreadName = "数据回写线程 " + data.id;
+                            ReturnBackData(normal, data.isTest, data.id, data.imgPath, data.modelPath, data.resultFile, list, runRedis, data.mode, data.sn, data.robotId, data.part, url_now);
+                        });
+                    };
+                }
+                ChangeForm.AddData(isTest, id, mode, sn, robotId, partId, imgPath1, modelPath, resultFile, boxes);
+            };
+
             if (isRun && rPtr == IntPtr.Zero)
             {
                 AddLog("未能获得算法结果", LogType.OtherLog);
-                return false;
+                if (ChangeForm == null || !ChangeForm.CanChanged)
+                {
+                    #region 清理内存
+                    clearMemory();
+                    #endregion
+
+                    return false; 
+                }
+                else
+                {
+                    runArtificial();
+
+                    #region 清理内存
+                    clearMemory();
+                    #endregion
+                }
             }
             if (isRun)
             {
@@ -384,48 +434,58 @@ namespace Project
             #endregion
 
             #region 结果数据转换，回写Redis用
-            List<RedisResult> list = new List<RedisResult>();
-            AddLog("创建回写Redis的数据集合", LogType.OtherLog);
-            string code = "";
-            Dictionary<int, string> codeId = new Dictionary<int, string>();
-            foreach (box_info box in boxes)
+            if (ChangeForm == null || !ChangeForm.CanChanged)
             {
-                code = box.state_enum.ChangeCode();
-                if (!codeId.ContainsKey(box.state_enum))
+                List<RedisResult> list = new List<RedisResult>();
+                AddLog("创建回写Redis的数据集合", LogType.OtherLog);
+                string code = "";
+                Dictionary<int, string> codeId = new Dictionary<int, string>();
+                foreach (box_info box in boxes)
                 {
-                    codeId.Add(box.state_enum, code);
-                    AddLog("映射结果码 " + box.state_enum + " >> " + code, LogType.OtherLog); 
-                }
-                RedisResult result = list.Find(r => r.jclx == code);
-                if (result == null)
-                {
-                    result = new RedisResult()
+                    code = box.state_enum.ChangeCode();
+                    if (!codeId.ContainsKey(box.state_enum))
                     {
-                        jclx = code,
-                        result = new List<Rectangle>()
-                    };
-                    AddLog("未找到数据对象，并开始生成新的数据对象", LogType.OtherLog);
-                    list.Add(result);
-                    AddLog("添加数据对象", LogType.OtherLog);
+                        codeId.Add(box.state_enum, code);
+                        AddLog("映射结果码 " + box.state_enum + " >> " + code, LogType.OtherLog);
+                    }
+                    RedisResult result = list.Find(r => r.jclx == code);
+                    if (result == null)
+                    {
+                        result = new RedisResult()
+                        {
+                            jclx = code,
+                            result = new List<Rectangle>()
+                        };
+                        AddLog("未找到数据对象，并开始生成新的数据对象", LogType.OtherLog);
+                        list.Add(result);
+                        AddLog("添加数据对象", LogType.OtherLog);
+                    }
+                    result.result.Add(new Rectangle(box.x, box.y, box.w, box.h));
                 }
-                result.result.Add(new Rectangle(box.x, box.y, box.w, box.h));
+
+                #region 清理内存
+                clearMemory();
+                #endregion
+
+                ReturnBackData(isNormal, isTest, id, imgPath1, modelPath, resultFile, list);
+            }
+            else
+            {
+                runArtificial();
+
+                #region 清理内存
+                clearMemory();
+                #endregion
             }
             #endregion
 
-            #region 清理内存
-            AddLog("开始清理内存", LogType.OtherLog);
-            boxes = null;
-#if !readFile
-            bytes1 = null;
-            bytes2 = null; 
-#endif
-            models = null;
-            tmp = null;
-            taskIds = null;
-            GC.Collect();
-            #endregion
+            return true;
+        }
 
-            #region 记录结果并返回
+        #region 记录结果并返回
+        private void ReturnBackData(bool isNormal, bool isTest, string id, string imgPath1, string modelPath, string resultFile, List<RedisResult> list,
+            bool runRedis = true, string mode = "", string sn = "", string robotId = "", string partId = "", string imgUrl = "")
+        {
 #if readFile
             if (isNormal)
             {
@@ -452,7 +512,7 @@ namespace Project
                 }
                 int index = files != null ? files.Length : 0;
                 File.Copy(imgPath1, modelPath + index.ToString("00") + ".jpg");
-            } 
+            }
 #endif
             string _json = JsonManager.ObjectToJson(list);
             AddLog("算法执行完毕", LogType.OtherLog);
@@ -469,14 +529,54 @@ namespace Project
 #else
                 if (!isTest)
                 {
-                    Project.ResultBack(id, _json);  
+                    if (runRedis)
+                    {
+                        Project.ResultBack(id, _json); 
+                    }
+                    else
+                    {
+                        /*
+                        POST: http://192.168.100.173:9001/planMalfunctionManagement/auth/robotAdd
+                        {
+                            "abnormalPhoto": "http://192.168.10.1/xxxxxxxxxx",
+                            "uniqueNumber": "00000001",
+                            "motorCarModel": "380AL",
+                            "motorCarNumber": "2600",
+                            "componentNumber": "600123123131313121",
+                            "resultList": [
+                            {
+                                "jclx": "0200",
+                                "result": "100,100,1,2;200,200,2,3;"
+                            },
+                            {
+                                "jclx": "0107",
+                                "result": "100,100,1,2;200,200,2,3;"
+                            }]
+                        }
+                        */
+                        string url = "http://192.168.100.173:9001/planMalfunctionManagement/auth/robotAdd";
+                        HttpModel httpModel = new HttpModel()
+                        {
+                            abnormalPhoto = imgUrl,
+                            uniqueNumber = robotId,
+                            motorCarModel = mode,
+                            motorCarNumber = sn,
+                            componentNumber = partId,
+                            resultList = list.ToArray()
+                        };
+                        url += JsonManager.ObjectToJson(httpModel);
+                        AddLog("Post请求：" + url, LogType.GeneralLog);
+                        HttpAgreementManager.Post(url);
+                        AlgorithmInterface ai = Project as AlgorithmInterface;
+                        string key = AlgorithmInterface.redis_key_handle + id;
+                        AddLog("删除Redis：" + key, LogType.GeneralLog);
+                        ai.DeleteRedis(key);
+                    }
                 }
 #endif
             }
-            #endregion
-
-            return true;
-        }
+        } 
+        #endregion
 
         public void TestRunAlgorithm()
         {
@@ -539,7 +639,7 @@ namespace Project
             AddLog("执行完毕", LogType.GeneralLog);
             AddLog("==============================", LogType.ProcessLog);
             AddLog("30秒后重复...", LogType.ProcessLog);
-            Thread.Sleep(30000);
+            Thread.Sleep(30000000);
 #endif
         }
 
@@ -597,6 +697,16 @@ namespace Project
                     }
                 }));
             }
+        }
+
+        private class HttpModel
+        {
+            public string abnormalPhoto { get; set; }
+            public string uniqueNumber { get; set; }
+            public string motorCarModel { get; set; }
+            public string motorCarNumber { get; set; }
+            public string componentNumber { get; set; }
+            public RedisResult[] resultList { get; set; }
         }
     }
 }
