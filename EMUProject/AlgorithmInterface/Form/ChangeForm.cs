@@ -32,7 +32,7 @@ namespace Project
             }
         }
 
-        public void AddData(bool isTest, string id, string mode, string sn, string robotId, string part, string imgPath, string modelPath, string resultFile, box_info[] boxes)
+        public void AddData(bool isTest, string id, string mode, string sn, string robotId, string part, string imgPath, string imgUrl, string modelPath, string resultFile, box_info[] boxes)
         {
             ThreadManager.TaskRun((ThreadEventArgs threadEventArgs) =>
             {
@@ -46,6 +46,7 @@ namespace Project
                     robotId = robotId,
                     part = part,
                     imgPath = imgPath,
+                    imgUrl = imgUrl,
                     modelPath = modelPath,
                     resultFile = resultFile,
                     boxes = boxes
@@ -345,6 +346,7 @@ namespace Project
         public string robotId { get; set; }
         public string part { get; set; }
         public string imgPath { get; set; }
+        public string imgUrl { get; set; }
         public string modelPath { get; set; }
         public string resultFile { get; set; }
         public box_info[] boxes { get; set; }

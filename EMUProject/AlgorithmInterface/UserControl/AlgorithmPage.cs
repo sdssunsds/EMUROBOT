@@ -377,11 +377,11 @@ namespace Project
                         ThreadManager.TaskRun((ThreadEventArgs threadEventArgs) =>
                         {
                             threadEventArgs.ThreadName = "数据回写线程 " + data.id;
-                            ReturnBackData(normal, data.isTest, data.id, data.imgPath, data.modelPath, data.resultFile, list, runRedis, data.mode, data.sn, data.robotId, data.part, url_now);
+                            ReturnBackData(normal, data.isTest, data.id, data.imgPath, data.modelPath, data.resultFile, list, runRedis, data.mode, data.sn, data.robotId, data.part, data.imgUrl);
                         });
                     };
                 }
-                ChangeForm.AddData(isTest, id, mode, sn, robotId, partId, imgPath1, modelPath, resultFile, boxes);
+                ChangeForm.AddData(isTest, id, mode, sn, robotId, partId, imgPath1, url_now, modelPath, resultFile, boxes);
             };
 
             if (isRun && rPtr == IntPtr.Zero)
@@ -554,7 +554,8 @@ namespace Project
                             }]
                         }
                         */
-                        string url = "http://192.168.100.173:9001/planMalfunctionManagement/auth/robotAdd";
+                        //string url = "http://192.168.100.173:9001/planMalfunctionManagement/auth/robotAdd";
+                        string url = "http://127.0.0.1:8080/planMalfunctionManagement/auth/robotAdd";
                         HttpModel httpModel = new HttpModel()
                         {
                             abnormalPhoto = imgUrl,
@@ -564,12 +565,13 @@ namespace Project
                             componentNumber = partId,
                             resultList = list.ToArray()
                         };
-                        url += JsonManager.ObjectToJson(httpModel);
+                        string par = JsonManager.ObjectToJson(httpModel);
                         AddLog("Post请求：" + url, LogType.GeneralLog);
-                        HttpAgreementManager.Post(url);
+                        AddLog(" >> 参数：" + par, LogType.GeneralLog);
+                        string result = HttpAgreementManager.Post(url, par);
+                        AddLog(" >> 返回：" + result, LogType.GeneralLog);
                         AlgorithmInterface ai = Project as AlgorithmInterface;
                         string key = AlgorithmInterface.redis_key_handle + id;
-                        AddLog("删除Redis：" + key, LogType.GeneralLog);
                         ai.DeleteRedis(key);
                     }
                 }
