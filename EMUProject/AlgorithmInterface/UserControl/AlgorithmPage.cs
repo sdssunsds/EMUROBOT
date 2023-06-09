@@ -377,6 +377,23 @@ namespace Project
                         ThreadManager.TaskRun((ThreadEventArgs threadEventArgs) =>
                         {
                             threadEventArgs.ThreadName = "数据回写线程 " + data.id;
+                            int i = -1;
+                            foreach (RedisResult item in list)
+                            {
+                                i = item.result.FindIndex(r => r.Width == 0 && r.Height == 0);
+                                if (i >= 0)
+                                {
+                                    item.result.RemoveAt(i);
+                                }
+                            }
+                            do
+                            {
+                                i = list.FindIndex(r => r.result.Count == 0);
+                                if (i >= 0)
+                                {
+                                    list.RemoveAt(i);
+                                }
+                            } while (i >= 0);
                             ReturnBackData(normal, data.isTest, data.id, data.imgPath, data.modelPath, data.resultFile, list, runRedis, data.mode, data.sn, data.robotId, data.part, data.imgUrl);
                         });
                     };

@@ -12,6 +12,7 @@ namespace Project
 {
     public partial class ChangeForm : Form
     {
+        private object dataLock = new object();
         private string savePath = "";
         private RectModel selectRect = null;
         private FrameSelectControl frameSelectControl;
@@ -37,24 +38,30 @@ namespace Project
             ThreadManager.TaskRun((ThreadEventArgs threadEventArgs) =>
             {
                 threadEventArgs.ThreadName = "添加人工数据线程 " + id;
-                datas.Add(new Data()
+                lock (dataLock)
                 {
-                    isTest = isTest,
-                    id = id,
-                    mode = mode,
-                    sn = sn,
-                    robotId = robotId,
-                    part = part,
-                    imgPath = imgPath,
-                    imgUrl = imgUrl,
-                    modelPath = modelPath,
-                    resultFile = resultFile,
-                    boxes = boxes
-                });
-                ShowDataNum();
-                if (datas.Count == 1)
-                {
-                    Invoke(new Action(() => { ShowData(); }));
+                    if (datas.FindIndex(d => d.id == id) < 0)
+                    {
+                        datas.Add(new Data()
+                        {
+                            isTest = isTest,
+                            id = id,
+                            mode = mode,
+                            sn = sn,
+                            robotId = robotId,
+                            part = part,
+                            imgPath = imgPath,
+                            imgUrl = imgUrl,
+                            modelPath = modelPath,
+                            resultFile = resultFile,
+                            boxes = boxes
+                        });
+                        ShowDataNum();
+                        if (datas.Count == 1)
+                        {
+                            Invoke(new Action(() => { ShowData(); }));
+                        }
+                    } 
                 }
             });
         }
@@ -236,6 +243,7 @@ namespace Project
         {
             if (datas.Count > 0)
             {
+                string id = datas[0].id;
                 Dictionary<AlgorithmStateEnum, List<Rectangle>> dict = frameSelectControl.GetRectangles();
                 List<RedisResult> list = new List<RedisResult>();
                 foreach (KeyValuePair<AlgorithmStateEnum, List<Rectangle>> item in dict)
@@ -253,7 +261,10 @@ namespace Project
 #else
                 ResultAct?.Invoke(dict.ContainsKey(AlgorithmStateEnum.正常) && dict.Count == 1, datas[0], list, true);
 #endif
-                datas.RemoveAt(0);
+                while (datas.Count > 0 && datas[0].id == id)
+                {
+                    datas.RemoveAt(0);
+                }
                 ShowData();
                 ShowDataNum(); 
             }

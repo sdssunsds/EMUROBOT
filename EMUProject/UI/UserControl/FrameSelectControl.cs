@@ -196,7 +196,7 @@ namespace Project
             Point p = new Point(x, y);
             foreach (RectModel rectangle in rectangles)
             {
-                if (rectangle.Rectangle.Contains(p))
+                if (!rectangle.Deleted && rectangle.Rectangle.Contains(p))
                 {
                     selectId = rectangle.ID;
                     DrawRectangles();
