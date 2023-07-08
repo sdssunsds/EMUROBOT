@@ -121,6 +121,49 @@ namespace Project
         }
 
         /// <summary>
+        /// 定位位置
+        /// </summary>
+        public void LocationPoint(Rectangle rectangle)
+        {
+            int w = this.Width / 2;
+            int h = this.Height / 2;
+            int px = 0, py = 0;
+            if (rectangle.X > w)
+            {
+                px = rectangle.X - w;
+            }
+            if (rectangle.Y > h)
+            {
+                py = rectangle.Y - h;
+            }
+            if (this.HorizontalScroll.Maximum > px)
+            {
+                this.HorizontalScroll.Value = px; 
+            }
+            else
+            {
+                this.HorizontalScroll.Value = this.HorizontalScroll.Maximum;
+            }
+            if (this.VerticalScroll.Maximum > py)
+            {
+                this.VerticalScroll.Value = py; 
+            }
+            else
+            {
+                this.VerticalScroll.Value = this.VerticalScroll.Maximum;
+            }
+            foreach (RectModel rect in rectangles)
+            {
+                if (!rect.Deleted && rect.Rectangle.X == rectangle.X && rect.Rectangle.Y == rectangle.Y && rect.Rectangle.Width == rectangle.Width && rect.Rectangle.Height == rectangle.Height)
+                {
+                    selectId = rect.ID;
+                    DrawRectangles();
+                    return;
+                }
+            }
+        }
+
+        /// <summary>
         /// 获取所有方框
         /// </summary>
         public Dictionary<AlgorithmStateEnum, List<Rectangle>> GetRectangles()

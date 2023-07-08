@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ChangeForm));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.treeView1 = new System.Windows.Forms.TreeView();
             this.pb_todo = new System.Windows.Forms.PictureBox();
             this.pb_revoke = new System.Windows.Forms.PictureBox();
             this.pb_ok = new System.Windows.Forms.PictureBox();
@@ -55,6 +56,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.treeView1);
             this.panel1.Controls.Add(this.pb_todo);
             this.panel1.Controls.Add(this.pb_revoke);
             this.panel1.Controls.Add(this.pb_ok);
@@ -71,6 +73,17 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(132, 450);
             this.panel1.TabIndex = 0;
+            // 
+            // treeView1
+            // 
+            this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.treeView1.Location = new System.Drawing.Point(6, 376);
+            this.treeView1.Name = "treeView1";
+            this.treeView1.Size = new System.Drawing.Size(123, 71);
+            this.treeView1.TabIndex = 15;
+            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
             // pb_todo
             // 
@@ -127,12 +140,12 @@
             // 
             // checkedListBox1
             // 
-            this.checkedListBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkedListBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.checkedListBox1.FormattingEnabled = true;
             this.checkedListBox1.Location = new System.Drawing.Point(6, 126);
             this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(123, 324);
+            this.checkedListBox1.Size = new System.Drawing.Size(123, 244);
             this.checkedListBox1.TabIndex = 8;
             this.checkedListBox1.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedListBox1_ItemCheck);
             // 
@@ -248,5 +261,6 @@
         private System.Windows.Forms.PictureBox pb_ok;
         private System.Windows.Forms.PictureBox pb_del;
         private System.Windows.Forms.PictureBox pb_save;
+        private System.Windows.Forms.TreeView treeView1;
     }
 }

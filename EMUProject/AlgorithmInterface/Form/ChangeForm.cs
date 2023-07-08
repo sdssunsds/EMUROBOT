@@ -184,6 +184,7 @@ namespace Project
                 {
                     ShowData(rect);
                 }
+                BindingTree();
             };
             frameSelectControl.SelectRectangle = (RectModel rect) =>
             {
@@ -285,6 +286,63 @@ namespace Project
             }
         }
 
+        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            string name = e.Node.Text;
+            string[] vs = name.Split(',');
+            if (vs.Length > 3)
+            {
+                Rectangle rectangle = new Rectangle(int.Parse(vs[0]), int.Parse(vs[1]), int.Parse(vs[2]), int.Parse(vs[3]));
+                frameSelectControl.LocationPoint(rectangle); 
+            }
+        }
+
+        private void BindingTree()
+        {
+            ThreadManager.TaskRun((ThreadEventArgs threadEventArgs) =>
+            {
+                threadEventArgs.ThreadName = "绑定树";
+                Dictionary<AlgorithmStateEnum, List<Rectangle>> dict = frameSelectControl.GetRectangles();
+                ClearTreeNode();
+                foreach (KeyValuePair<AlgorithmStateEnum, List<Rectangle>> item in dict)
+                {
+                    TreeNode node = new TreeNode(item.Key.ToString());
+                    foreach (Rectangle rectangle in item.Value)
+                    {
+                        if (rectangle.Width > 0 && rectangle.Height > 0)
+                        {
+                            node.Nodes.Add($"{rectangle.X},{rectangle.Y},{rectangle.Width},{rectangle.Height}"); 
+                        }
+                    }
+                    if (node.Nodes.Count > 0)
+                    {
+                        BeginInvoke(new Action(() => { treeView1.Nodes.Add(node); })); 
+                    }
+                }
+                BeginInvoke(new Action(() => { treeView1.ExpandAll(); }));
+            });
+        }
+
+        private void ClearTreeNode(TreeNode node = null)
+        {
+            if (node == null)
+            {
+                foreach (TreeNode item in treeView1.Nodes)
+                {
+                    ClearTreeNode(item);
+                }
+                Invoke(new Action(() => { treeView1.Nodes.Clear(); }));
+            }
+            else
+            {
+                foreach (TreeNode item in node.Nodes)
+                {
+                    ClearTreeNode(item);
+                }
+                Invoke(new Action(() => { node.Nodes.Clear(); }));
+            }
+        }
+
         private void SaveData(Data data, List<RedisResult> list)
         {
             try
@@ -324,6 +382,7 @@ namespace Project
                 frameSelectControl.Image = null;
                 tb_h.Text = tb_w.Text = tb_x.Text = tb_y.Text = "";
             }
+            BindingTree();
         }
 
         private void ShowData(RectModel rect)

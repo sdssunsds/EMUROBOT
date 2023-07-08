@@ -70,7 +70,7 @@ namespace Project
                             AddLog("3秒后重新初始化算法", LogType.OtherLog);
                             Thread.Sleep(3000);
                             goto Run;
-                        }  
+                        }
                     }
                 }
             });
@@ -377,23 +377,26 @@ namespace Project
                         ThreadManager.TaskRun((ThreadEventArgs threadEventArgs) =>
                         {
                             threadEventArgs.ThreadName = "数据回写线程 " + data.id;
-                            int i = -1;
-                            foreach (RedisResult item in list)
+                            for (int i = list.Count - 1; i >= 0; i--)
                             {
-                                i = item.result.FindIndex(r => r.Width == 0 && r.Height == 0);
-                                if (i >= 0)
+                                RedisResult item = list[i];
+                                if (item.jclx != "0200")
                                 {
-                                    item.result.RemoveAt(i);
+                                    for (int j = item.result.Count - 1; j >= 0; j--)
+                                    {
+                                        if (item.result[j].Width == 0 || item.result[j].Height == 0)
+                                        {
+                                            AddLog($"==>发现无效数据：{item.result[j].X},{item.result[j].Y},{item.result[j].Width},{item.result[j].Height}", LogType.OtherLog);
+                                            item.result.RemoveAt(j);
+                                        }
+                                    }
+                                    if (item.result.Count == 0)
+                                    {
+                                        AddLog($"=> 移除无效结果：{item.jclx}", LogType.OtherLog);
+                                        list.RemoveAt(i);
+                                    }
                                 }
                             }
-                            do
-                            {
-                                i = list.FindIndex(r => r.result.Count == 0);
-                                if (i >= 0)
-                                {
-                                    list.RemoveAt(i);
-                                }
-                            } while (i >= 0);
                             ReturnBackData(normal, data.isTest, data.id, data.imgPath, data.modelPath, data.resultFile, list, runRedis, data.mode, data.sn, data.robotId, data.part, data.imgUrl);
                         });
                     };
@@ -647,7 +650,7 @@ namespace Project
                     string[] args = txt.Split('&');
                     if (args.Length > 6)
                     {
-                        if (!RunAlgorithm(args[0], args[1], args[2], args[3], args[4], Application.StartupPath + "\\bak_img\\" + taskId + ".jpg", args[6], taskId, null))
+                        if (!RunAlgorithm(args[0], args[1], "0000001", args[2], args[3], args[4], Application.StartupPath + "\\bak_img\\" + taskId + ".jpg", args[6], taskId, null))
                         {
                             AddLog("算法执行失败", LogType.GeneralLog);
                         }
