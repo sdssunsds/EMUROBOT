@@ -227,6 +227,7 @@ namespace Project
                     rectangles[i].Deleted = false;
                     DataChanged?.Invoke(rectangles[i]);
                 }
+                DataChanged?.Invoke(null);
                 DrawRectangles(); 
             }
         }

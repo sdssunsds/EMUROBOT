@@ -101,9 +101,20 @@ namespace Project
                     change.Text = "人工修正";
                     change.Click += (object sender, EventArgs e) =>
                     {
-                        ChangeForm.CanChanged = false;
-                        algorithmPage.ChangeForm = new ChangeForm();
-                        algorithmPage.ChangeForm.Show();
+                        if (algorithmPage.ChangeForm == null)
+                        {
+                            ChangeForm.CanChanged = false;
+                            algorithmPage.ChangeForm = new ChangeForm();
+                            algorithmPage.ChangeForm.FormClosed += (object o, FormClosedEventArgs fce) =>
+                            {
+                                algorithmPage.ChangeForm = null;
+                            };
+                            algorithmPage.ChangeForm.Show(); 
+                        }
+                        else
+                        {
+                            algorithmPage.ChangeForm.BringToFront();
+                        }
                     };
                     item.DropDownItems.Insert(1, change);
 

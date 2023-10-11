@@ -1,4 +1,5 @@
 ﻿#define httpInterface
+//#define testImage
 
 using AlgorithmLib;
 using EMU.Util;
@@ -12,7 +13,9 @@ namespace Project
 {
     public partial class ChangeForm : Form
     {
+        private bool isTreeBinded = false;
         private object dataLock = new object();
+        private object treeLock = new object();
         private string savePath = "";
         private RectModel selectRect = null;
         private FrameSelectControl frameSelectControl;
@@ -71,7 +74,9 @@ namespace Project
             frameSelectControl = new FrameSelectControl();
             frameSelectControl.Dock = DockStyle.Fill;
             frameSelectControl.Name = "frameSelectControl";
-            //frameSelectControl.Image = Image.FromFile(@"E:\RGV\线阵和面阵图片\380AL_2591_2023_04_11_13_15_00000001\Back\60001010010102021020000.jpg");
+#if testImage
+            frameSelectControl.Image = Image.FromFile(@"E:\RGV\线阵和面阵图片\380AL_2591_2023_04_11_13_15_00000001\Back\60001010010102021020000.jpg");
+#endif
             frameSelectControl.AltAndKeyUpAction = (Keys key) =>
             {
                 switch (key)
@@ -188,8 +193,12 @@ namespace Project
             };
             frameSelectControl.SelectRectangle = (RectModel rect) =>
             {
-                ShowData(rect);
-                selectRect = rect;
+                if (selectRect?.ID != rect?.ID)
+                {
+                    ShowData(rect);
+                    selectRect = rect;
+                    BindingTree(); 
+                }
             };
             this.Controls.Add(frameSelectControl);
             frameSelectControl.BringToFront();
@@ -227,6 +236,7 @@ namespace Project
                 selectRect.AlgorithmState = (AlgorithmStateEnum)Enum.Parse(typeof(AlgorithmStateEnum), comboBox1.Text);
                 selectRect.Rectangle = new Rectangle(int.Parse(tb_x.Text), int.Parse(tb_y.Text), int.Parse(tb_w.Text), int.Parse(tb_h.Text));
                 frameSelectControl.SetRectangleData(selectRect);
+                BindingTree();
             }
         }
 
@@ -301,25 +311,33 @@ namespace Project
         {
             ThreadManager.TaskRun((ThreadEventArgs threadEventArgs) =>
             {
-                threadEventArgs.ThreadName = "绑定树";
-                Dictionary<AlgorithmStateEnum, List<Rectangle>> dict = frameSelectControl.GetRectangles();
-                ClearTreeNode();
-                foreach (KeyValuePair<AlgorithmStateEnum, List<Rectangle>> item in dict)
+                isTreeBinded = false;
+                lock (treeLock)
                 {
-                    TreeNode node = new TreeNode(item.Key.ToString());
-                    foreach (Rectangle rectangle in item.Value)
+                    if (!isTreeBinded)
                     {
-                        if (rectangle.Width > 0 && rectangle.Height > 0)
+                        threadEventArgs.ThreadName = "绑定树";
+                        Dictionary<AlgorithmStateEnum, List<Rectangle>> dict = frameSelectControl.GetRectangles();
+                        ClearTreeNode();
+                        foreach (KeyValuePair<AlgorithmStateEnum, List<Rectangle>> item in dict)
                         {
-                            node.Nodes.Add($"{rectangle.X},{rectangle.Y},{rectangle.Width},{rectangle.Height}"); 
+                            TreeNode node = new TreeNode(item.Key.ToString());
+                            foreach (Rectangle rectangle in item.Value)
+                            {
+                                if (rectangle.Width > 0 && rectangle.Height > 0)
+                                {
+                                    node.Nodes.Add($"{rectangle.X},{rectangle.Y},{rectangle.Width},{rectangle.Height}");
+                                }
+                            }
+                            if (node.Nodes.Count > 0)
+                            {
+                                BeginInvoke(new Action(() => { treeView1.Nodes.Add(node); }));
+                            }
                         }
-                    }
-                    if (node.Nodes.Count > 0)
-                    {
-                        BeginInvoke(new Action(() => { treeView1.Nodes.Add(node); })); 
+                        BeginInvoke(new Action(() => { treeView1.ExpandAll(); }));
+                        isTreeBinded = true;
                     }
                 }
-                BeginInvoke(new Action(() => { treeView1.ExpandAll(); }));
             });
         }
 
